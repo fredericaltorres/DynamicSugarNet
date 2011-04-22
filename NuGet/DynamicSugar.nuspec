@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>DynamicSugar</id>
+    <version>[VERSION]</version>
+    <authors>Frederic Torres</authors>
+    <owners>Frederic Torres</owners>
+    <description>The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#</description>
+    <language>en-US</language>
+    <projectUrl>http://www.dynamicSugar.net</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>C#.NET Dynamic Python JavaScript</tags>
+  </metadata>
+ <files>
+      <file src="Output\NuGet\Lib\*.dll" target="lib" />
+      <file src="Output\NuGet\mkd\*.markdown" target="mkd" />
+  </files>
+</package>
+
+<!--
+http://nuget.codeplex.com/documentation?title=Nuspec%20Format
+nuget push -source http://packages.nuget.org/v1/ DynamicSugarSharpLibrary.nupkg af4148d0-20ae-4904-80c5-8c76fafe81a0
+-->

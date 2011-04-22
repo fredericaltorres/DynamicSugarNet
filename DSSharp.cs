@@ -1,0 +1,138 @@
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using System.Collections;
+using System.Dynamic;
+using System.Reflection;
+
+// http://lostintangent.com/post/4202489524/c-api-design-type-inference-named-parameters-and
+
+namespace DynamicSugar {
+    /// <summary>
+    /// Dynamic Sharp Exception
+    /// </summary>
+    public class DynamicSugarSharpException : System.Exception {
+
+        public DynamicSugarSharpException(string message) : base(message) { }
+    }
+    /// <summary>
+    /// Dynamic Sharp Helper Class
+    /// </summary>
+    public static partial class DS {
+        /// <summary>
+        /// Wrap an anonynous type into a MultiValues object to be returned
+        /// as a function result.
+        /// </summary>
+        /// <param name="anonymousType"></param>
+        /// <returns></returns>
+        public static dynamic Values(object anonymousType){
+
+            return DynamicSugar.MultiValues.Values(anonymousType);
+        }
+        /// <summary>
+        /// Convert the parameters passed to this function into a List Of T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="values"></param>
+        /// <returns></returns>       
+        public static List<T> List<T>(params T[] values) {
+
+            return values.ToList<T>();            
+        }      
+        /// <summary>
+        /// Return in a dictionary all the properties and fields of an instance
+        /// </summary>
+        /// <param name="instance">The instance</param>
+        /// <param name="properties">Define the list of properties and field to return. All properties and fields are returned if this parameter is not defined</param>
+        /// <returns></returns>
+        public static Dictionary<string,object> Dictionary(object instance, List<string> properties = null) {
+
+            return ReflectionHelper.GetDictionary(instance, properties);
+        }
+        public static Dictionary<string, TValue> Dictionary<TValue>(object instance, List<string> properties = null) {
+
+            Dictionary<string, TValue> d = new Dictionary<string,TValue>();
+            foreach(var k in ReflectionHelper.GetDictionary(instance, properties)){
+                TValue v = (TValue)Convert.ChangeType(k.Value, typeof(TValue));
+                d.Add(k.Key, v);
+            }
+            return d;
+        }
+        /*
+        public static dynamic Dictionary {
+            get{
+                return MultiValues.Create(MultiValuesBehavior.Dictionary);
+            }
+        }
+        public static dynamic Values {
+            get{
+                return MultiValues.Create(MultiValuesBehavior.Bag);
+            }
+        }*/        
+        /// <summary>
+        /// Allow to create dynamic object that can be passed back and forth
+        /// between assembly. Using anonymous type cause problem because they
+        /// are generated as internal and cannot be pass to another assembly.
+        /// Expando object can.
+        /// http://stackoverflow.com/questions/2630370/c-4-0-dynamics
+        /// </summary>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static dynamic Expando(params object [] def) {
+
+            dynamic expando   = new ExpandoObject();
+            var expandoAsDict = expando as IDictionary<String, object>;
+
+            for (int i = 0; i < def.Length; i++){
+
+                if(def[i] is string){
+                    expandoAsDict.Add(def[i].ToString(), def[i+1]);
+                    i++;
+                }
+                else{			
+                    foreach (KeyValuePair<string, object> k in ReflectionHelper.GetDictionary(def[i])) 
+                        expandoAsDict.Add(k.Key, k.Value);
+                }
+            }
+            return expando;
+        }         
+        /// <summary>
+        /// Return a list of integer from 0 to max-1
+        /// </summary>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static List<int> Range(int max) {
+
+            return Range(max, 1);
+        }   
+        /// <summary>
+        /// Return a list of integer from 0 to max-1 with an increment
+        /// </summary>
+        /// <param name="max"></param>
+        /// <param name="increment"></param>
+        /// <returns></returns>
+        public static List<int> Range(int max, int increment) {
+
+            return Range(0, max, increment);
+        }        
+        /// <summary>
+        /// Return a list of integer from start to max-1 with an increment
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="max"></param>
+        /// <param name="increment"></param>
+        /// <returns></returns>
+        public static List<int> Range(int start, int max, int increment) {
+
+            int i = start;
+            var l = new List<int>();
+            while (i < max) {
+                l.Add(i);
+                i += increment;
+            }
+            return l;
+        }
+    }
+}
