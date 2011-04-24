@@ -84,7 +84,6 @@
     </Compile>
     <Compile Include="DSSharp.Dictionary.cs" />
     <Compile Include="DSSharp.List.cs" />
-    <Compile Include="DynamicObjects\Experimental\DynamicString.cs" />
     <Compile Include="DynamicObjects\Experimental\DynamicTextFileManager.cs" />
     <Compile Include="ExtendedFormat.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.Dictionary.cs" />

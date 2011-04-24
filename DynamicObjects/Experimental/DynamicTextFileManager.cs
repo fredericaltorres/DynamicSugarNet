@@ -6,11 +6,18 @@ using System.Dynamic;
 
 namespace DynamicSugar.Experimental {
 
+    /// <summary>
+    /// Exception raise by the class DynamicTextFileManager
+    /// </summary>
     public class DynamicTextFileManagerException : System.Exception {
 
         public DynamicTextFileManagerException(string message) : base(message) { }
         public DynamicTextFileManagerException(string message, System.Exception innerEx) : base(message, innerEx) { }
     }        
+    /// <summary>
+    /// Class allowing to read and write text file, just by setting or getting property.
+    /// The property name is the filename.
+    /// </summary>
     public class DynamicTextFileManager : DynamicObject {
      
         private string _path;
@@ -32,9 +39,9 @@ namespace DynamicSugar.Experimental {
 
             this._path      = path;
             this._extension = extension;
-        }
-        
+        }        
         public virtual object GetMember(string name) {
+
             return null;
         }
         public override bool TryGetMember(GetMemberBinder binder, out object result) {
