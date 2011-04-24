@@ -7,7 +7,7 @@ using System.Dynamic;
 namespace DynamicSugar.Experimental {
 
     /// <summary>
-    /// Exception raise by the class DynamicTextFileManager
+    /// Exception raised by the class DynamicTextFileManager
     /// </summary>
     public class DynamicTextFileManagerException : System.Exception {
 
