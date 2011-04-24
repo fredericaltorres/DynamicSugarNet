@@ -12,17 +12,6 @@ namespace DynamicSugarSharp_UnitTests {
     public class Expando_UnitTests {
 
         [TestMethod]
-        public void ToExpando_FromDynamicBag() {
-
-            var bag  = DynamicBag.Create();
-            bag.ID   = 1;
-            bag.Name = "Fred";
-            var o    = DS.Expando(bag);
-
-            Assert.AreEqual(1     , o.ID);
-            Assert.AreEqual("Fred", o.Name);
-        }
-        [TestMethod]
         public void ToExpando_FromOneAnonymousType() {
 
             var o = DS.Expando(

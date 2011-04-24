@@ -91,7 +91,7 @@ namespace DynamicSugar {
                     expandoAsDict.Add(def[i].ToString(), def[i+1]);
                     i++;
                 }
-                else{			
+                else{
                     foreach (KeyValuePair<string, object> k in ReflectionHelper.GetDictionary(def[i])) 
                         expandoAsDict.Add(k.Key, k.Value);
                 }

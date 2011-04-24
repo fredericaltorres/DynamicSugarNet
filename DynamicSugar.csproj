@@ -84,7 +84,6 @@
     </Compile>
     <Compile Include="DSSharp.Dictionary.cs" />
     <Compile Include="DSSharp.List.cs" />
-    <Compile Include="DynamicObjects\Experimental\DynamicTextFileManager.cs" />
     <Compile Include="ExtendedFormat.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.Dictionary.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.ListOfT.cs" />
@@ -92,7 +91,6 @@
     <Compile Include="ExtensionMethods\ExtensionMethods.General.cs" />
     <Compile Include="DSSharp.cs" />
     <Compile Include="Reflection\ReflectionHelper.cs" />
-    <Compile Include="DynamicObjects\DynamicBag.cs" />
     <Compile Include="Generated\FormatValueBasedOnType.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -125,7 +123,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DynamicObjects\Experimental\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

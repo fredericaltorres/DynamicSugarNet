@@ -51,14 +51,5 @@ namespace DynamicSugarSharp_UnitTests{
             var s       = "[{LastName}] Age={Age:000}".Format(eo as ExpandoObject);
             Assert.AreEqual("[TORRES] Age=045",s);
         }
-        [TestMethod]
-        public void String_Format__WithDynamicBag() {
-                 
-            var eo      = DynamicBag.Create();
-            eo.LastName = "TORRES";
-            eo.Age      = 45;
-            var s       = "[{LastName}] Age={Age:000}".Format(eo as DynamicBag);
-            Assert.AreEqual("[TORRES] Age=045",s);
-        }
     }
 }

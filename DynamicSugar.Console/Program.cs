@@ -16,8 +16,7 @@ namespace DynamicSugar.ConsoleApplication {
 
             Console.WriteLine("Dynamic Sugar # Library\r\n");
             Why();
-            Why2();
-            DynamicTextFile();
+            Why2();            
             In();
             FormatMethodSample();
             FormatMethodWithDictionarySample();
@@ -35,14 +34,7 @@ namespace DynamicSugar.ConsoleApplication {
             Pluck();
             Reject();
             Pause();
-        }       
-        static void DynamicTextFile(){
-
-            var path       = String.Format(@"{0}\DynamicTextFile", Environment.GetEnvironmentVariable("TEMP"));
-            dynamic dtfm   = new Experimental.DynamicTextFileManager(path, "txt");
-            dtfm.MyNewFile = "Hello World"; // Write "Hello World" in the file %TEMP%\DynamicTextFile\MyNewFile.txt
-            string s       = dtfm.MyNewFile; // Read the content of the file %TEMP%\DynamicTextFile\MyNewFile.txt
-        }
+        }          
         static void Why2(){
 
             // Regular Syntax
