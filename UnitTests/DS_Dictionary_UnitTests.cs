@@ -28,7 +28,7 @@ namespace DynamicSugarSharp_UnitTests {
             DS.DictionaryHelper.AssertDictionaryEqual(d1,d2);
         }
         [TestMethod]
-        public void ___DictionaryFormat_StaticMemberAndExtensionMethod() {
+        public void DictionaryFormat_StaticMemberAndExtensionMethod() {
             
             var expected = @"{ a:1, b:2, c:3 }";
             Assert.AreEqual(expected, DS.DictionaryHelper.Format(DS.Dictionary( new { a=1, b=2, c=3 } )));

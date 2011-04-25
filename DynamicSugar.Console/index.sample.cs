@@ -156,9 +156,12 @@ public static void Sample9(){
     var v11 = DS.List(1, 2, 3).Merge( DS.List(3, 4, 5) );
     var v12 = DS.List(1, 2, 3).Reject( e => e % 2 == 0 );
     var v13 = DS.List(1, 2, 3).Substract( DS.List( 3, 4, 5) );
-    var v14 = DS.List(1, 2, 3).Without( DS.List(2, 3) );
-    var v15 = DS.List(1, 2, 3).Without( 2, 3 );
+              DS.List(1, 2, 3).ToFile(@"C:\MyFile.txt");
+    var v15 = DS.ListHelper.FromFile<int>(@"C:\MyFile.txt");
+    var v16 = DS.List(1, 2, 3).Without( DS.List(2, 3) );
+    var v17 = DS.List(1, 2, 3).Without( 2, 3 );
 }
+    
     
 
 

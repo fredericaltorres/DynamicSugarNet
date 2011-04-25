@@ -8,7 +8,6 @@ using DynamicSugar;
 namespace DynamicSugarSharp_UnitTests {
 
     [TestClass]
-
     public class MultiValue_UnitTests {
     
         [TestMethod]

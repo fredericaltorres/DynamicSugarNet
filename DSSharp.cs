@@ -7,8 +7,6 @@ using System.Collections;
 using System.Dynamic;
 using System.Reflection;
 
-// http://lostintangent.com/post/4202489524/c-api-design-type-inference-named-parameters-and
-
 namespace DynamicSugar {
     /// <summary>
     /// Dynamic Sharp Exception
@@ -42,15 +40,22 @@ namespace DynamicSugar {
             return values.ToList<T>();            
         }      
         /// <summary>
-        /// Return in a dictionary all the properties and fields of an instance
+        /// Return in a dictionary of string, object all the properties and fields of an instance
         /// </summary>
         /// <param name="instance">The instance</param>
-        /// <param name="properties">Define the list of properties and field to return. All properties and fields are returned if this parameter is not defined</param>
+        /// <param name="properties">Define the list of property and field to return. All properties and fields are returned if this parameter is not defined</param>
         /// <returns></returns>
         public static Dictionary<string,object> Dictionary(object instance, List<string> properties = null) {
 
             return ReflectionHelper.GetDictionary(instance, properties);
         }
+        /// <summary>
+        /// Return in a dictionary of string, T all the properties and fields of an instance.
+        /// With the method the type of the dictionart value can be defined.
+        /// </summary>
+        /// <param name="instance">The instance</param>
+        /// <param name="properties">Define the list of property and field to return. All properties and fields are returned if this parameter is not defined</param>
+        /// <returns></returns>
         public static Dictionary<string, TValue> Dictionary<TValue>(object instance, List<string> properties = null) {
 
             Dictionary<string, TValue> d = new Dictionary<string,TValue>();
@@ -59,42 +64,27 @@ namespace DynamicSugar {
                 d.Add(k.Key, v);
             }
             return d;
-        }
-        /*
-        public static dynamic Dictionary {
-            get{
-                return MultiValues.Create(MultiValuesBehavior.Dictionary);
-            }
-        }
-        public static dynamic Values {
-            get{
-                return MultiValues.Create(MultiValuesBehavior.Bag);
-            }
-        }*/        
+        }           
         /// <summary>
-        /// Allow to create dynamic object that can be passed back and forth
-        /// between assembly. Using anonymous type cause problem because they
-        /// are generated as internal and cannot be pass to another assembly.
-        /// Expando object can.
-        /// http://stackoverflow.com/questions/2630370/c-4-0-dynamics
+        /// Initialize an Expando object with the properties of one or more instances passed 
+        /// as parameters. Then return the expando object.
         /// </summary>
-        /// <param name="def"></param>
-        /// <returns></returns>
-        public static dynamic Expando(params object [] def) {
+        /// <param name="instances"></param>
+        /// <returns>An expando object</returns>
+        public static dynamic Expando(params object [] instances) {
 
             dynamic expando   = new ExpandoObject();
             var expandoAsDict = expando as IDictionary<String, object>;
 
-            for (int i = 0; i < def.Length; i++){
+            for (int i = 0; i < instances.Length; i++){
 
-                if(def[i] is string){
-                    expandoAsDict.Add(def[i].ToString(), def[i+1]);
+                if(instances[i] is string){
+                    expandoAsDict.Add(instances[i].ToString(), instances[i+1]);
                     i++;
                 }
-                else{
-                    foreach (KeyValuePair<string, object> k in ReflectionHelper.GetDictionary(def[i])) 
-                        expandoAsDict.Add(k.Key, k.Value);
-                }
+                else
+                    foreach (KeyValuePair<string, object> k in ReflectionHelper.GetDictionary(instances[i])) 
+                        expandoAsDict.Add(k.Key, k.Value);                
             }
             return expando;
         }         

@@ -14,49 +14,13 @@ namespace DynamicSugarSharp_UnitTests {
     [TestClass]
     public class DS_StaticMethods_UnitTests {
 
-
         private string InitializeSettings(IDictionary<string, object> settings){
 
             return settings["UserName"].ToString();
         }
-
-        [TestMethod]
-        public void DS_DictionaryExs(){
-
-
-            var referenceDic = new Dictionary<string, string>() {
-                { "UserName", "RRabbit"  },
-                { "Domain"  , "ToonTown" },
-                { "UserID"  , "234873"   }
-            };            
-       
-            var DicOfString = DS.Dictionary<string>(
-                new {
-                    UserName = "RRabbit" ,
-                    Domain   = "ToonTown",
-                    UserID   = 234873
-                }
-            );
-            // HERE
-        }
-
         [TestMethod]
         public void DS_Dictionary(){
-            
-            // Regular syntax
-            InitializeSettings( new Dictionary<string, object>() {
-                { "UserName", "RRabbit"  },
-                { "Domain"  , "ToonTown" },
-                { "UserID"  , 234873     }
-            });            
-            // Dynamic Sugar syntaxes
-            InitializeSettings( DS.Dictionary( 
-                new {
-                    UserName = "RRabbit" ,
-                    Domain   = "ToonTown",
-                    UserID   = 234873
-                }
-            ));
+
             Assert.AreEqual("RRabbit",
                 InitializeSettings( DS.Dictionary(
                         new {
@@ -67,8 +31,6 @@ namespace DynamicSugarSharp_UnitTests {
                 ))
             );                             
         }
-
-        
         [TestMethod]
         public void DS_Values(){
 

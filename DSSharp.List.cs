@@ -7,47 +7,12 @@ using System.Collections;
 using System.Dynamic;
 using System.Reflection;
 
-
-//http://lostintangent.com/post/4202489524/c-api-design-type-inference-named-parameters-and
-
 namespace DynamicSugar {
     
     /// <summary>
-    /// Dynamic Sharp Helper Class
+    /// Dynamic Sharp Helper Class, dedicated methods to work with list
     /// </summary>
     public  static partial class DS {
-
-        public static class Resources {
-             /// <summary>
-            /// Return the fully qualified name of the resource file
-            /// </summary>
-            /// <param name="resourceFileName">File name of the resource</param>
-            /// <returns></returns>
-            private static string GetResourceFullName(string resourceFileName, Assembly assembly ) {
-        
-                foreach(var resource in assembly.GetManifestResourceNames())
-                    if(resource.EndsWith("."+resourceFileName))
-                        return resource;
-
-                throw new System.ApplicationException(String.Format("Resource '{0}' not find in assembly '{1}'", resourceFileName, Assembly.GetExecutingAssembly().FullName));
-            }
-            /// <summary>
-            /// Return the content of a text file embed as a resource.
-            /// The function takes care of finding the fully qualify name, in the current
-            /// assembly.
-            /// </summary>
-            /// <param name="resourceFileName">The file name of the resource</param>
-            /// <returns></returns>
-            public static string GetTextResource(string resourceFileName, Assembly assembly) {
-
-                var resourceFullName = GetResourceFullName(resourceFileName, assembly);
-                    
-                using (var _textStreamReader = new StreamReader(assembly.GetManifestResourceStream(resourceFullName))) {
-
-                    return _textStreamReader.ReadToEnd();
-                }
-            }            
-        }
 
         public static class ListHelper {
 
@@ -73,7 +38,7 @@ namespace DynamicSugar {
             /// </summary>
             /// <param name="fileName">The filename to load</param>
             /// <returns>A List Of String</returns>
-            private static List<string> FromFileAsListOfString(string fileName) {
+            private static List<string> __FromFileAsListOfString(string fileName) {
 
                 List<string> l = new List<string>();
 
@@ -163,15 +128,12 @@ namespace DynamicSugar {
             /// <returns></returns>
             public static List<T> FromFile<T>(string fileName) {
 
-                var l = new List<T>();
-                          
-                List<string> ll = FromFileAsListOfString(fileName);
-            
-                foreach(var s in ll){
+                var l           = new List<T>();                          
+                List<string> ll = __FromFileAsListOfString(fileName);            
 
-                    T v = (T)Convert.ChangeType(s, typeof(T));
-                    l.Add(v);
-                }            
+                foreach(var s in ll)
+                    l.Add((T)Convert.ChangeType(s, typeof(T)));                
+
                 return l;
             }
             /// <summary>
@@ -185,10 +147,10 @@ namespace DynamicSugar {
             /// <returns></returns>
             public static List<T0> Pluck<T0, T1>(List<T1> l, string propertyOrFunction) {
 
-                List<T0> l1 = new List<T0>();
-
+                List<T0> l1   = new List<T0>();
                 bool isMethod = propertyOrFunction.EndsWith("()");
-                if(isMethod) propertyOrFunction = propertyOrFunction.Substring(0, propertyOrFunction.Length-2);
+                if(isMethod) 
+                    propertyOrFunction = propertyOrFunction.Substring(0, propertyOrFunction.Length-2);
 
                 foreach(var i in l){
                     try{
@@ -226,6 +188,7 @@ namespace DynamicSugar {
             /// <param name="l"></param>
             /// <returns></returns>
             public static T First<T>(List<T> l) {
+
                 if(l.Count>0)
                     return l[0];
                 else
@@ -238,6 +201,7 @@ namespace DynamicSugar {
             /// <param name="l"></param>
             /// <returns></returns>
             public static T Last<T>(List<T> l) {
+
                 if(l.Count>0)
                     return l[l.Count-1];
                 else
@@ -259,11 +223,14 @@ namespace DynamicSugar {
                     foreach (var e in l1) 
                         lr.Add(e);
                     foreach (var e in l2) 
-                        if(!lr.Contains(e)) lr.Add(e);
+                        if(!lr.Contains(e)) 
+                            lr.Add(e);
                 }
                 else{
-                    foreach (var e in l1) lr.Add(e);
-                    foreach (var e in l2) lr.Add(e);
+                    foreach (var e in l1) 
+                        lr.Add(e);
+                    foreach (var e in l2) 
+                        lr.Add(e);
                 }            
                 return lr;
             }   
@@ -277,10 +244,9 @@ namespace DynamicSugar {
 
                 T v = default(T);
 
-                foreach (var e in l) {
-
+                foreach (var e in l)
                     v = f(e, v);
-                }
+                
                 return v;
             }    
             /// <summary>

@@ -79,9 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\__Version.cs">
-      <Link>__Version.cs</Link>
-    </Compile>
+    <Compile Include="DSSharp.Resources.cs" />
     <Compile Include="DSSharp.Dictionary.cs" />
     <Compile Include="DSSharp.List.cs" />
     <Compile Include="ExtendedFormat.cs" />
@@ -97,18 +95,18 @@
       <DependentUpon>FormatValueBasedOnType.tt</DependentUpon>
     </Compile>
     <Compile Include="DynamicObjects\MultiValue.cs" />
+    <Compile Include="__Version.cs" />
     <None Include="Readme.markdown" />
     <None Include="TODO.markdown">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Txt\CSharp.Info.mkd">
-      <SubType>Designer</SubType>
-    </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Txt\CSharp.Info.markdown" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Txt\License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -123,9 +121,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DynamicObjects\Experimental\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,6 +1,6 @@
 ﻿/*
  * DO NOT CHANGE THIS FILE.
- * This file was generated.
+ * THIS FILE WAS GENERATED.
  */
 using System;
 using System.Collections.Generic;

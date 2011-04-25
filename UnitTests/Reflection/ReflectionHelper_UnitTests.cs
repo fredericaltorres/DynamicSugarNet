@@ -31,10 +31,10 @@ namespace DynamicSugarSharp_UnitTests {
             return dic;
         }
         [TestMethod]
-        public void ___GetLocals() {
+        public void GetLocals() {
 
             var dic = MyMethod(1, 2.0, "A");
-            
+
             Assert.AreEqual(@"{ i:1, d:2, s:""A"" }", dic.Format());
             Assert.AreEqual(1  , dic["i"]);
             Assert.AreEqual(2.0, dic["d"]);
