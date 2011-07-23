@@ -72,6 +72,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -97,9 +98,6 @@
     <Compile Include="DynamicObjects\MultiValue.cs" />
     <Compile Include="__Version.cs" />
     <None Include="Readme.markdown" />
-    <None Include="TODO.markdown">
-      <SubType>Designer</SubType>
-    </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Txt\CSharp.Info.markdown" />
   </ItemGroup>

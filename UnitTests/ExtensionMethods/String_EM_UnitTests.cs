@@ -8,10 +8,19 @@ using System.Dynamic;
 
 namespace DynamicSugarSharp_UnitTests {
 
-    //TODO:Try extension method to List<T>
-
     [TestClass]
     public class String_EM_UnitTests {
+
+        [TestMethod]
+        public void ___IfNullOrEmpty() {
+
+            string s = null;
+            Assert.AreEqual("default", s.IfNullOrEmpty("default"));
+            s = "";
+            Assert.AreEqual("default", s.IfNullOrEmpty("default"));
+            s = "A";
+            Assert.AreEqual("A", s.IfNullOrEmpty("default"));            
+        }
 
         [TestMethod]
         public void IsNullOrEmpty() {

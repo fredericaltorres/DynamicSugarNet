@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSugar.UnitTests", "U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSugar.Console", "DynamicSugar.Console\DynamicSugar.Console.csproj", "{F95E8A2F-4FB6-4450-8561-99E2063106F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "..\Compiler\Compiler.csproj", "{C058DDFF-F44F-40B7-A917-6752DAE72D52}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = DynamicSugar.vsmdi
@@ -60,6 +62,16 @@ Global
 		{F95E8A2F-4FB6-4450-8561-99E2063106F6}.Release|Mixed Platforms.Build.0 = Release|x86
 		{F95E8A2F-4FB6-4450-8561-99E2063106F6}.Release|x86.ActiveCfg = Release|x86
 		{F95E8A2F-4FB6-4450-8561-99E2063106F6}.Release|x86.Build.0 = Release|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Debug|x86.ActiveCfg = Debug|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Debug|x86.Build.0 = Debug|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Release|Any CPU.ActiveCfg = Release|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Release|Mixed Platforms.Build.0 = Release|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Release|x86.ActiveCfg = Release|x86
+		{C058DDFF-F44F-40B7-A917-6752DAE72D52}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

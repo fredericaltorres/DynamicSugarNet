@@ -37,6 +37,13 @@ To download the library in your project enter the following command in the Packa
 
 	Date        Version Features/Bug Fixes
 	--------------------------------------------------------------------
+	2011-07-23  0.1.20  Add methods
+                            SaveBinaryResourceAsFiles
+                            SaveBinaryResourceAsFile
+                            GetBitmapResource
+                            GetBinaryResource
+                        to namespace DynamicSugar.DS.Resources
+
 	2011-04-24  0.1.10  Clean source code
 	2011-04-20  0.1.8   First version on GitHub
 	2011-04-17  0.1.7   A lot of new features

@@ -9,6 +9,36 @@ using System.Text.RegularExpressions;
 namespace DynamicSugar {
 
     public static class ExtensionMethods_Dictionary {
+
+        public static bool Include<K, V>(this IDictionary<K, V> d, object anonymousType) {
+
+            if (anonymousType is IDictionary<K, V>)
+                return d.Include((IDictionary<K, V>)anonymousType);            
+            else 
+                return d.Include(DS.Dictionary(anonymousType));
+        }
+        public static bool Include<K, V>(this IDictionary<K, V> d, IDictionary<K, V> includedDictionary)
+        {
+            foreach (var k in includedDictionary.Keys)
+                if (d.ContainsKey(k))
+                {
+                    if (!d[k].Equals(includedDictionary[k]))
+                        return false;
+                }
+                else return false;
+            return true;
+        }
+        public static bool Include<K, V>(this IDictionary<K, V> d, params K[] listOfKeys) {
+
+            return d.Include(listOfKeys.ToList());
+        }
+        public static bool Include<K, V>(this IDictionary<K, V> d, List<K> listOfKeys)
+        {
+            foreach (var k in listOfKeys)
+                if (!d.ContainsKey(k))
+                    return false;
+            return true;
+        }
         /// <summary>
         /// Clone a IDictionary Of K,V
         /// </summary>

@@ -87,6 +87,17 @@ namespace DynamicSugar {
             return string.Join(s, values.ToArray());
         }
         /// <summary>
+        /// Return the value of the string <paramref name="s"/> if not null
+        /// or empty else return the default value.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static string IfNullOrEmpty(this string s, string defaultValue)
+        {
+            return string.IsNullOrEmpty(s) ? defaultValue : s;
+        }
+        /// <summary>
         /// Indicates whether the specified string is null or an System.String.Empty
         /// string.
         /// </summary>

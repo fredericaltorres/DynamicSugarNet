@@ -192,6 +192,7 @@ public static void Sample12() {
     var s1 = "ABCD";
     var s2 = s1.Reverse();
     var s3 = ";".Join(DS.List(1, 2, 3));
+    var s4 = s2.IfNullOrEmpty("default");
     
     if(s1.IsNullOrEmpty()){
 
@@ -213,11 +214,15 @@ public static void Sample13() {
 
     var stones       = DS.Dictionary<int>( new { Mick=1943, Keith=1943, Brian=1942, Bill=1936,  Charlie=1941 } );
     var allTogether  = beatles.Add(stones);
-
     var noStones     = allTogether.Substract(stones);
+
+    var b1           = beatles.Include(beatles);
+    var b2           = beatles.Include("Paul");
+    var b3           = beatles.Include( new { Paul=1942, John=1940 } );
 }
 
-public static void MyFunction2(int i, string s, DateTime d) {
+
+    public static void MyFunction2(int i, string s, DateTime d) {
 
     var parameters = ReflectionHelper.GetLocals(i, s, d);
     var v1 = ReflectionHelper.GetLocals(i, s, d).Format(); // { i:1, s:"A", d:"4/21/2011 10:23:13 PM" }

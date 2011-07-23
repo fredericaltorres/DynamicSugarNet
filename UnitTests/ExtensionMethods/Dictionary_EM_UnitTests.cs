@@ -14,6 +14,70 @@ namespace DynamicSugarSharp_UnitTests {
     public class Dictionary_EM_UnitTests {
 
         [TestMethod]
+        public void Include_AnonymousType()
+        {
+            var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3, d = 4, e = 5 });
+            Assert.IsTrue(dic1.Include(dic1));
+            Assert.IsTrue(dic1.Include(new { a = 1, b = 2, }));
+            Assert.IsFalse(dic1.Include(new { a = 1, b = 2, c = 33 }));
+            Assert.IsFalse(dic1.Include(new { a = 1, b = 2, d = 3 }));
+        }
+        [TestMethod]
+        public void Include_Dictionary()
+        {
+            var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3, d = 4, e = 5 });
+            Assert.IsTrue(dic1.Include(dic1));
+            Assert.IsTrue(dic1.Include(DS.Dictionary(new { a = 1, b = 2, })));
+            Assert.IsFalse(dic1.Include(DS.Dictionary(new { a = 1, b = 2, c=33})));
+            Assert.IsFalse(dic1.Include(DS.Dictionary(new { a = 1, b = 2, d =3 })));            
+        }
+        [TestMethod]
+        public void Include_List()
+        {
+            var dic1 = DS.Dictionary( new { a = 1, b = 2, c = 3, d = 4, e = 5 } );
+            Assert.IsTrue(dic1.Include(DS.List("a", "b", "c")));
+            Assert.IsTrue(dic1.Include("a", "b", "c"));
+            Assert.IsFalse(dic1.Include(DS.List("a", "b", "c", "dd")));
+            Assert.IsFalse(dic1.Include("a", "b", "c", "dd"));
+        }
+        [TestMethod]
+        public void SystemWebRoutingRouteValueDictionary_Dictionary()
+        {
+            var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3 });
+            var dic2 = DS.Dictionary(new Dictionary<string, object>() { { "a", 1 }, { "b", 2 }, { "c", 3 } } );
+            dynamic dic3 = new ExpandoObject();
+            dic3.a = 1;
+            dic3.b = 2;
+            dic3.c = 3;
+            
+            var dic4 = new System.Web.Routing.RouteValueDictionary(new { a = 1, b = 2, c = 3 });
+            DS.DictionaryHelper.AssertDictionaryEqual(dic1, dic4);
+
+            dic4 = new System.Web.Routing.RouteValueDictionary(new Dictionary<string, object>() { { "a", 1 }, { "b", 2 }, { "c", 3 } });
+            DS.DictionaryHelper.AssertDictionaryEqual(dic1, dic4);
+
+            dic4 = new System.Web.Routing.RouteValueDictionary(dic3);
+            DS.DictionaryHelper.AssertDictionaryEqual(dic1, dic4);
+
+            dic4 = new System.Web.Routing.RouteValueDictionary(TestDataInstanceManager.TestPersonInstance);
+         
+        }
+        [TestMethod]
+        public void Dictionary_Argument_AnonymousType_Dictionary_ExpandoObject()
+        {
+            var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3 });
+            var dic2 = DS.Dictionary(
+                new Dictionary<string, object>() { { "a",1 },{ "b",2 },{ "c",3 } } 
+            );
+            DS.DictionaryHelper.AssertDictionaryEqual(dic1, dic2);
+
+            dynamic dic3 = new ExpandoObject();
+            dic3.a = 1;
+            dic3.b = 2;
+            dic3.c = 3;
+            DS.DictionaryHelper.AssertDictionaryEqual(dic1, dic3);
+        }
+        [TestMethod]
         public void Substract_Dictionary() {
 
             var dic1        = DS.Dictionary( new { a=1, b=2, c=3, d=4, e=5  } );
@@ -70,8 +134,16 @@ namespace DynamicSugarSharp_UnitTests {
         public void Max_Int() {
 
             Dictionary<string, int> dic = DS.Dictionary<int>( new { a=1, b=2, c=3, d=4 } );
+            Assert.AreEqual("d", dic.Max());
             Assert.AreEqual("d", dic.Max( DS.List("a","b","c","d")));
             Assert.AreEqual("b", dic.Max( DS.List("a","b")));
+        }
+        [TestMethod]
+        public void Min_Int()
+        {
+            Dictionary<string, int> dic = DS.Dictionary<int>(new { a = 1, b = 2, c = 3, d = 4 });
+            Assert.AreEqual("a", dic.Min());
+            Assert.AreEqual("b", dic.Min(DS.List("b", "c", "d")));            
         }
         [TestMethod]
         public void Max_String() {
@@ -79,6 +151,6 @@ namespace DynamicSugarSharp_UnitTests {
             Dictionary<string, int> dic = DS.Dictionary<int>( new { a="1", b="2", c="3", d="4" } );
             Assert.AreEqual("d", dic.Max( DS.List("a","b","c","d")));
             Assert.AreEqual("b", dic.Max( DS.List("a","b")));
-        }        
+        }
     }
 }
