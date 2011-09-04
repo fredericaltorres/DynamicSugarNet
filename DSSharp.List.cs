@@ -71,7 +71,7 @@ namespace DynamicSugar {
 
                 var t = b.ToString();
                 if(t.EndsWith(Environment.NewLine))
-                    t = t.Substring(0, t.Length-2);
+                    t = t.Substring(0, t.Length-System.Environment.NewLine.Length);
 
                 if(System.IO.File.Exists(fileName))
                     System.IO.File.AppendAllText(fileName, t);
@@ -150,7 +150,7 @@ namespace DynamicSugar {
                 List<T0> l1   = new List<T0>();
                 bool isMethod = propertyOrFunction.EndsWith("()");
                 if(isMethod) 
-                    propertyOrFunction = propertyOrFunction.Substring(0, propertyOrFunction.Length-2);
+                    propertyOrFunction = propertyOrFunction.Substring(0, propertyOrFunction.Length-System.Environment.NewLine.Length);
 
                 foreach(var i in l){
                     try{

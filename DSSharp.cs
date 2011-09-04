@@ -19,6 +19,33 @@ namespace DynamicSugar {
     /// Dynamic Sharp Helper Class
     /// </summary>
     public static partial class DS {
+
+        #if !MONOTOUCH
+
+        /// <summary>
+        /// Initialize an Expando object with the properties of one or more instances passed 
+        /// as parameters. Then return the expando object.
+        /// </summary>
+        /// <param name="instances"></param>
+        /// <returns>An expando object</returns>
+        public static dynamic Expando(params object [] instances) {
+
+            dynamic expando   = new ExpandoObject();
+            var expandoAsDict = expando as IDictionary<String, object>;
+
+            for (int i = 0; i < instances.Length; i++){
+
+                if(instances[i] is string){
+                    expandoAsDict.Add(instances[i].ToString(), instances[i+1]);
+                    i++;
+                }
+                else
+                    foreach (KeyValuePair<string, object> k in ReflectionHelper.GetDictionary(instances[i])) 
+                        expandoAsDict.Add(k.Key, k.Value);                
+            }
+            return expando;
+        }       
+
         /// <summary>
         /// Wrap an anonynous type into a MultiValues object to be returned
         /// as a function result.
@@ -29,6 +56,7 @@ namespace DynamicSugar {
 
             return DynamicSugar.MultiValues.Values(anonymousType);
         }
+        #endif
         /// <summary>
         /// Convert the parameters passed to this function into a List Of T
         /// </summary>
@@ -64,30 +92,7 @@ namespace DynamicSugar {
                 d.Add(k.Key, v);
             }
             return d;
-        }           
-        /// <summary>
-        /// Initialize an Expando object with the properties of one or more instances passed 
-        /// as parameters. Then return the expando object.
-        /// </summary>
-        /// <param name="instances"></param>
-        /// <returns>An expando object</returns>
-        public static dynamic Expando(params object [] instances) {
-
-            dynamic expando   = new ExpandoObject();
-            var expandoAsDict = expando as IDictionary<String, object>;
-
-            for (int i = 0; i < instances.Length; i++){
-
-                if(instances[i] is string){
-                    expandoAsDict.Add(instances[i].ToString(), instances[i+1]);
-                    i++;
-                }
-                else
-                    foreach (KeyValuePair<string, object> k in ReflectionHelper.GetDictionary(instances[i])) 
-                        expandoAsDict.Add(k.Key, k.Value);                
-            }
-            return expando;
-        }         
+        }                    
         /// <summary>
         /// Return a list of integer from 0 to max-1
         /// </summary>

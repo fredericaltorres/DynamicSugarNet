@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Dynamic;
 
+#if !MONOTOUCH
+
 namespace DynamicSugar {
 
     /// <summary>
@@ -273,3 +275,4 @@ namespace DynamicSugar {
 
     }   
 }
+#endif

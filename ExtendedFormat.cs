@@ -329,7 +329,7 @@ namespace DynamicSugar {
                 string key   = ExtendedFormat.FormatValue(kv.Key);
                 b.AppendFormat("{0}:{1}, ", key, value);
             }
-            b.Remove(b.Length-2,2); // Remove the coma and the space
+            b.Remove(b.Length-2,System.Environment.NewLine.Length); // Remove the coma and the space
             b.Append("}");
             return b.ToString();
         }
