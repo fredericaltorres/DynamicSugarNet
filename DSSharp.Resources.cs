@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Collections;
+#if !MONOTOUCH
 using System.Dynamic;
+#endif
 using System.Reflection;
 using System.Drawing;
 
@@ -60,6 +62,7 @@ namespace DynamicSugar {
                 stream.Read(data, 0, (int)stream.Length);
                 return data;
             }
+#if !MONOTOUCH			
             /// <summary>
             /// Return a image embed as a resource.
             /// The function takes care of finding the fully qualify name, in the current
@@ -80,6 +83,7 @@ namespace DynamicSugar {
                 var img = System.Drawing.Image.FromStream(ms);
                 return img as System.Drawing.Bitmap;
             }
+#endif			
             /// <summary>
             /// Save a buffer of byte into a file
             /// </summary>
@@ -98,6 +102,7 @@ namespace DynamicSugar {
                     return false;
                 }
             }
+
             /// <summary>
             /// Save resources as a local files
             /// </summary>

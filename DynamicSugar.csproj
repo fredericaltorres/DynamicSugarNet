@@ -97,7 +97,9 @@
     </Compile>
     <Compile Include="DynamicObjects\MultiValue.cs" />
     <Compile Include="__Version.cs" />
-    <None Include="Readme.markdown" />
+    <None Include="Readme.markdown">
+      <SubType>Designer</SubType>
+    </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Txt\CSharp.Info.markdown" />
   </ItemGroup>

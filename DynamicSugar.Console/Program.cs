@@ -250,7 +250,7 @@ namespace DynamicSugar.ConsoleApplication {
 
             DS.ListHelper.AssertListEqual(l1, l2);            
         }
-        private static void Include() {
+         private static void Include() {
 
             var l1 = DS.Range(10);
 
