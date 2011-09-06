@@ -60,9 +60,9 @@ namespace DynamicSugar {
             /// <param name="fileName">The file name</param>
             /// <param name="create">If true create the file, else append to the file if the file already exist</param>
             public static void ToFile<T>(List<T> l, string fileName, bool create = false) {
-
+                
                 System.Text.StringBuilder b = new StringBuilder(1024);
-
+                
                 foreach(var s in l){
 
                     b.Append(s.ToString()).AppendLine();

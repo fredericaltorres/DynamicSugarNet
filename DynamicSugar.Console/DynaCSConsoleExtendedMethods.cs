@@ -14,7 +14,7 @@ namespace DynamicSugar.ConsoleApplication {
             return DynamicSugar.ExtendedFormat.Format(person, format, args);
         }
         public static IDictionary<string,object> Dict(this Person person) {
-
+            
             return DynamicSugar.ReflectionHelper.GetDictionary(person);
         }
     }

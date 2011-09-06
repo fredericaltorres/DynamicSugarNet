@@ -242,7 +242,8 @@ namespace DynamicSugar.ConsoleApplication {
         private static void ToFile_FromFile() {
 
             var l1        = DS.Range(10);
-            var fileName  = String.Format(@"{0}\DSSharpLibrary_UnitTests.txt", Environment.GetEnvironmentVariable("TEMP"));
+            //var fileName  = String.Format(@"{0}\DSSharpLibrary_UnitTests.txt", Environment.GetEnvironmentVariable("TEMP"));
+            var fileName  = String.Format(@"{0}\DSSharpLibrary_UnitTests.txt", System.IO.Path.GetTempPath());
             l1.ToFile(fileName, true);
 
             var l2        = DS.ListHelper.FromFile<int>(fileName);
