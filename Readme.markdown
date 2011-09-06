@@ -3,9 +3,13 @@
 
 # What is DynamicSugar.Net?
 
-The ***Dynamic Sugar Library*** provides methods and classes inspired 
-by the dynamic languages Python and JavaScript to write shorter and more 
+The ***Dynamic Sugar Library*** provides methods and classes inspired
+by the dynamic languages Python and JavaScript to write shorter and more
 readable source code in C# 4.0.
+
+The code has been modified to also run on MacOS and iOS using MonoTouch.
+The project DynamicSugar.MonoTouch.csproj, will compile for iOS, but all features
+using .NET 4.0 class DynamicObject are excluded.
 
 ## Web site
 - [www.DynamicSugar.net](http://www.DynamicSugar.net)
@@ -16,7 +20,7 @@ Copyright (c) 2011 Frederic Torres
 ## License
 You may use DynamicSugar.Net under the terms of the MIT License.
 
-##Contact 
+##Contact
 <fredericaltorres@gmail.com>
 
 ##Source Code: 
@@ -37,6 +41,7 @@ To download the library in your project enter the following command in the Packa
 
 	Date        Version Features/Bug Fixes
 	--------------------------------------------------------------------
+    2011-09-05  0.1.21  Support of MacOS and iOS. Just the begining.
 	2011-07-23  0.1.20  Add methods
                             SaveBinaryResourceAsFiles
                             SaveBinaryResourceAsFile
