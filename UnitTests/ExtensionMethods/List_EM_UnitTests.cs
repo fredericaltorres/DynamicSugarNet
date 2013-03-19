@@ -216,6 +216,11 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual("1234", s);
         }
         [TestMethod]
+        public void Reduce() {
+
+            Assert.AreEqual(10, DS.List(1, 2, 3, 4).Reduce((v, e) => v += e));
+        }
+        [TestMethod]
         public void ForEach_StandardNet() {
 
             int z = 0;

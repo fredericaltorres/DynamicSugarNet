@@ -65,6 +65,10 @@ namespace DynamicSugar {
 
             return DS.ListHelper.Inject(l, f);
         }
+        public static T Reduce<T>(this List<T> l, Func<T, T, T> f) {
+
+            return l.Inject(f);
+        }
         public static bool Identical<T>(this List<T> l1, List<T> l2) {
 
             return DS.ListHelper.Identical(l1, l2);

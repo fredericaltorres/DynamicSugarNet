@@ -17,8 +17,6 @@ namespace DynamicSugar {
                 l.Add(m.ToString());
             return l;
         }
-        
-   
         public static bool In<T>(this T value, params T[] values) {
         
             return values.Contains(value);
@@ -26,6 +24,10 @@ namespace DynamicSugar {
         public static bool In<T>(this T value, List<T> l2) {
         
             return l2.Contains(value);
+        }
+        public static bool In<T, V>(this T value,  Dictionary <T, V> dic) {
+
+            return dic.ContainsKey(value);
         }
     }
 }

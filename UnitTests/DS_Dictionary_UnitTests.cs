@@ -13,6 +13,13 @@ namespace DynamicSugarSharp_UnitTests {
     [TestClass]
     public class DS_Dictionary_UnitTests {
         [TestMethod]
+        public void Dictionary_In() {
+
+            var d1 = DS.Dictionary(new { a = 1, b = 2, c = 3 });
+            Assert.IsTrue("a".In(d1));
+            Assert.IsFalse("aaaa".In(d1));
+        }
+        [TestMethod]
         public void Dictionary_Identical() {
 
             var d1 = DS.Dictionary( new { a=1, b=2, c=3 } );
