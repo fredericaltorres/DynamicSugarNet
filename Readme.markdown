@@ -15,7 +15,7 @@ using .NET 4.0 class DynamicObject are excluded.
 - [www.DynamicSugar.net](http://www.DynamicSugar.net)
 
 ##Copyright
-Copyright (c) 2011 Frederic Torres
+Copyright (c) 2011, 2013 Frederic Torres
 
 ## License
 You may use DynamicSugar.Net under the terms of the MIT License.
