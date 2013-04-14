@@ -9,6 +9,16 @@ using System.Text.RegularExpressions;
 namespace DynamicSugar {
 
     public static class ExtensionMethods_Dictionary {
+      
+        public static string PreProcess<K, V>(this IDictionary<K, V> d, string template, params object[] args) {
+
+            var d2 = new Dictionary<string,object>();
+
+            foreach(var e in d)
+                d2.Add(e.Key.ToString(), e.Value);
+
+            return ExtendedFormat.Format(template, d2);
+        }
 
         public static bool Include<K, V>(this IDictionary<K, V> d, object anonymousType) {
 

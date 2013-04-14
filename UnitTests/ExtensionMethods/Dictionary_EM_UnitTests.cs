@@ -14,6 +14,12 @@ namespace DynamicSugarSharp_UnitTests {
     public class Dictionary_EM_UnitTests {
 
         [TestMethod]
+        public void ProcessTemplate()
+        {
+            var dic1 = DS.Dictionary(new { a = 1, b = 2, date = new DateTime(1964, 12, 11) });
+            Assert.AreEqual("a=1, b=002, date=1964-12-11", dic1.PreProcess("a={a}, b={b:000}, date={date:yyyy-MM-dd}"));
+        }
+        [TestMethod]
         public void Include_AnonymousType()
         {
             var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3, d = 4, e = 5 });
