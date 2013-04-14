@@ -24,8 +24,10 @@ namespace DynamicSugar {
 
             if (anonymousType is IDictionary<K, V>)
                 return d.Include((IDictionary<K, V>)anonymousType);            
-            else 
-                return d.Include(DS.Dictionary(anonymousType));
+            else {
+                var d1 = DS.Dictionary<V>(anonymousType);
+                return d.Include(d1);
+            }
         }
         public static bool Include<K, V>(this IDictionary<K, V> d, IDictionary<K, V> includedDictionary)
         {
@@ -71,7 +73,7 @@ namespace DynamicSugar {
         /// <param name="d"></param>
         /// <param name="entrieToRemove">Dictionary containing the entries to remove</param>
         /// <returns></returns>
-        public static IDictionary<K,V> Substract<K,V>(this IDictionary<K,V> d, IDictionary<K,V> entrieToRemove) {
+        public static IDictionary<K,V> Remove<K,V>(this IDictionary<K,V> d, IDictionary<K,V> entrieToRemove) {
 
             Dictionary<K,V> newD = new Dictionary<K,V>();
             foreach(var k in d.Keys)
@@ -79,7 +81,7 @@ namespace DynamicSugar {
                     newD.Add(k, d[k]);                
             return newD;
         }
-        public static IDictionary<K,V> Substract<K,V>(this IDictionary<K,V> d, List<K> keysToRemove) {
+        public static IDictionary<K,V> Remove<K,V>(this IDictionary<K,V> d, List<K> keysToRemove) {
 
             Dictionary<K,V> newD = new Dictionary<K,V>();
             foreach(var k in d.Keys)

@@ -12,12 +12,7 @@ public class samples {
 static void DoSomething(List<int> l){
 
 }
-static void main(string [] args) {
-        
-    DoSomething(new List<int>() { 1, 2, 3 });   // Regular C#
-        
-    DoSomething(DS.List( 1, 2, 3 ));            // Dynamic Sugar Syntax
-}                    
+                 
               
 static void Sample2(string [] args) {
 
@@ -28,7 +23,7 @@ if(Values.Contains(i))
     Console.WriteLine("in the list");            
 
 if(i.In(1,2,3))                             // Dynamic Sugar Syntax
-    Console.WriteLine("in the list");                    
+    Console.WriteLine("in the list");  
 
 }
 
@@ -44,6 +39,12 @@ void Sample3(){
 
     // Dynamic Sugar Syntax
     MyFunction( DS.Dictionary( new { Debug=true, Continent="North America" } ) ); 
+     
+    // In() method
+    var stones = DS.Dictionary<int>( new { Mick=1943, Keith=1943, Brian=1942, Bill=1936, Charlie=1941 } );
+    if("Mick".In(stones)) {
+
+    }     
 }
 
 void MyFunction( IDictionary<string, bool> d){
@@ -189,14 +190,23 @@ public void Sample11() {
 
 public static void Sample12() {
 
-    var s1 = "ABCD";
-    var s2 = s1.Reverse();
-    var s3 = ";".Join(DS.List(1, 2, 3));
-    var s4 = s2.IfNullOrEmpty("default");
+    Assert.AreEqual("DCBA", "ABCD".Reverse()); 
     
+    Assert.AreEqual("1;2;3", ";".Join(DS.List(1, 2, 3)));
+       
+    string s1 = null;
+    Assert.AreEqual("default", s1.IfNullOrEmpty("default"));
     if(s1.IsNullOrEmpty()){
 
     }
+
+    Assert.AreEqual("Lastname", "lastname".Capitalize());
+
+    Assert.AreEqual("1,2,3,", ",1,2,3,".RemoveFirstChar());
+    Assert.AreEqual("1,2,3,", ",1,2,3,".RemoveFirstChar(','));
+    Assert.AreEqual(",1,2,3", ",1,2,3,".RemoveLastChar());
+    Assert.AreEqual(",1,2,3", ",1,2,3,".RemoveLastChar(','));
+    Assert.AreEqual("1,2,3", ",1,2,3,".RemoveLastChar().RemoveFirstChar());
 }
 
 public static void Sample13() {
@@ -204,21 +214,31 @@ public static void Sample13() {
     var beatles      = DS.Dictionary<int>( new { Paul=1942, John=1940, Richard=1940, George=1943 } );
     var other        = beatles.Get("Pete", 1941); // Support a default value for non existing key
     
-    var younger1     = beatles.Max();
+    var younger1     = beatles.Max(); // Return the entry with the greatest value
     var younger2     = beatles.Max(DS.List("Paul", "John", "Richard"));
 
-    var older1       = beatles.Min();
+    var older1       = beatles.Min(); // Return the entry with the smallest value
     var older2       = beatles.Min(DS.List("Paul", "Richard", "George"));
 
     var newMusicians = beatles.Clone();
 
-    var stones       = DS.Dictionary<int>( new { Mick=1943, Keith=1943, Brian=1942, Bill=1936,  Charlie=1941 } );
+    // Add or remove entries to a dictionary
+    var stones       = DS.Dictionary<int>( new { Mick=1943, Keith=1943, Brian=1942, Bill=1936, Charlie=1941 } );
     var allTogether  = beatles.Add(stones);
-    var noStones     = allTogether.Substract(stones);
+    var noStones     = allTogether.Remove(stones);
 
+    // Determine if a dictionary contains a key, a dictionary or literal dictionary
     var b1           = beatles.Include(beatles);
     var b2           = beatles.Include("Paul");
     var b3           = beatles.Include( new { Paul=1942, John=1940 } );
+
+    // Process string template with the value of a dictionary
+    var InstallVar   = DS.Dictionary( new { SERVER="foo.bar.local", USER=@"bat\jshmoe", PASSWORD="abcd" } );
+    var batchCode    = InstallVar.PreProcess(@"msiexec.exe /i product.msi SERVER={SERVER} USER={USER} PASSWORD={PASSWORD}");
+
+    if("Mick".In(stones)) {
+
+    }
 }
 
 

@@ -33,7 +33,10 @@ namespace DynamicSugar.ConsoleApplication {
             First_Last_Rest();
             Pluck();
             Reject();
+            N.samples.Sample13();
+            N.samples.Sample12();
             Pause();
+
         }          
         static void Why2(){
 

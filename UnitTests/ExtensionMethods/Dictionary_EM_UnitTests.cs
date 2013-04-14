@@ -14,7 +14,7 @@ namespace DynamicSugarSharp_UnitTests {
     public class Dictionary_EM_UnitTests {
 
         [TestMethod]
-        public void ProcessTemplate()
+        public void PreProcess()
         {
             var dic1 = DS.Dictionary(new { a = 1, b = 2, date = new DateTime(1964, 12, 11) });
             Assert.AreEqual("a=1, b=002, date=1964-12-11", dic1.PreProcess("a={a}, b={b:000}, date={date:yyyy-MM-dd}"));
@@ -88,7 +88,7 @@ namespace DynamicSugarSharp_UnitTests {
 
             var dic1        = DS.Dictionary( new { a=1, b=2, c=3, d=4, e=5  } );
             var dic2        = DS.Dictionary( new { a=1, c=3, e=5 } );
-            var dic3        = dic1.Substract(dic2);
+            var dic3        = dic1.Remove(dic2);
             var expectedDic = DS.Dictionary( new { b=2, d=4, } );
             
             DS.DictionaryHelper.AssertDictionaryEqual(expectedDic, dic3);
@@ -97,7 +97,7 @@ namespace DynamicSugarSharp_UnitTests {
         public void Substract_list() {
 
             var dic1        = DS.Dictionary ( new { a=1, b=2, c=3, d=4, e=5 } );
-            var dic3        = dic1.Substract( DS.List("a","c","e") );
+            var dic3        = dic1.Remove( DS.List("a","c","e") );
             var expectedDic = DS.Dictionary ( new { b=2, d=4, } );            
 
             DS.DictionaryHelper.AssertDictionaryEqual(expectedDic, dic3);
