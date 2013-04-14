@@ -7,6 +7,7 @@ using System.Collections;
 
 #if !MONOTOUCH
 using System.Dynamic;
+using System.Globalization;
 #endif
 
 namespace DynamicSugar {
@@ -53,15 +54,78 @@ namespace DynamicSugar {
                     result = ""; // If the index goes over the limit of the string we return ""                
             }
             return result;
-        }      
+        }
+
+        /// <summary>
+        /// Capitalize the string
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="charToRemove">If defined only remove the first char if it is equal to charToRemove</param>
+        /// <returns></returns>
+        public static string Capitalize(this string s, CultureInfo cultureInfo = null)
+        {
+            if(s == null)
+                return null;
+
+            if(cultureInfo == null)
+                cultureInfo = new CultureInfo("en-US", false);
+
+            s        = s.ToLower(cultureInfo);
+            var t    = cultureInfo.TextInfo;
+            return s = t.ToTitleCase(s.ToLower(cultureInfo));
+        }       
+        /// <summary>
+        /// Remove the first char
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="charToRemove">If defined only remove the first char if it is equal to charToRemove</param>
+        /// <returns></returns>
+        public static string RemoveFirstChar(this string s, char charToRemove = '\0')
+        {
+            if(s == null)
+                return null;
+            if (charToRemove == '\0') {
+                if(s.Length > 0) {
+                    s = s.Substring(1);
+                }
+            }
+            else {
+                if(s.Length > 0 && s[0] == charToRemove) {
+                    s = s.Substring(1);
+                }
+            }
+            return s;
+        }       
+        /// <summary>
+        /// Remove the first char
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="charToRemove">If defined only remove the first char if it is equal to charToRemove</param>
+        /// <returns></returns>
+        public static string RemoveLastChar(this string s, char charToRemove = '\0')
+        {
+            if(s == null)
+                return null;
+            if (charToRemove == '\0') {
+                if(s.Length > 0) {
+                    s = s.Substring(0, s.Length-1);
+                }
+            }
+            else {
+                if(s.Length > 0 && s[s.Length-1] == charToRemove) {
+                    s = s.Substring(0, s.Length-1);
+                }
+            }
+            return s;
+        }       
         /// <summary>
         /// Return the string reversed.
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static string Reverse(this string s)
-        {
-	        char[] arr = s.ToCharArray();
+        public static string Reverse(this string s) {
+	     
+            char[] arr = s.ToCharArray();
 	        Array.Reverse(arr);
 	        return new string(arr);
         }                

@@ -92,6 +92,16 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.IsFalse(DS.List(1, 2, 3).IsNullOrEmpty());            
         }
 
+
+        [TestMethod]
+        public void Array_Integer() {
+
+            var l = DS.Array(1, 2, 3);
+            Assert.AreEqual(1, l[0]);
+            Assert.AreEqual(2, l[1]);
+            Assert.AreEqual(3, l[2]);
+        }
+
         [TestMethod]
         public void List_Integer() {
 

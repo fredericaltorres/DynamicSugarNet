@@ -70,6 +70,16 @@ namespace DynamicSugar {
             return values.ToList<T>();            
         }      
         /// <summary>
+        /// Convert the parameters passed to this function into an array Of T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="values"></param>
+        /// <returns></returns>       
+        public static T[] Array<T>(params T[] values) {
+
+            return values;       
+        }  
+        /// <summary>
         /// Return in a dictionary of string, object all the properties and fields of an instance
         /// </summary>
         /// <param name="instance">The instance</param>

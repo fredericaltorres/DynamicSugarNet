@@ -12,6 +12,41 @@ namespace DynamicSugarSharp_UnitTests {
     public class String_EM_UnitTests {
 
         [TestMethod]
+        public void Capitalize() {
+
+            Assert.AreEqual("Abcd", "abcd".Capitalize());
+            Assert.AreEqual("Abcd", "ABCD".Capitalize());
+            Assert.AreEqual("",     "".Capitalize());
+            Assert.AreEqual("!@#$",  "!@#$".Capitalize());
+            Assert.AreEqual(null,  ((string)null).Capitalize());
+        }
+
+        [TestMethod]
+        public void RemoveLastChar() {
+
+            string s = "ABCD";
+            Assert.AreEqual("ABC", s.RemoveLastChar());
+            Assert.AreEqual("ABC", s.RemoveLastChar('D'));
+            Assert.AreEqual("ABCD", s.RemoveLastChar('d'));
+
+            s = null;
+            Assert.AreEqual(null, s.RemoveLastChar());
+            Assert.AreEqual(null, s.RemoveLastChar('a'));
+        }
+        [TestMethod]
+        public void RemoveFirstChar() {
+
+            string s = "ABCD";
+            Assert.AreEqual("BCD", s.RemoveFirstChar());
+            Assert.AreEqual("BCD", s.RemoveFirstChar('A'));
+            Assert.AreEqual("ABCD", s.RemoveFirstChar('a'));
+
+            s = null;
+            Assert.AreEqual(null, s.RemoveFirstChar());
+            Assert.AreEqual(null, s.RemoveFirstChar('a'));
+        }
+
+        [TestMethod]
         public void ___IfNullOrEmpty() {
 
             string s = null;
