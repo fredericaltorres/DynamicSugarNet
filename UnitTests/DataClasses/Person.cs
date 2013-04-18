@@ -5,6 +5,11 @@ using System.Text;
 
 namespace DynamicSugarSharp_UnitTests {
 
+    public class Address {
+        public string Street;
+        public string ZipCode;
+        public string State;
+    }
     /// <summary>
     /// A test class
     /// </summary>
@@ -15,6 +20,8 @@ namespace DynamicSugarSharp_UnitTests {
         public string FirstName  { get; set; }
         public int Age           { get; set; }
         public DateTime BirthDay { get; set; }
+
+        public Address Address = new Address();
 
         public List<string> DrivingLicenses = new List<string>();
 

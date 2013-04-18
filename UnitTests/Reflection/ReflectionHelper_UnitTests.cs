@@ -186,5 +186,14 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(null, DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "lastname"));
             Assert.AreEqual(null, DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "NotAvailableProperty"));
         }
+        [TestMethod]
+        public void GetPropertyForObject() {
+
+            var streetValue  = "41 Lakewood road";
+            var p            = TestDataInstanceManager.TestPersonInstance;
+            p.Address.Street = streetValue;
+            dynamic address  = DynamicSugar.ReflectionHelper.GetProperty(p, "Address");
+            Assert.AreEqual(streetValue, address.Street);
+        }
     }
 }
