@@ -24,6 +24,20 @@ namespace DynamicSugar {
 
         public static class Assert {
 
+            /// <summary>
+            /// Assert that 2 List Of T are equal
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="l1"></param>
+            /// <param name="l2"></param>
+            public static void AreEqual<T>(List<T> l1, List<T> l2) {
+
+                if (!DS.ListHelper.Identical(l1, l2)) {
+
+                    throw new AssertFailedException(String.Format("List are not equal L1:'{0}', L2:'{1}'", DS.ListHelper.Format(l1), DS.ListHelper.Format(l2)));
+                }
+            }
+
             public static void ValueTypeProperties(object poco, Dictionary<string, object> propertyNameValues) {
 
                 foreach(var k in propertyNameValues) {

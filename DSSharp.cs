@@ -60,6 +60,36 @@ namespace DynamicSugar {
         }
         #endif
         /// <summary>
+        /// Convert the parameters passed to this function into a Queue Of T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static Queue<T> Queue<T>(params T[] values) {
+
+            var q = new Queue<T>();
+
+            foreach(var v in values)
+                q.Enqueue(v);
+
+            return q;          
+        }  
+        /// <summary>
+        /// Convert the parameters passed to this function into a Queue Of T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static Stack<T> Stack<T>(params T[] values) {
+
+            var q = new Stack<T>();
+
+            foreach(var v in values)
+                q.Push(v);
+
+            return q;          
+        }  
+        /// <summary>
         /// Convert the parameters passed to this function into a List Of T
         /// </summary>
         /// <typeparam name="T"></typeparam>

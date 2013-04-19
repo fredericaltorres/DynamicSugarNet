@@ -61,11 +61,12 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Range_100_Start10_Step10() {
             
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(10,20,30,40,50,60,70,80,90), 
                 DS.Range(10,100,10)
             );
         }
+
 
         [TestMethod]
         public void List_OfDifferentTypes() {
@@ -100,6 +101,25 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(1, l[0]);
             Assert.AreEqual(2, l[1]);
             Assert.AreEqual(3, l[2]);
+        }
+
+
+        [TestMethod]
+        public void Queue_Integer() {
+
+            var l = DS.Queue(1, 2, 3);
+            Assert.AreEqual(1, l.Dequeue());
+            Assert.AreEqual(2, l.Dequeue());
+            Assert.AreEqual(3, l.Dequeue());
+        }
+
+         [TestMethod]
+        public void Stack_Integer() {
+
+            var l = DS.Stack(1, 2, 3);
+            Assert.AreEqual(3, l.Pop());
+            Assert.AreEqual(2, l.Pop());
+            Assert.AreEqual(1, l.Pop());
         }
 
         [TestMethod]
@@ -140,7 +160,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Map_WithLambdaExpression() {
                         
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(1, 4, 9), 
                 DS.List(1, 2, 3).Map(e => e * e)
             );
@@ -149,7 +169,7 @@ namespace DynamicSugarSharp_UnitTests {
         public void Map_WithLambdaExpression_WithLocalVariable() {
 
             int MyConst = 2;
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(2, 4, 6), 
                 DS.List(1, 2, 3).Map(e => e * MyConst)
             );                  
@@ -157,7 +177,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Map_WithBlockStatment() {
             
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(2, 4, 6), 
                 DS.List(1, 2, 3).Map(e => { return e * 2; })
             );
@@ -166,7 +186,7 @@ namespace DynamicSugarSharp_UnitTests {
         public void Map_WithLambdaExpression_String() {
 
             string MyConst = "Hi ";
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List("Hi fred", "Hi joe", "Hi diane"), 
                 DS.List("fred", "joe", "diane").Map(e => MyConst + e)
             );
@@ -184,7 +204,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Filter() {
                 
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(0, 2, 4, 6, 8), 
                 DS.List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9).Filter( e => e % 2 == 0)
             );
@@ -192,7 +212,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Reject() {
                         
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(1,3,5,7,9),
                 DS.Range(10).Reject( e => e % 2 == 0)
             );
@@ -202,12 +222,12 @@ namespace DynamicSugarSharp_UnitTests {
 
             var l = DS.List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9).Select(e => e % 2 == 0).ToList();
             var r = DS.List(true, false, true, false, true, false, true, false, true, false);
-            DS.ListHelper.AssertListEqual(r, l);
+            DS.Assert.AreEqual(r, l);
         }
         [TestMethod]
         public void Filter_Decimal() {
 
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(0M, 2M, 4M, 6M, 8M), 
                 DS.List(0M, 1M, 2M, 3M, 4M, 5M, 6M, 7M, 8M, 9M).Filter(e => e % 2 == 0)
             );
@@ -244,13 +264,13 @@ namespace DynamicSugarSharp_UnitTests {
         public void Clone_EmptyList() {
 
             var l = new List<int>();
-            DS.ListHelper.AssertListEqual(l, DS.ListHelper.Clone(l));            
+            DS.Assert.AreEqual(l, DS.ListHelper.Clone(l));            
         }
         [TestMethod]
         public void Clone() {
             
             var refList = DS.List(1,2,3,4);
-            DS.ListHelper.AssertListEqual(refList, refList.Clone());
+            DS.Assert.AreEqual(refList, refList.Clone());
         }
         [TestMethod]
         public void Intersection() {
@@ -258,8 +278,8 @@ namespace DynamicSugarSharp_UnitTests {
             var l1    = DS.List(1, 2, 3, 4);
             var l2    = DS.List(3, 4, 5, 6);
             var inter = DS.List(3, 4);
-            DS.ListHelper.AssertListEqual(inter, l1.Intersection(l2));
-            DS.ListHelper.AssertListEqual(inter, l1.Intersect(l2).ToList());
+            DS.Assert.AreEqual(inter, l1.Intersection(l2));
+            DS.Assert.AreEqual(inter, l1.Intersect(l2).ToList());
             
 
         }
@@ -269,7 +289,7 @@ namespace DynamicSugarSharp_UnitTests {
             var l1  = DS.List(1, 2, 3);
             var l2  = DS.List(3, 4, 5);
             var sum = DS.List(1, 2, 3, 3, 4, 5);
-            DS.ListHelper.AssertListEqual(sum, DS.ListHelper.Add(l1, l2));
+            DS.Assert.AreEqual(sum, DS.ListHelper.Add(l1, l2));
             
         }
         [TestMethod]
@@ -278,7 +298,7 @@ namespace DynamicSugarSharp_UnitTests {
             var l1  = DS.List(1, 2, 3);
             var l2  = new List<int>();
             var sum = DS.List(1, 2, 3);
-            DS.ListHelper.AssertListEqual(sum, DS.ListHelper.Add(l1, l2));
+            DS.Assert.AreEqual(sum, DS.ListHelper.Add(l1, l2));
         }
         [TestMethod]
         public void Add_2EmptyList() {
@@ -286,7 +306,7 @@ namespace DynamicSugarSharp_UnitTests {
             var l1  = new List<int>();
             var l2  = new List<int>();
             var sum = new List<int>();
-            DS.ListHelper.AssertListEqual(sum, DS.ListHelper.Add(l1, l2));
+            DS.Assert.AreEqual(sum, DS.ListHelper.Add(l1, l2));
         }
         [TestMethod]
         public void Substract() {
@@ -294,8 +314,8 @@ namespace DynamicSugarSharp_UnitTests {
             var l1  = DS.List(1, 2, 3);
             var l2  = DS.List(3, 4, 5);
             var sum = DS.List(1, 2);
-            DS.ListHelper.AssertListEqual(sum, DS.ListHelper.Substract(l1, l2));
-            DS.ListHelper.AssertListEqual(sum, l1.Substract(l2));
+            DS.Assert.AreEqual(sum, DS.ListHelper.Substract(l1, l2));
+            DS.Assert.AreEqual(sum, l1.Substract(l2));
         }
         [TestMethod]
         public void Substract_String() {
@@ -304,13 +324,13 @@ namespace DynamicSugarSharp_UnitTests {
             var l2  = DS.List("3", "4", "5");
             var sum = DS.List("1", "2");
 
-            DS.ListHelper.AssertListEqual(sum, DS.ListHelper.Substract(l1, l2));
-            DS.ListHelper.AssertListEqual(sum, l1.Substract(l2));
+            DS.Assert.AreEqual(sum, DS.ListHelper.Substract(l1, l2));
+            DS.Assert.AreEqual(sum, l1.Substract(l2));
         }
         [TestMethod]
         public void Merge_Int() {
             
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(1, 2, 3, 4, 5),
                 DS.ListHelper.Merge(
                     DS.List(1, 2, 3), 
@@ -321,7 +341,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Merge_Unique() {
 
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(1, 2, 3, 4, 5),                
                 DS.List(1, 2, 3, 4).Merge(DS.List(4, 4, 5), true)
             );           
@@ -329,7 +349,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Merge_NonUnique() {
 
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(1, 2, 3, 4, 4, 4, 5),
                 DS.ListHelper.Merge(
                     DS.List(1, 2, 3, 4), 
@@ -341,7 +361,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Rest_Int() {
 
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(2,3,4,5),
                 DS.List(1,2,3,4,5).Rest()
             );
@@ -390,7 +410,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Distinct_LINQ_Standard() {
 
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(1, 2, 3, 4, 5),
                 DS.List(1, 2, 3, 4, 5, 1, 2, 3).Distinct().ToList()
             );
@@ -400,7 +420,7 @@ namespace DynamicSugarSharp_UnitTests {
 
             var people = GetPeopleList();
 
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(20, 40, 60),
                 people.Pluck<int, Person>("Age")
             );
@@ -409,7 +429,7 @@ namespace DynamicSugarSharp_UnitTests {
         public void Pluck_Instance_Property() {
 
             var people = GetPeopleList();
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List("Descartes", "Montesquieu", "Rousseau"),
                 people.Pluck<string, Person>("LastName")
             );
@@ -418,7 +438,7 @@ namespace DynamicSugarSharp_UnitTests {
         public void Pluck_Instance_Function() {
 
             var people = GetPeopleList();
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List("#Descartes.Rene.0001", "#Montesquieu.Gerard.0001", "#Rousseau.JJ.0001"),
                 people.Pluck<string, Person>("GetUniqueID()")
             );
@@ -475,7 +495,7 @@ namespace DynamicSugarSharp_UnitTests {
 
             var l = DS.List(3,2,4,6,5,1);
             l.Sort();            
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(1,2,3,4,5,6),
                 l
             );
@@ -485,7 +505,7 @@ namespace DynamicSugarSharp_UnitTests {
 
             var l = DS.Range(10);
 
-            DS.ListHelper.AssertListEqual(
+            DS.Assert.AreEqual(
                 DS.List(0,1,2,3,4,5),
                 l.Without(DS.List(6,7,8,9))
             );
@@ -524,10 +544,10 @@ namespace DynamicSugarSharp_UnitTests {
             foreach(var i in l) expected.Add(i.ToString());
 
             var l1 = DS.ListHelper.FromFile<string>(fileName);
-            DS.ListHelper.AssertListEqual(expected, l1);
+            DS.Assert.AreEqual(expected, l1);
 
             var l2 = DS.ListHelper.FromFile<int>(fileName);
-            DS.ListHelper.AssertListEqual(l, l2);
+            DS.Assert.AreEqual(l, l2);
         }
 
         private static void DeleteFile(string fileName) {

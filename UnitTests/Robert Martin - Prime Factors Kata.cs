@@ -46,12 +46,12 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void PrimeFactorsKata_UnitTests() {
 
-            DS.ListHelper.AssertListEqual( DS.List(3,3),              generate(9) );
-            DS.ListHelper.AssertListEqual( DS.List(2,7),              generate(14) );
-            DS.ListHelper.AssertListEqual( DS.List(13),               generate(13) );
-            DS.ListHelper.AssertListEqual( DS.List(2, 3),             generate(6) );
-            DS.ListHelper.AssertListEqual( DS.List(2, 2, 2, 11),      generate(88) );
-            DS.ListHelper.AssertListEqual( DS.List(2, 2, 2, 2, 2, 3), generate(96) );
+            DS.Assert.AreEqual( DS.List(3,3),              generate(9) );
+            DS.Assert.AreEqual( DS.List(2,7),              generate(14) );
+            DS.Assert.AreEqual( DS.List(13),               generate(13) );
+            DS.Assert.AreEqual( DS.List(2, 3),             generate(6)  );
+            DS.Assert.AreEqual( DS.List(2, 2, 2, 11),      generate(88) );
+            DS.Assert.AreEqual( DS.List(2, 2, 2, 2, 2, 3), generate(96) );
 
             //foreach(var i in DSSharp.Range(30000)) { var z = generate(i); }
         }

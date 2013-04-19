@@ -24,7 +24,7 @@ namespace DynamicSugar {
             /// </summary>
             /// <param name="instance"></param>
             /// <returns></returns>
-            private static List<object> get_Items(object instance) {
+            private static List<object> __GetItems(object instance) {
 
                 int count       = (int)ReflectionHelper.GetProperty(instance, "Count");
                 List<Object> lo = new List<object>();
@@ -299,19 +299,7 @@ namespace DynamicSugar {
                 return source.Select(selector).ToList();                
             }
             
-            /// <summary>
-            /// Assert that 2 List Of T are equal
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="l1"></param>
-            /// <param name="l2"></param>
-            public static void AssertListEqual<T>(List<T> l1, List<T> l2) {
-
-                if (!Identical(l1, l2)) {
-
-                    throw new DynamicSugarSharpException(String.Format("List are not equal L1:'{0}', L2:'{1}'", DS.ListHelper.Format(l1), DS.ListHelper.Format(l2)));
-                }
-            }
+            
             /// <summary>
             /// Return true is 2 List Of T are identical
             /// </summary>

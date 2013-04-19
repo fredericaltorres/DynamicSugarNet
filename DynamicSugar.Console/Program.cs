@@ -251,7 +251,7 @@ namespace DynamicSugar.ConsoleApplication {
 
             var l2        = DS.ListHelper.FromFile<int>(fileName);
 
-            DS.ListHelper.AssertListEqual(l1, l2);            
+            DS.Assert.AreEqual(l1, l2);            
         }
          private static void Include() {
 
