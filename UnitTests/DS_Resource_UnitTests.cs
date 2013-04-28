@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace DynamicSugarSharp_UnitTests {
 
@@ -13,6 +14,16 @@ namespace DynamicSugarSharp_UnitTests {
 
     [TestClass]
     public class DS_Resource_GetTextResource {
+
+        [TestMethod]
+        public void GetMultipleTextResource() {
+            
+            var alphabetDic = DS.Resources.GetTextResource(new Regex("DataClasses.Alphabet", RegexOptions.IgnoreCase), Assembly.GetExecutingAssembly());
+            Assert.AreEqual(3, alphabetDic.Count);
+            foreach(var e in alphabetDic) {
+                Assert.AreEqual("ABCDEFGHIJKLMNOPQRSTVWXYZ", alphabetDic[e.Key]);
+            }
+        }
 
         [TestMethod]
         public void GetTextResource() {
