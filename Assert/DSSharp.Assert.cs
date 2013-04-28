@@ -42,8 +42,11 @@ namespace DynamicSugar {
 
                 foreach(var k in propertyNameValues) {
                     var actualValue = ReflectionHelper.GetProperty(poco, k.Key);
-                    if(!actualValue.Equals(propertyNameValues[k.Key]))
-                        throw new AssertFailedException("AssertValueTypeProperties failed Property:{0}, Actual:{1}, Expected:{2}".format(k.Key, actualValue, propertyNameValues[k.Key]));
+                    if(actualValue == null && propertyNameValues[k.Key] == null) {
+                        // null == null
+                    }
+                    else if(!actualValue.Equals(propertyNameValues[k.Key]))
+                            throw new AssertFailedException("AssertValueTypeProperties failed Property:{0}, Actual:{1}, Expected:{2}".format(k.Key, actualValue, propertyNameValues[k.Key]));
                 }
             }
 

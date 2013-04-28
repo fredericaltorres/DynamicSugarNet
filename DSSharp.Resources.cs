@@ -47,6 +47,29 @@ namespace DynamicSugar {
                     return _textStreamReader.ReadToEnd();
             }
             /// <summary>
+            /// Return multiple text files embed as a resource in a dictionary.
+            /// The key in the resource name, the value is the text data
+            /// The function takes care of finding the fully qualify name, in the passed
+            /// assembly.
+            /// </summary>
+            /// <param name="regex">The regular expression to filter the resource by name. The file system '\' are replaced with '.'</param>
+            /// <returns></returns>
+            public static Dictionary<string, string> GetTextResource(System.Text.RegularExpressions.Regex regex , Assembly assembly) {
+
+                var dic   = new Dictionary<string, string> ();
+                var names = new List<string>();
+
+                foreach (var resource in assembly.GetManifestResourceNames())
+                    if (regex.IsMatch(resource))
+                        names.Add(resource);
+
+                foreach(var name in names)
+                    using (var _textStreamReader = new StreamReader(assembly.GetManifestResourceStream(name)))
+                       dic.Add(name, _textStreamReader.ReadToEnd());
+
+                return dic;
+            }
+            /// <summary>
             /// Return the content of a file embed as a resource.
             /// The function takes care of finding the fully qualify name, in the current
             /// assembly.
