@@ -89,6 +89,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DS_Compression_UnitTests.cs" />
     <Compile Include="DS_Assert_UnitTests.cs" />
     <Compile Include="DS_Resource_UnitTests.cs" />
     <Compile Include="ExtensionMethods\Dictionary_EM_UnitTests.cs" />
@@ -135,6 +136,9 @@
     <EmbeddedResource Include="DataClasses\Alphabet3.txt">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Files\24k.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assert\DSSharp.Assert.cs" />
+    <Compile Include="Compression\Compression.cs" />
     <Compile Include="DSSharp.Resources.cs" />
     <Compile Include="DSSharp.Dictionary.cs" />
     <Compile Include="DSSharp.List.cs" />
@@ -109,13 +110,6 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Txt\CSharp.Info.markdown" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Txt\License.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Generated\FormatValueBasedOnType.tt">
