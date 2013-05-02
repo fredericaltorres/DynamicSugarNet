@@ -8,14 +8,33 @@ using System.Dynamic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using DynamicSugar.Compression;
+using System.IO;
 
 namespace DynamicSugarSharp_UnitTests {
 
     [TestClass]
     public class DS_Compression {
         
-        string STRING_REF = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+        public const string STRING_REF = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
         
+        [TestMethod]
+        public void GZipATextFile_UnGZipATextFile() {
+            
+            var fileName = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), "DS_Compression.txt");
+            File.WriteAllText(fileName, STRING_REF);
+
+            // GZip a text file
+            var gzipFilename = DynamicSugar.Compression.GZip.GZipFile(fileName);
+            Assert.IsTrue(File.Exists(gzipFilename));
+
+            File.Delete(fileName);
+            var newTextFileName = DynamicSugar.Compression.GZip.UnGZipFile(gzipFilename);
+            Assert.IsTrue(File.Exists(newTextFileName));
+
+            var text = System.IO.File.ReadAllText(newTextFileName);
+            Assert.AreEqual(STRING_REF, text);
+        }
+
         [TestMethod]
         public void ZipString() {
             

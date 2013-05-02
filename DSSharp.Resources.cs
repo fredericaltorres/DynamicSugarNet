@@ -28,7 +28,7 @@ namespace DynamicSugar {
             private static string GetResourceFullName(string resourceFileName, Assembly assembly) {
 
                 foreach (var resource in assembly.GetManifestResourceNames())
-                    if (resource.EndsWith("." + resourceFileName))
+                    if (resource.EndsWith("." + resourceFileName) || resource == resourceFileName)
                         return resource;
                 throw new System.ApplicationException("Resource '{0}' not find in assembly '{1}'".format(resourceFileName, Assembly.GetExecutingAssembly().FullName));
             }
@@ -39,12 +39,17 @@ namespace DynamicSugar {
             /// </summary>
             /// <param name="resourceFileName">The file name of the resource</param>
             /// <returns></returns>
-            public static string GetTextResource(string resourceFileName, Assembly assembly) {
+            public static string GetTextResource(string resourceFileName, Assembly assembly, bool gzip = false) {
 
                 var resourceFullName = GetResourceFullName(resourceFileName, assembly);
 
-                using (var _textStreamReader = new StreamReader(assembly.GetManifestResourceStream(resourceFullName)))
-                    return _textStreamReader.ReadToEnd();
+                if(gzip) {
+                    return Compression.GZip.UnzipAsString(GetBinaryResource(resourceFileName, assembly));
+                }
+                else {
+                    using (var _textStreamReader = new StreamReader(assembly.GetManifestResourceStream(resourceFullName)))
+                        return _textStreamReader.ReadToEnd();
+                }
             }
             /// <summary>
             /// Return multiple text files embed as a resource in a dictionary.
@@ -54,7 +59,7 @@ namespace DynamicSugar {
             /// </summary>
             /// <param name="regex">The regular expression to filter the resource by name. The file system '\' are replaced with '.'</param>
             /// <returns></returns>
-            public static Dictionary<string, string> GetTextResource(System.Text.RegularExpressions.Regex regex , Assembly assembly) {
+            public static Dictionary<string, string> GetTextResource(System.Text.RegularExpressions.Regex regex , Assembly assembly, bool gzip = false) {
 
                 var dic   = new Dictionary<string, string> ();
                 var names = new List<string>();
@@ -64,8 +69,7 @@ namespace DynamicSugar {
                         names.Add(resource);
 
                 foreach(var name in names)
-                    using (var _textStreamReader = new StreamReader(assembly.GetManifestResourceStream(name)))
-                       dic.Add(name, _textStreamReader.ReadToEnd());
+                       dic.Add(name, GetTextResource(name, assembly, gzip));
 
                 return dic;
             }

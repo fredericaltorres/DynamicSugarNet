@@ -16,6 +16,20 @@ namespace DynamicSugarSharp_UnitTests {
     public class DS_Resource_GetTextResource {
 
         [TestMethod]
+        public void GetMultipleGzipTextResource(){ 
+
+            var files = DS.Resources.GetTextResource(new Regex("DS_Compression.txt.gzip", RegexOptions.IgnoreCase), Assembly.GetExecutingAssembly(), true);
+            Assert.AreEqual(DS_Compression.STRING_REF, files["DynamicSugar_UnitTests.Files.DS_Compression.txt.gzip"]);
+        }
+
+        [TestMethod]
+        public void GetGzipTextResource() {
+
+            var text = DS.Resources.GetTextResource("DS_Compression.txt.gzip", Assembly.GetExecutingAssembly(), true);
+            Assert.AreEqual(DS_Compression.STRING_REF, text);
+        }
+
+        [TestMethod]
         public void GetMultipleTextResource() {
             
             var alphabetDic = DS.Resources.GetTextResource(new Regex("DataClasses.Alphabet", RegexOptions.IgnoreCase), Assembly.GetExecutingAssembly());

@@ -12,7 +12,33 @@ namespace DynamicSugar.Compression {
 
     public static class GZip {
 
-        public static void CopyTo(Stream src, Stream dest) {
+        public static void GZipFolder(string path, string wildCard) {
+
+            var files = System.IO.Directory.GetFiles(path, wildCard);
+
+            foreach(var file in files)
+                GZipFile(file);
+        }
+
+        public static string UnGZipFile(string fileName) {
+
+            var buffer          = System.IO.File.ReadAllBytes(fileName);
+            var bufferNotZipped = Unzip(buffer);
+            var newName         = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName));
+            System.IO.File.WriteAllBytes(newName, bufferNotZipped);
+            return newName;
+        }
+
+        public static string GZipFile(string fileName, string extension = "gzip") {
+
+            var bufferNotGZipped = System.IO.File.ReadAllBytes(fileName);
+            var buffer           = Zip(bufferNotGZipped);
+            var newName          = fileName + "." + extension;
+            System.IO.File.WriteAllBytes(newName, buffer);
+            return newName;
+        }
+
+        private static void CopyTo(Stream src, Stream dest) {
 
             byte[] bytes = new byte[4096];
             int cnt;
@@ -41,10 +67,12 @@ namespace DynamicSugar.Compression {
                 }
             }
         }
+
         public static string UnzipAsString(byte[] bytes) {
 
             return Encoding.UTF8.GetString(Unzip(bytes));
         }
+
         public static byte[] Unzip(byte[] bytes) {
 
             using (var msi = new MemoryStream(bytes)) {
