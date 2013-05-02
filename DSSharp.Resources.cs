@@ -19,6 +19,12 @@ namespace DynamicSugar {
     /// </summary>
     public static partial class DS {
 
+        public enum TextResourceEncoding {
+            Ascii,
+            Unicode,
+            UTF8
+        }
+
         public static class Resources {
             /// <summary>
             /// Return the fully qualified name of the resource file
@@ -39,12 +45,20 @@ namespace DynamicSugar {
             /// </summary>
             /// <param name="resourceFileName">The file name of the resource</param>
             /// <returns></returns>
-            public static string GetTextResource(string resourceFileName, Assembly assembly, bool gzip = false) {
+            public static string GetTextResource(string resourceFileName, Assembly assembly, bool gzip = false, TextResourceEncoding encoding = TextResourceEncoding.Unicode) {
 
                 var resourceFullName = GetResourceFullName(resourceFileName, assembly);
 
                 if(gzip) {
-                    return Compression.GZip.UnzipAsString(GetBinaryResource(resourceFileName, assembly));
+                    var buffer        = GetBinaryResource(resourceFileName, assembly);
+                    var text          = string.Empty;
+                    var bufferUnziped = Compression.GZip.Unzip(buffer);
+                    switch(encoding) {
+                        case TextResourceEncoding.Ascii  : text = Encoding.ASCII.GetString(bufferUnziped);break;
+                        case TextResourceEncoding.Unicode: text = Encoding.Unicode.GetString(bufferUnziped);break;
+                        case TextResourceEncoding.UTF8   : text = Encoding.UTF8.GetString(bufferUnziped);break;
+                    }
+                    return text;
                 }
                 else {
                     using (var _textStreamReader = new StreamReader(assembly.GetManifestResourceStream(resourceFullName)))
@@ -59,7 +73,7 @@ namespace DynamicSugar {
             /// </summary>
             /// <param name="regex">The regular expression to filter the resource by name. The file system '\' are replaced with '.'</param>
             /// <returns></returns>
-            public static Dictionary<string, string> GetTextResource(System.Text.RegularExpressions.Regex regex , Assembly assembly, bool gzip = false) {
+            public static Dictionary<string, string> GetTextResource(System.Text.RegularExpressions.Regex regex , Assembly assembly, bool gzip = false, TextResourceEncoding encoding = TextResourceEncoding.Unicode) {
 
                 var dic   = new Dictionary<string, string> ();
                 var names = new List<string>();
@@ -69,7 +83,7 @@ namespace DynamicSugar {
                         names.Add(resource);
 
                 foreach(var name in names)
-                       dic.Add(name, GetTextResource(name, assembly, gzip));
+                       dic.Add(name, GetTextResource(name, assembly, gzip, encoding));
 
                 return dic;
             }

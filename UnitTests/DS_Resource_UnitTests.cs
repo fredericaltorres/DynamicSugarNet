@@ -18,14 +18,27 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void GetMultipleGzipTextResource(){ 
 
-            var files = DS.Resources.GetTextResource(new Regex("DS_Compression.txt.gzip", RegexOptions.IgnoreCase), Assembly.GetExecutingAssembly(), true);
+            var files = DS.Resources.GetTextResource(new Regex("DS_Compression.txt.gzip", RegexOptions.IgnoreCase), Assembly.GetExecutingAssembly(), true, DS.TextResourceEncoding.UTF8);
             Assert.AreEqual(DS_Compression.STRING_REF, files["DynamicSugar_UnitTests.Files.DS_Compression.txt.gzip"]);
+        }
+
+        [TestMethod]
+        public void GetMultipleGzipTextResource_3File(){ 
+
+            // var text = DynamicSugar.Compression.GZip.UnGZipFile(@"C:\DVT\.NET\DynamicSugar\Source\DynamicSugarNet\UnitTests\Files\%.txt.gzip");
+
+            var files = DS.Resources.GetTextResource(new Regex("(ac|%).txt.gzip$", RegexOptions.IgnoreCase), Assembly.GetExecutingAssembly(), true);
+            
+            Assert.AreEqual(2, files.Count);
+            
+            Assert.IsTrue(files["DynamicSugar_UnitTests.Files.ac.txt.gzip"].Contains("Adds content to the specified items, such as adding words to a file."));
+            Assert.IsTrue(files["DynamicSugar_UnitTests.Files.%.txt.gzip"].Contains("ForEach-Object"));
         }
 
         [TestMethod]
         public void GetGzipTextResource() {
 
-            var text = DS.Resources.GetTextResource("DS_Compression.txt.gzip", Assembly.GetExecutingAssembly(), true);
+            var text = DS.Resources.GetTextResource("DS_Compression.txt.gzip", Assembly.GetExecutingAssembly(), true, DS.TextResourceEncoding.UTF8);
             Assert.AreEqual(DS_Compression.STRING_REF, text);
         }
 

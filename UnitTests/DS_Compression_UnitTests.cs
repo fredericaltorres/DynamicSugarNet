@@ -23,7 +23,6 @@ namespace DynamicSugarSharp_UnitTests {
             var fileName = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), "DS_Compression.txt");
             File.WriteAllText(fileName, STRING_REF);
 
-            // GZip a text file
             var gzipFilename = DynamicSugar.Compression.GZip.GZipFile(fileName);
             Assert.IsTrue(File.Exists(gzipFilename));
 
@@ -33,6 +32,10 @@ namespace DynamicSugarSharp_UnitTests {
 
             var text = System.IO.File.ReadAllText(newTextFileName);
             Assert.AreEqual(STRING_REF, text);
+            
+            //var textfile = @"C:\Users\frederic.torres\Desktop\TextHighlighterExtensionV30\TextHighlighterExtension2012\LanguageServices\Languages\PS1\GenerateIntellisense\Txt\Add-Computer.txt.gzip";
+            //var aaa = DynamicSugar.Compression.GZip.UnGZipFile(textfile);
+
         }
 
         [TestMethod]

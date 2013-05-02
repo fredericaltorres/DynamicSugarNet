@@ -29,6 +29,12 @@ namespace DynamicSugar.Compression {
             return newName;
         }
 
+        /// <summary>
+        /// Gzip a file. 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
         public static string GZipFile(string fileName, string extension = "gzip") {
 
             var bufferNotGZipped = System.IO.File.ReadAllBytes(fileName);
