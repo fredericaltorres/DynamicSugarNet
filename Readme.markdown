@@ -12,7 +12,7 @@ The project DynamicSugar.MonoTouch.csproj, will compile for iOS, but all feature
 using .NET 4.0 class DynamicObject are excluded.
 
 ## Web site
-- [www.DynamicSugar.net](http://www.DynamicSugar.net)
+- [www.DynamicSugar.net](http://www.jsonb.net/dynamicSugar.net/)
 
 ##Copyright
 Copyright (c) 2011, 2013 Frederic Torres
