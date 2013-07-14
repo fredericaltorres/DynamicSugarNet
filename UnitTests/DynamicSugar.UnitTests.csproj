@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="DS_Compression_UnitTests.cs" />
     <Compile Include="DS_Assert_UnitTests.cs" />
+    <Compile Include="DS_Registry_UnitTests.cs" />
     <Compile Include="DS_Resource_UnitTests.cs" />
     <Compile Include="ExtensionMethods\Dictionary_EM_UnitTests.cs" />
     <Compile Include="ExtensionMethods\String_EM_UnitTests.cs" />

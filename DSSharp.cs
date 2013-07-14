@@ -25,6 +25,24 @@ namespace DynamicSugar {
         #if !MONOTOUCH
 
         /// <summary>
+        /// Convert a System.Array into a list
+        /// </summary>
+        /// <typeparam name="T0"></typeparam>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static List<T0> SystemArrayToList<T0>(System.Array a) {
+
+            var l = new List<T0>();
+
+            for (var i = 0; i < a.Length; i++) {
+
+                T0 v = (T0)Convert.ChangeType(a.GetValue(i), typeof(T0));
+                l.Add(v);
+            }
+            return l;
+        }
+
+        /// <summary>
         /// Initialize an Expando object with the properties of one or more instances passed 
         /// as parameters. Then return the expando object.
         /// </summary>
