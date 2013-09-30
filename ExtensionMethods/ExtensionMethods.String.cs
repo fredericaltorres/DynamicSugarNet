@@ -13,7 +13,23 @@ using System.Globalization;
 namespace DynamicSugar {
 
     public static class ExtensionMethods_Format {
-                    
+
+        public static int      ToInt     (this string s, int? defaultValue = null) { try { return int.Parse(s); } catch { if(defaultValue == null) throw;return (int)defaultValue; } }
+        public static uint     ToUInt    (this string s, uint? defaultValue = null) { try { return uint.Parse(s);      } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static long     ToLong    (this string s, long? defaultValue = null) { try { return long.Parse(s);      } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static ulong    ToULong   (this string s, ulong? defaultValue = null) { try { return ulong.Parse(s);     } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }     
+        public static UInt16   ToUInt16  (this string s, UInt16? defaultValue = null) { try { return UInt16.Parse(s);    } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static Int16    ToInt16   (this string s, Int16? defaultValue = null) { try { return Int16.Parse(s);     } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static UInt32   ToUInt32  (this string s, UInt32? defaultValue = null) { try { return UInt32.Parse(s);    } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static Int32    ToInt32   (this string s, Int32? defaultValue = null) { try { return Int32.Parse(s);     } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static UInt64   ToUInt64  (this string s, UInt64? defaultValue = null) { try { return UInt64.Parse(s);    } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static Int64    ToInt64   (this string s, Int64? defaultValue = null) { try { return Int64.Parse(s);     } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static decimal  ToDecimal (this string s, decimal? defaultValue = null) { try { return decimal.Parse(s);   } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }    
+        public static double   ToDouble  (this string s, double? defaultValue = null) { try { return double.Parse(s);    } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }    
+        public static DateTime ToDateTime(this string s, DateTime? defaultValue = null) { try { return DateTime.Parse(s);  } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }     
+        public static Guid     ToGuid    (this string s, Guid? defaultValue = null) { try { return new Guid(s);        } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+        public static bool     ToBool    (this string s, bool? defaultValue = null) { try { return bool.Parse(s);      } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
+  
         /// <summary>
         /// The slice() method selects a part of a string.
         /// The original string is not be changed.

@@ -12,6 +12,57 @@ namespace DynamicSugarSharp_UnitTests {
     public class String_EM_UnitTests {
 
         [TestMethod]
+        public void ToXXXX() {
+
+            Assert.AreEqual(123, "123".ToInt());
+            Assert.AreEqual(123u, "123".ToUInt());
+            Assert.AreEqual(123L, "123".ToLong());
+            Assert.AreEqual(123UL, "123".ToULong());
+            Assert.AreEqual(123M, "123".ToDecimal());
+            Assert.AreEqual(123.0, "123".ToDouble());
+            
+            Assert.AreEqual(new Guid("{2E36429B-2695-4CB3-BCF2-9C7C6DC56B45}"), "{2E36429B-2695-4CB3-BCF2-9C7C6DC56B45}".ToGuid());
+            Assert.AreEqual(new Guid("{2E36429B-2695-4CB3-BCF2-9C7C6DC56B45}"), "2E36429B-2695-4CB3-BCF2-9C7C6DC56B45".ToGuid());
+            Assert.AreEqual(new Guid("2E36429B-2695-4CB3-BCF2-9C7C6DC56B45"), "2E36429B-2695-4CB3-BCF2-9C7C6DC56B45".ToGuid());
+            Assert.AreEqual(new Guid("2E36429B-2695-4CB3-BCF2-9C7C6DC56B45"), "{2E36429B-2695-4CB3-BCF2-9C7C6DC56B45}".ToGuid());
+
+            Assert.AreEqual(new DateTime(1964, 12, 11), "12/11/1964".ToDateTime());
+
+            Assert.AreEqual(false, "false".ToBool());
+            Assert.AreEqual(true, "true".ToBool());
+        }
+
+        [TestMethod]
+        public void ToXXXX_NegativeWithDefault() {
+
+            Assert.AreEqual(123, "AA".ToInt(123));
+            Assert.AreEqual(123u, "AA".ToUInt(123U));
+            Assert.AreEqual(123L, "AA".ToLong(123L));
+            Assert.AreEqual(123UL, "AA".ToULong(123UL));
+            Assert.AreEqual(123M, "AA".ToDecimal(123M));
+            Assert.AreEqual(123.0, "AA".ToDouble(123.0));
+            Assert.AreEqual(new Guid("{2E36429B-2695-4CB3-BCF2-9C7C6DC56B45}"), "AA".ToGuid(new Guid("{2E36429B-2695-4CB3-BCF2-9C7C6DC56B45}")));
+            Assert.AreEqual(new DateTime(1964, 12, 11), "AA".ToDateTime(new DateTime(1964, 12, 11)));
+            Assert.AreEqual(false, "AA".ToBool(false));
+            Assert.AreEqual(true, "AA".ToBool(true));
+        }
+
+        [TestMethod, ExpectedException(typeof(FormatException))]
+        public void ToInt_NegativeNoDefault() { Assert.AreEqual(123, "AAA".ToInt()); }
+
+        [TestMethod, ExpectedException(typeof(FormatException))]
+        public void ToDouble_NegativeNoDefault() { Assert.AreEqual(123.0, "AAA".ToDouble()); }
+
+        [TestMethod, ExpectedException(typeof(FormatException))]
+        public void ToDecimal_NegativeNoDefault() { Assert.AreEqual(123M, "AAA".ToDecimal()); }
+
+        [TestMethod, ExpectedException(typeof(FormatException))]
+        public void ToDateTime_NegativeNoDefault() { Assert.AreEqual(DateTime.Now, "AAA".ToDateTime()); }
+
+        [TestMethod, ExpectedException(typeof(FormatException))]
+        public void ToGuid_NegativeNoDefault() { Assert.AreEqual(Guid.Empty, "AAA".ToGuid()); }
+
+        [TestMethod]
         public void Capitalize() {
 
             Assert.AreEqual("Abcd", "abcd".Capitalize());
