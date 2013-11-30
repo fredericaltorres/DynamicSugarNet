@@ -58,7 +58,7 @@
     <DefineConstants>TRACE;IN_EXTENSION_METHOD</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\Release\DynamicSugarSharp.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>

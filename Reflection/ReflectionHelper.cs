@@ -115,8 +115,9 @@ namespace DynamicSugar {
                 dic.Add(mp.Name, new ParameterMetadata(mp, parameterValues[i++]));
             return dic;
         }
-        const BindingFlags GET_FLAGS = BindingFlags.Instance  | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
+        const BindingFlags GET_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
         const BindingFlags CALL_METHOD_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
+        const BindingFlags CALL_STATIC_METHOD_FLAGS = BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
         /// <summary>
         /// Clone a dictionary
         /// </summary>
@@ -280,6 +281,22 @@ namespace DynamicSugar {
                 retValue = instance.GetType().InvokeMember(method, CALL_METHOD_FLAGS, null, instance, null);            
             else
                 retValue = instance.GetType().InvokeMember(method, CALL_METHOD_FLAGS, null, instance, parameters);
+            return retValue;
+        }
+        /// <summary>
+        /// Execute a static method
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="method"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static object ExecuteStaticMethod(Type type, string method, params object[] parameters) {
+            object retValue;
+
+            if (parameters.Length == 0)
+                retValue = type.InvokeMember(method, CALL_STATIC_METHOD_FLAGS, null, null, null);
+            else
+                retValue = type.InvokeMember(method, CALL_STATIC_METHOD_FLAGS, null, null, parameters);
             return retValue;
         }
         /// <summary>
