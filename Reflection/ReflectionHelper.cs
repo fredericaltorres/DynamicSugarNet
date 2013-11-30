@@ -6,37 +6,40 @@ using System.Reflection;
 
 namespace DynamicSugar {
 
-
      public class ParameterMetadata {
 
-            public bool     IsIn;
-            public bool     IsOptional;
-            public bool     IsOut;
-            public bool     IsRetval;
-            public string   Name;
-            public Type     ParameterType;
-            public int      Position;
-            public object   RawDefaultValue;
-            public object   Value;
+        public bool     IsIn;
+        public bool     IsOptional;
+        public bool     IsOut;
+        public bool     IsRetval;
+        public string   Name;
+        public Type     ParameterType;
+        public int      Position;
+        public object   RawDefaultValue;
+        public object   Value;
 
-            public ParameterMetadata(ParameterInfo pi, object value){
+        public ParameterMetadata(ParameterInfo pi, object value){
 
-                this.IsIn            = pi.IsIn;
-                this.IsOptional      = pi.IsOptional;
-                this.IsOut           = pi.IsOut;
-                this.IsRetval        = pi.IsRetval;
-                this.Name            = pi.Name;
-                this.ParameterType   = pi.ParameterType;
-                this.Position        = pi.Position;
-                this.RawDefaultValue = pi.RawDefaultValue;
-                this.Value           = value;
-            }
+            this.IsIn            = pi.IsIn;
+            this.IsOptional      = pi.IsOptional;
+            this.IsOut           = pi.IsOut;
+            this.IsRetval        = pi.IsRetval;
+            this.Name            = pi.Name;
+            this.ParameterType   = pi.ParameterType;
+            this.Position        = pi.Position;
+            this.RawDefaultValue = pi.RawDefaultValue;
+            this.Value           = value;
         }
+    }
 
     /// <summary>
     /// 
     /// </summary>
     public class ReflectionHelper {
+
+        const BindingFlags GET_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
+        const BindingFlags CALL_METHOD_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
+        const BindingFlags CALL_STATIC_METHOD_FLAGS = BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
         
         public static string GetStackCall() {
             try {
@@ -78,10 +81,9 @@ namespace DynamicSugar {
 
                 methodToIgnore.Add("GetCallingMethod");// Alway ignore the current method                
 
-                int stackIndex         = 0;
-                MethodBase      method = null;
-                int i                  = 1;
-                int max                = (new System.Diagnostics.StackTrace(true)).FrameCount;
+                MethodBase method = null;
+                int i             = 1;
+                int max           = (new System.Diagnostics.StackTrace(true)).FrameCount;
 
                 while (i <= max) {
 
@@ -97,6 +99,35 @@ namespace DynamicSugar {
                 return null;
             }
         }
+        /// <summary>
+        /// Create new instance of the type
+        /// </summary>
+        /// <param name="typeToInstantiate"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static object Constructor(Type typeToInstantiate, params object[] parameters) {
+
+            object o = Activator.CreateInstance(typeToInstantiate, parameters);
+            return o;
+        }
+        /// <summary>
+        /// Create new instance of the type with casting in the right type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="typeToInstantiate"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static T Constructor<T>(Type typeToInstantiate, params object[] parameters) {
+
+            object o = Activator.CreateInstance(typeToInstantiate, parameters);
+            T t = (T)Convert.ChangeType(o, typeof(T));
+            return t;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterValues"></param>
+        /// <returns></returns>
         public static Dictionary<string, Object> GetLocals(params object[] parameterValues){
 
             var dic = new Dictionary<string,Object>();
@@ -106,6 +137,11 @@ namespace DynamicSugar {
                 dic.Add(mp.Name, parameterValues[i++]);
             return dic;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterValues"></param>
+        /// <returns></returns>
         public static Dictionary<string, ParameterMetadata> GetLocalsEx(params object[] parameterValues){
 
             Dictionary<string, ParameterMetadata> dic = new Dictionary<string,ParameterMetadata>();
@@ -115,9 +151,6 @@ namespace DynamicSugar {
                 dic.Add(mp.Name, new ParameterMetadata(mp, parameterValues[i++]));
             return dic;
         }
-        const BindingFlags GET_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
-        const BindingFlags CALL_METHOD_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
-        const BindingFlags CALL_STATIC_METHOD_FLAGS = BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
         /// <summary>
         /// Clone a dictionary
         /// </summary>

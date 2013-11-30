@@ -11,6 +11,52 @@ namespace DynamicSugarSharp_UnitTests {
     [TestClass]
     public class ReflectionHelper_UnitTests {
 
+        class ConsTest1 {
+            public string Name = "Toto";
+        }
+        class ConsTest2 {
+            public string Name = "Toto";
+
+            public ConsTest2() { 
+            }
+            public ConsTest2(string name) {
+                this.Name = name;
+            }
+        }
+
+        [TestMethod]
+        public void Constructor_MultipleConstructor_GenericMethod() {
+            
+            var consTestInstance = ReflectionHelper.Constructor<ConsTest2>(typeof(ConsTest2));
+            Assert.AreEqual("Toto", consTestInstance.Name);
+
+            var consTestInstance2 = ReflectionHelper.Constructor<ConsTest2>(typeof(ConsTest2), "Tata");
+            Assert.AreEqual("Tata", consTestInstance2.Name);
+        }
+
+        [TestMethod]
+        public void Constructor_MultipleConstructor() {
+
+            var consTestInstance = ReflectionHelper.Constructor(typeof(ConsTest2)) as ConsTest2;
+            Assert.AreEqual("Toto", consTestInstance.Name);
+
+            var consTestInstance2 = ReflectionHelper.Constructor(typeof(ConsTest2), "Tata") as ConsTest2;
+            Assert.AreEqual("Tata", consTestInstance2.Name);
+        }
+
+        [TestMethod, ExpectedException(typeof(MissingMethodException))]
+        public void Constructor_ConstructorWithInvalidParameters() {
+
+            var consTestInstance = ReflectionHelper.Constructor(typeof(ConsTest2), "Tata", true);
+        }
+
+        [TestMethod]
+        public void Constructor_DefaultConstructor() {
+
+            var consTestInstance = ReflectionHelper.Constructor(typeof(ConsTest1)) as ConsTest1;
+            Assert.AreEqual("Toto", consTestInstance.Name);
+        }
+
         private Dictionary<string, ParameterMetadata> MyMethod_ParameterMetadata(int i, double d, string s){
 
             var dic = ReflectionHelper.GetLocalsEx(i, d, s);
