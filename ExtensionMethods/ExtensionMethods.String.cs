@@ -112,6 +112,36 @@ namespace DynamicSugar {
             }
             return s;
         }       
+
+        /// <summary>
+        /// Remove a piece of the string at the start of the string
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="startWithString"></param>
+        /// <returns></returns>
+        public static string RemoveIfStartsWith(this string s, string startWithString)
+        {
+            if(string.IsNullOrEmpty(s) || string.IsNullOrEmpty(startWithString))
+                return s;
+
+            if(s.StartsWith(startWithString)) {
+                s = s.Substring(startWithString.Length);
+            }
+            return s;
+        }
+
+        public static string RemoveIfEndsWith(this string s, string startWithString)
+        {
+            if(string.IsNullOrEmpty(s) || string.IsNullOrEmpty(startWithString))
+                return s;
+            
+            if(s.EndsWith(startWithString)) {
+                s = s.Substring(0, s.Length-startWithString.Length);
+            }
+            return s;
+        }
+
+
         /// <summary>
         /// Remove the first char
         /// </summary>

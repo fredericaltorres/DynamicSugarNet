@@ -84,6 +84,41 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(null, s.RemoveLastChar());
             Assert.AreEqual(null, s.RemoveLastChar('a'));
         }
+
+        
+        [TestMethod]
+        public void RemoveIfStartsWith() {
+
+            string sref = "yesterday I was here";
+            string s = sref;
+            Assert.AreEqual("terday I was here", s.RemoveIfStartsWith("yes"));
+            Assert.AreEqual(sref, s.RemoveIfStartsWith("null"));
+            Assert.AreEqual(sref, s.RemoveIfStartsWith(""));
+
+            Assert.AreEqual("", "A".RemoveIfStartsWith("A"));
+            Assert.AreEqual("A", "AA".RemoveIfStartsWith("A"));
+
+            Assert.AreEqual("", "".RemoveIfStartsWith("yes"));
+            s = null;
+            Assert.AreEqual(null, s.RemoveIfStartsWith("yes"));
+        }
+
+        [TestMethod]
+        public void RemoveIfEndsWith() {
+
+            string sref = "yesterday I was here";
+            string s = sref;
+            Assert.AreEqual("yesterday I was ", s.RemoveIfEndsWith("here"));
+            Assert.AreEqual("yesterday I was", s.RemoveIfEndsWith(" here"));
+
+            Assert.AreEqual(sref, s.RemoveIfEndsWith("null"));
+            Assert.AreEqual(sref, s.RemoveIfEndsWith(""));
+
+            Assert.AreEqual("", "A".RemoveIfEndsWith("A"));
+            Assert.AreEqual("A", "AA".RemoveIfEndsWith("A"));
+
+        }
+
         [TestMethod]
         public void RemoveFirstChar() {
 
