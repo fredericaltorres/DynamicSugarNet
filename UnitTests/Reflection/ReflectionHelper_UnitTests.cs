@@ -27,8 +27,21 @@ namespace DynamicSugarSharp_UnitTests {
             }
 
             public int this[int index] {
-                get{
+                get {
                     return index*2;
+                }
+            }
+        }
+
+        public class IndexerTestClass {
+
+            private int _index;
+            public int this[int index] {
+                get{
+                    return this._index;
+                }
+                set {
+                    this._index = index*value;
                 }
             }
         }
@@ -44,6 +57,14 @@ namespace DynamicSugarSharp_UnitTests {
             public ConsTest2(string name) {
                 this.Name = name;
             }
+        }
+
+        [TestMethod]
+        public void Indexer_Set() {
+            
+            var f = new IndexerTestClass();
+            ReflectionHelper.SetIndexer(f, 2, 123);
+            Assert.AreEqual(2*123, ReflectionHelper.GetIndexer(f, 1));
         }
 
         [TestMethod]

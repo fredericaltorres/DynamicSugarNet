@@ -351,6 +351,32 @@ namespace DynamicSugar {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static object SetIndexer(object instance, params object[] parameters)
+        {
+            try
+            {
+                if(instance == null)
+                    throw new ArgumentException("Instance null has not indexer");
+
+                var getIndexerMethod = GetIndexerMethodName(instance, IndexerType.Set);
+                if(getIndexerMethod == null)
+                    throw new ArgumentException(string.Format("Type:{0} has not indexer", instance.GetType().FullName));
+
+                var v = ReflectionHelper.ExecuteMethod(instance, getIndexerMethod, parameters);
+                return v;
+            }
+            catch(System.Exception ex)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="o"></param>
         /// <param name="strPropertyName"></param>
         /// <param name="Value"></param>
