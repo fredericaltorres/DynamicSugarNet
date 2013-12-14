@@ -38,6 +38,7 @@ namespace DynamicSugar {
     public class ReflectionHelper {
 
         const BindingFlags GET_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
+        const BindingFlags GET_FLAGS_STATIC = BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
         const BindingFlags CALL_METHOD_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
         const BindingFlags CALL_STATIC_METHOD_FLAGS = BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
         
@@ -280,6 +281,71 @@ namespace DynamicSugar {
             }
             catch {
                 return defaultValue;
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static object GetPropertyStatic(Type o, string propertyName, object defaultValue = null)
+        {
+            try
+            {
+                object oValue = o.InvokeMember(propertyName, GET_FLAGS_STATIC, null, null, null);
+                return oValue;
+            }
+            catch(System.Exception ex)
+            {
+                throw;
+            }
+        }
+        public enum IndexerType {
+            Get,
+            Set
+        }
+        /// <summary>
+        /// Return the name of the indexer function for a get or a set
+        /// </summary>
+        /// <param name="o">The instance</param>
+        /// <param name="indexerType">Define get or set</param>
+        /// <returns></returns>
+        private static string GetIndexerMethodName(object o, IndexerType indexerType) {
+            
+            foreach (PropertyInfo property in o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)) {
+                if (property.GetIndexParameters().Length > 0)
+                {
+                    return string.Format("{0}_{1}", indexerType.ToString().ToLowerInvariant(), property.Name);
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="method"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static object GetIndexer(object instance, params object[] parameters)
+        {
+            try
+            {
+                if(instance == null)
+                    throw new ArgumentException("Instance null has not indexer");
+
+                var getIndexerMethod = GetIndexerMethodName(instance, IndexerType.Get);
+                if(getIndexerMethod == null)
+                    throw new ArgumentException(string.Format("Type:{0} has not indexer", instance.GetType().FullName));
+
+                var v = ReflectionHelper.ExecuteMethod(instance, getIndexerMethod, parameters);
+                return v;
+            }
+            catch(System.Exception ex)
+            {
+                throw;
             }
         }
         /// <summary>

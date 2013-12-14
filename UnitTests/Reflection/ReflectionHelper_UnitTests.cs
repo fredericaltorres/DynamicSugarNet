@@ -11,6 +11,28 @@ namespace DynamicSugarSharp_UnitTests {
     [TestClass]
     public class ReflectionHelper_UnitTests {
 
+        public class FredPropertyClass {
+
+            public string FieldString { get; set; }
+            public DateTime FieldDate { get; set; }
+            public double FieldDouble { get; set; }
+            public bool FieldBool { get; set; }
+
+            public  FredPropertyClass() {
+
+                FieldString = "Hello World";
+                FieldDate = DateTime.Parse("12/13/2013 11:15:35 PM");
+                FieldDouble = 12.34;
+                FieldBool = true;
+            }
+
+            public int this[int index] {
+                get{
+                    return index*2;
+                }
+            }
+        }
+
         class ConsTest1 {
             public string Name = "Toto";
         }
@@ -22,6 +44,27 @@ namespace DynamicSugarSharp_UnitTests {
             public ConsTest2(string name) {
                 this.Name = name;
             }
+        }
+
+        [TestMethod]
+        public void Indexer_Get() {
+            
+            var f = new FredPropertyClass();
+            Assert.AreEqual(2, ReflectionHelper.GetIndexer(f, 1));
+            Assert.AreEqual(16, ReflectionHelper.GetIndexer(f, 8));
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentException))]
+        public void Indexer_Get_NoIndexerDefined() {
+            
+            var f = new ConsTest2();
+            ReflectionHelper.GetIndexer(f, 1);
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentException))]
+        public void Indexer_Get_FromNull() {
+                        
+            ReflectionHelper.GetIndexer(null, 1);
         }
 
         [TestMethod]
