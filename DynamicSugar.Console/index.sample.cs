@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DynamicSugar;
 using System.Dynamic;
+#if WINDOWS
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace N {  
 public class samples {
@@ -180,15 +182,19 @@ void Sample10(){
 public void Sample11() {
 
     var s = "ABCD";
-    Assert.AreEqual("ABCD"  , s.Slice(0    ));
-    Assert.AreEqual("BCD"   , s.Slice(1    ));
-    Assert.AreEqual("AB"    , s.Slice(0 , 2));
-    Assert.AreEqual("BC"    , s.Slice(1 , 2));
-    Assert.AreEqual("DCBA"  , s.Slice(-1   ));
-    Assert.AreEqual("CB"    , s.Slice(-2, 2));            
-}
+	#if WINDOWS
+	Assert.AreEqual("ABCD"  , s.Slice(0    ));
+	Assert.AreEqual("BCD"   , s.Slice(1    ));
+	Assert.AreEqual("AB"    , s.Slice(0 , 2));
+	Assert.AreEqual("BC"    , s.Slice(1 , 2));
+	Assert.AreEqual("DCBA"  , s.Slice(-1   ));
+	Assert.AreEqual("CB"    , s.Slice(-2, 2));            
+			#endif
+	}
 
 public static void Sample12() {
+
+			#if WINDOWS
 
     Assert.AreEqual("DCBA", "ABCD".Reverse()); 
     
@@ -207,7 +213,10 @@ public static void Sample12() {
     Assert.AreEqual(",1,2,3", ",1,2,3,".RemoveLastChar());
     Assert.AreEqual(",1,2,3", ",1,2,3,".RemoveLastChar(','));
     Assert.AreEqual("1,2,3", ",1,2,3,".RemoveLastChar().RemoveFirstChar());
-}
+
+			#endif
+
+			}
 
 public static void Sample13() {
 
