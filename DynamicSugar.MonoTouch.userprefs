@@ -1,6 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ExtensionMethods/ExtensionMethods.String.cs">
+    <Files>
+      <File FileName="Readme.markdown" Line="18" Column="41" />
+      <File FileName="__Version.cs" Line="1" Column="1" />
+      <File FileName="DynamicObjects/MultiValue.cs" Line="9" Column="15" />
+      <File FileName="Compression/Compression.cs" Line="8" Column="17" />
+      <File FileName="DSSharp.Registry.cs" Line="3" Column="1" />
+      <File FileName="ExtensionMethods/ExtensionMethods.String.cs" Line="20" Column="22" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Dynamic;
+
 
 #if !MONOTOUCH
+using System.Dynamic;B
 
 namespace DynamicSugar {
 
