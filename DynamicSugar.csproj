@@ -110,9 +110,21 @@
     <Compile Include="DynamicObjects\MultiValue.cs" />
     <Compile Include="__Version.cs" />
     <None Include="DynamicSugar.snk" />
-    <None Include="Readme.markdown">
+    <Content Include="NuGet\install.ps1">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NuGet\CreatePackage.bat">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="NuGet\NuGet Package Creation.md">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="DynamicSugar.markdown">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -120,15 +132,42 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>FormatValueBasedOnType.cs</LastGenOutput>
     </None>
-    <None Include="NuGet\DynamicSugar.nuspec">
+    <Content Include="NuGet\DynamicSugar.nuspec">
       <SubType>Designer</SubType>
-    </None>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="NuGet\NuGet.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>Set TD=$(TargetDir)\NuGet.out
+
+md "%25TD%25"
+md "%25TD%25\content"
+md "%25TD%25\content\net40"
+md "%25TD%25\tools"
+md "%25TD%25\tools\net40"
+md "%25TD%25\lib"
+md "%25TD%25\lib\net40"
+
+copy "$(TargetPath)" "%25TD%25\lib\net40"
+copy "$(TargetDir)\DynamicSugar.markdown" "%25TD%25\content\net40"
+
+copy "$(TargetDir)\NuGet\install.ps1" "%25TD%25\tools\net40"
+
+copy "$(TargetDir)\NuGet\NuGet.exe" "%25TD%25"
+copy "$(TargetDir)\NuGet\DynamicSugar.nuspec" "%25TD%25"
+copy "$(TargetDir)\NuGet\CreatePackage.bat" "%25TD%25"
+
+</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -7,12 +7,14 @@ The ***Dynamic Sugar Library*** provides methods and classes inspired
 by the dynamic languages Python and JavaScript to write shorter and more
 readable source code in C# 4.0.
 
-The code has been modified to also run on MacOS and iOS using MonoTouch.
-The project DynamicSugar.MonoTouch.csproj, will compile for iOS, but all features
-using .NET 4.0 class DynamicObject are excluded.
+The code has been modified to also run on MacOS and iOS using Xamarin iOS and Android.
+
+Xamarin iOS:
+
+	The project DynamicSugar.MonoTouch.csproj, will compile for iOS, but all features using .NET 4.0 class DynamicObject are excluded.
 
 ## Web site
-- [www.DynamicSugar.net](http://www.jsonb.net/dynamicSugar.net/)
+- [www.DynamicSugar.net](http://www.frederictorres.net/dynamicSugar.net/index.html)
 
 ##Copyright
 Copyright (c) 2011, 2013 Frederic Torres

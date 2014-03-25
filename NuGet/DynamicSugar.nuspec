@@ -2,18 +2,25 @@
 <package>
   <metadata>
     <id>DynamicSugar</id>
-    <version>[VERSION]</version>
+    <title>DynamicSugar</title>
+    <version>0.2.5</version>
     <authors>Frederic Torres</authors>
     <owners>Frederic Torres</owners>
-    <description>The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#</description>
+    <copyright>Copyright © TORRES Frederic 2011,2014</copyright>
+    <summary></summary>
+    <description>
+      The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#.
+      The library support .NET and Xamarin iOS and Android.
+    </description>
     <language>en-US</language>
-    <projectUrl>http://www.dynamicSugar.net</projectUrl>
+    <projectUrl>http://www.frederictorres.net/dynamicSugar.net/index.html</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>C#.NET Dynamic Python JavaScript</tags>
+    <licenseUrl>https://raw.githubusercontent.com/fredericaltorres/DynamicSugarNet/master/Readme.markdown</licenseUrl>
+    <iconUrl>http://www.frederictorres.net/dynamicSugar.net/images/DynamicSugarLogo.png</iconUrl>
   </metadata>
  <files>
-      <file src="Output\NuGet\Lib\*.dll" target="lib" />
-      <file src="Output\NuGet\mkd\*.markdown" target="mkd" />
+    <file src="..\*.dll" target="lib"/>
   </files>
 </package>
 
