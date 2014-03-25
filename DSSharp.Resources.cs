@@ -36,7 +36,7 @@ namespace DynamicSugar {
                 foreach (var resource in assembly.GetManifestResourceNames())
                     if (resource.EndsWith("." + resourceFileName) || resource == resourceFileName)
                         return resource;
-                throw new System.ApplicationException("Resource '{0}' not find in assembly '{1}'".format(resourceFileName, Assembly.GetExecutingAssembly().FullName));
+                throw new System.ApplicationException("Resource '{0}' not find in assembly '{1}'".FormatString(resourceFileName, Assembly.GetExecutingAssembly().FullName));
             }
             /// <summary>
             /// Return the content of a text file embed as a resource.

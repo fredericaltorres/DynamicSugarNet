@@ -225,7 +225,7 @@ namespace DynamicSugar {
                 foreach (var p in __TypeDefined[typeFullName]) {
                     var pp = o.GetType().GetProperty(p);                    
                     if(pp==null)
-                        throw new System.ApplicationException("Field '{0}' in object '{1}' is not supported. Only properties are supported".format(p, o));
+                        throw new System.ApplicationException("Field '{0}' in object '{1}' is not supported. Only properties are supported".FormatString(p, o));
                     dic.Add(p, FastProperty<object, object>.Make(pp).Get(o));
                 }
             #else

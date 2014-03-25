@@ -10,6 +10,8 @@ using System.Globalization;
 using System.Dynamic;
 #endif
 
+// http://extensionmethod.net/
+
 namespace DynamicSugar {
 
     public static class ExtensionMethods_Format {
@@ -28,8 +30,8 @@ namespace DynamicSugar {
         public static double   ToDouble  (this string s, double? defaultValue = null) { try { return double.Parse(s);    } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }    
         public static DateTime ToDateTime(this string s, DateTime? defaultValue = null) { try { return DateTime.Parse(s);  } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }     
         public static Guid     ToGuid    (this string s, Guid? defaultValue = null) { try { return new Guid(s);        } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
-        public static bool     ToBool    (this string s, bool? defaultValue = null) { try { return bool.Parse(s);      } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
-  
+        public static bool     ToBool    (this string s, bool? defaultValue = null) { try { return bool.Parse(s);      } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }
+        
         /// <summary>
         /// The slice() method selects a part of a string.
         /// The original string is not be changed.
@@ -211,6 +213,17 @@ namespace DynamicSugar {
             return string.IsNullOrEmpty(s) ? defaultValue : s;
         }
         /// <summary>
+        /// Return the value of the string <paramref name="s"/> if not null
+        /// else return the default value.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static string IfNull(this string s, string defaultValue)
+        {
+            return s == null ? defaultValue : s;
+        }
+        /// <summary>
         /// Indicates whether the specified string is null or an System.String.Empty
         /// string.
         /// </summary>
@@ -219,7 +232,7 @@ namespace DynamicSugar {
         public static bool IsNullOrEmpty(this string s) {
             
             return string.IsNullOrEmpty(s);            
-        }      
+        }
         /// <summary>
         /// Indicates whether the specified string is an System.String.Empty
         /// string.
@@ -229,31 +242,64 @@ namespace DynamicSugar {
         public static bool IsEmpty(this string s) {
             
             return (s!=null) && s.Length==0;
-        }      
+        }
+
         /// <summary>
-        ///  Replaces the format item in the string with the string representation
+        ///  Replaces the FormatString item in the string with the string representation
         ///  of a corresponding object in a specified array.
         /// </summary>
         /// <param name="s"></param>
-        /// <param name="args">An object array that contains zero or more objects to format</param>
-        /// <returns>A copy of format in which the format items have been replaced by the string
+        /// <param name="args">An object array that contains zero or more objects to FormatString</param>
+        /// <returns>A copy of FormatString in which the FormatString items have been replaced by the string
         /// representation of the corresponding objects in args.
-        /// </returns>
-        public static string format(this string s, params object[] args) {
-            
+        /// </returns>   
+        public static string FormatString(this string s, params object[] args)
+        {
             return string.Format(s, args);
         }
+
+        //public static string Format(this string s, object a1) { return string.Format(s, a1); }
+        //public static string Format(this string s, object a1, object a2) { return string.Format(s, a1, a2); }
+        //public static string Format(this string s, object a1, object a2, object a3) { return string.Format(s, a1, a2, a3); }
+        //public static string Format(this string s, object a1, object a2, object a3, object a4) { return string.Format(s, a1, a2, a3, a4); }
+        //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5) { return string.Format(s, a1, a2, a3, a4, a5); }
+        //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5, object a6) { return string.Format(s, a1, a2, a3, a4, a5, a6); }
+        //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5, object a6, object a7) { return string.Format(s, a1, a2, a3, a4, a5, a6, a7); }
+        //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5, object a6, object a7, object a8) { return string.Format(s, a1, a2, a3, a4, a5, a6, a7, a8); }
+        //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5, object a6, object a7, object a8, object a9) { return string.Format(s, a1, a2, a3, a4, a5, a6, a7, a8, a9); }
+        //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5, object a6, object a7, object a8, object a9, object a10) { return string.Format(s, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10); }
+        
+        /*
         /// <summary>
-        ///  Replaces the format item in the string with the string representation
+        /// http://extensionmethod.net/csharp/string/FormatString-string
+        /// Author: Adam Weigert
+        /// </summary>
+        /// <param name="FormatString"></param>
+        /// <param name="arg"></param>
+        /// <param name="additionalArgs"></param>
+        /// <returns></returns>
+        public static string Formataaaaa(this string FormatString, object arg, params object[] additionalArgs)
+        {
+            if (additionalArgs == null || additionalArgs.Length == 0)
+            {
+                return string.Format(FormatString, arg);
+            }
+            else
+            {
+                return string.Format(FormatString, new object[] { arg }.Concat(additionalArgs).ToArray());
+            }
+        }*/
+        /// <summary>
+        ///  Replaces the FormatString item in the string with the string representation
         ///  of a corresponding property/field in the object passed.
         /// </summary>
         /// <param name="s"></param>
         /// <param name="poco">Any poco object</param>
         /// <returns></returns>
-        public static string Format(this string s, object poco) {
-         
+        public static string Template(this string s, object poco) {
+
             return ExtendedFormat.Format(s, ReflectionHelper.GetDictionary(poco));
-        }       
+        }
     }
 }
 /*

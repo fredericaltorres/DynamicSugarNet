@@ -23,8 +23,8 @@ namespace DynamicSugar {
             /// </summary>
             /// <typeparam name="K">The type of the key</typeparam>
             /// <typeparam name="V">The type of the value</typeparam>
-            /// <param name="dictionary">The dictionary to format</param>
-            /// <param name="format">The format of each key and value. The default is "{0}:{1}"</param>
+            /// <param name="dictionary">The dictionary to FormatString</param>
+            /// <param name="format">The FormatString of each key and value. The default is "{0}:{1}"</param>
             /// <param name="separator">The separator between each key and value. The default is ", "</param>
             /// <param name="preFix">A string to output at the beginning of the string, the default is "{ "</param>
             /// <param name="postFix">A string to output at the end of the string, the default is " }"</param>

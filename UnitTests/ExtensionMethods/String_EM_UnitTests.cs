@@ -84,7 +84,6 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(null, s.RemoveLastChar());
             Assert.AreEqual(null, s.RemoveLastChar('a'));
         }
-
         
         [TestMethod]
         public void RemoveIfStartsWith() {
@@ -142,6 +141,17 @@ namespace DynamicSugarSharp_UnitTests {
             s = "A";
             Assert.AreEqual("A", s.IfNullOrEmpty("default"));            
         }
+        
+        [TestMethod]
+        public void ___IfNull()
+        {
+            string s = null;
+            Assert.AreEqual("default", s.IfNull("default"));
+            s = "";
+            Assert.AreEqual("", s.IfNull("default"));
+            s = "A";
+            Assert.AreEqual("A", s.IfNull("default"));
+        }
 
         [TestMethod]
         public void IsNullOrEmpty() {
@@ -189,7 +199,9 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual("C"     ,s.Slice(2,1));
             Assert.AreEqual("CD"    ,s.Slice(2,2));            
         }
-        [TestMethod]        public void Slice_Range_All() {
+
+        [TestMethod]        
+        public void Slice_Range_All() {
 
             var s = "ABCD";
             Assert.AreEqual("ABCD"     ,s.Slice(0));
@@ -201,12 +213,15 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod,ExpectedException(typeof(System.ArgumentOutOfRangeException))]
         public void Slice_Range_IndexOutOfBand() {
             
-            "ABCD".Slice(1,4);
-        }        
+            "ABCD".Slice(1, 4);
+        }
+        
+        [TestMethod]
         public void Slice_IndexOutOfBand() {
 
             Assert.AreEqual("", "ABCD".Slice(10));
         }
+
         [TestMethod]
         public void Slice_NegativeIndex() {
 
@@ -226,6 +241,7 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual("DCB"    , s.Slice(-1,3));
             Assert.AreEqual("DCBA"   , s.Slice(-1,4));
         }
+
         [TestMethod]
         public void Slice_Range_NegativeIndex_All() {
 
@@ -240,6 +256,7 @@ namespace DynamicSugarSharp_UnitTests {
                         
             Assert.AreEqual("","ABCD".Slice(-110));
         }
+
         /// <summary>
         /// Based on How to Write a Spelling Corrector by Peter Norvig
         /// http://norvig.com/spell-correct.html
@@ -268,13 +285,13 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(""     , splits[5][1]);
 
             var deletes = new List<string>();
-            foreach (var s in splits){
+            foreach(var s in splits){
                 var a = s[0];
                 var b = s[1];
                 deletes.Add(a + b.Slice(1, -1));
             }
             var transposes = new List<string>();
-            foreach (var s in splits){
+            foreach(var s in splits){
                 var a = s[0];
                 var b = s[1];
                 if(b.Length>1)
@@ -318,6 +335,7 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual("Hell,o", splits[4]);            
             Assert.AreEqual("Hello,", splits[5]);
         }
+
         [TestMethod]
         public void Slice_Demo() {
 

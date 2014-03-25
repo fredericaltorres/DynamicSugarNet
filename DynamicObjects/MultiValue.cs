@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 
 #if !MONOTOUCH
-using System.Dynamic;B
+using System.Dynamic;
 
 namespace DynamicSugar {
 
@@ -120,7 +120,7 @@ namespace DynamicSugar {
                 result = this.Dictionary[binder.Name];
                 return true;
             }
-            else throw new MultiValuesException(EXCEPTION_MESSAGE__PROPERTY_NOT_DEFINED.format(binder.Name));
+            else throw new MultiValuesException(EXCEPTION_MESSAGE__PROPERTY_NOT_DEFINED.FormatString(binder.Name));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace DynamicSugar {
             else if(this.Behavior==MultiValuesBehavior.Bag)
                 result = this;
             else if(this.Behavior==MultiValuesBehavior.Undefined)
-                throw new MultiValuesException(EXCEPTION_MESSAGE__BEHAVIOR_NOT_DEFINED.format(this.Dictionary.Format()));
+                throw new MultiValuesException(EXCEPTION_MESSAGE__BEHAVIOR_NOT_DEFINED.FormatString(this.Dictionary.Format()));
             
             return true;
         }
@@ -178,7 +178,7 @@ namespace DynamicSugar {
                 result = this.Dictionary[name];
                 return true;
             }
-            else throw new MultiValuesException(EXCEPTION_MESSAGE__PROPERTY_NOT_DEFINED.format(name));
+            else throw new MultiValuesException(EXCEPTION_MESSAGE__PROPERTY_NOT_DEFINED.FormatString(name));
 
             //SetDictionaryFromParameters(binder.CallInfo, indexes);
             //result = this;

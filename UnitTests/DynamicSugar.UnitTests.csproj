@@ -123,12 +123,6 @@
     <EmbeddedResource Include="EmbedResource\EmbedBitmap.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSugar.csproj">
-      <Project>{9411FD91-3C80-47DB-8DFB-8FFC68C18592}</Project>
-      <Name>DynamicSugar</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="DataClasses\Alphabet2.txt">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -147,6 +141,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Files\%25.txt.gzip" />
     <EmbeddedResource Include="Files\ac.txt.gzip" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DynamicSugar.csproj">
+      <Project>{9411fd91-3c80-47db-8dfb-8ffc68c18592}</Project>
+      <Name>DynamicSugar</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

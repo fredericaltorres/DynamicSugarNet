@@ -76,7 +76,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void SaveBinaryResourceAsFiles() {
 
-            string path = @"{0}\GetBinaryResource".format(Environment.GetEnvironmentVariable("TEMP"));
+            string path = @"{0}\GetBinaryResource".FormatString(Environment.GetEnvironmentVariable("TEMP"));
             var d = DS.Resources.SaveBinaryResourceAsFiles(Assembly.GetExecutingAssembly(), path, "EmbedBitmap.bmp", "Alphabet.txt");
             Assert.IsTrue(System.IO.File.Exists(d["EmbedBitmap.bmp"]));
             Assert.IsTrue(System.IO.File.Exists(d["Alphabet.txt"]));
@@ -84,7 +84,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void SaveBinaryResourceAsFile() {
 
-            string path = @"{0}\GetBinaryResource".format(Environment.GetEnvironmentVariable("TEMP"));
+            string path = @"{0}\GetBinaryResource".FormatString(Environment.GetEnvironmentVariable("TEMP"));
             var f = DS.Resources.SaveBinaryResourceAsFile(Assembly.GetExecutingAssembly(), path, "EmbedBitmap.bmp");
             Assert.IsTrue(System.IO.File.Exists(f));
         }

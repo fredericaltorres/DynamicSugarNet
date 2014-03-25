@@ -27,16 +27,16 @@ namespace DynamicSugar {
         /// <summary>
         /// 
         /// </summary>
-        const string SYNTAX_ERROR_IN_FORMAT                        = "Syntax error in the format";
+        const string SYNTAX_ERROR_IN_FORMAT                        = "Syntax error in the FormatString";
         const string SYNTAX_ERROR_IN_FORMAT_PROPERTY_NAME_IS_EMPTY = SYNTAX_ERROR_IN_FORMAT + ". Property name is empty:'{0}'";
         const string PROPERTY_NOT_FIND_IN_OBJECT                   = "Property '{0}' not find in object '{1}'";
-        const string SYNTAX_ERROR_IN_FORMAT_MISSING_CLOSING_BRAKET = "Syntax error in the format - missing closing braket:'{0}'";
+        const string SYNTAX_ERROR_IN_FORMAT_MISSING_CLOSING_BRAKET = "Syntax error in the FormatString - missing closing braket:'{0}'";
         const string KEY_NOT_FIND_IN_DICTIONARY                    = "Key '{0}' not find in dictionary ";
 
         /// <summary>
-        /// Tokeninze the format and return a list.
+        /// Tokeninze the FormatString and return a list.
         /// There 2 type of token:
-        ///   (1) { .NET-ID or string.format-format }
+        ///   (1) { .NET-ID or string.FormatString-FormatString }
         ///   (2) Anything else
         /// </summary>
         /// <param name="format"></param>
@@ -180,7 +180,7 @@ namespace DynamicSugar {
                             {
                                 v = EvaluateValue(valueFormat, dictionary[methodOrPropertyName]);
                             }
-                            else throw new ExtendedFormatException(String.Format("Property '{0}' not found in dictionary, you may have a typo in the format", methodOrPropertyName));
+                            else throw new ExtendedFormatException(String.Format("Property '{0}' not found in dictionary, you may have a typo in the FormatString", methodOrPropertyName));
                         }
                         b.Append(v);
                     }
@@ -238,8 +238,8 @@ namespace DynamicSugar {
         }
         
         /// <summary>
-        /// if the value is a List Of T, we format it as a list [1,2,3]
-        /// else we format the value
+        /// if the value is a List Of T, we FormatString it as a list [1,2,3]
+        /// else we FormatString the value
         /// </summary>
         /// <param name="valueFormat"></param>
         /// <param name="ov"></param>
@@ -263,12 +263,12 @@ namespace DynamicSugar {
             return v;
         }
         /// <summary>
-        /// Convert to string the value in v and apply the format
+        /// Convert to string the value in v and apply the FormatString
         /// </summary>
         /// <param name="v"></param>
         /// <param name="format"></param>
         /// <returns></returns>       
-        //public static string Format(string format, dynamic expandoBag,params object[] args) {
+        //public static string Format(string FormatString, dynamic expandoBag,params object[] args) {
 
         //    IDictionary<string, object> dic = null;
 
@@ -276,7 +276,7 @@ namespace DynamicSugar {
         //        dic = expandoBag as IDictionary<string, object>;
         //    else
         //        throw new System.FormatException("parameter expandoBag is not of type System.Dynamic.ExpandoObject");
-        //    return Format(format, dic, null, args);
+        //    return Format(FormatString, dic, null, args);
         //}
         /// <summary>
         /// 

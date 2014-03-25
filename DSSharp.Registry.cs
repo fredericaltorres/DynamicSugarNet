@@ -33,14 +33,14 @@ namespace DynamicSugar {
             public void SetValue(string name, object value) {
 
                 if (!__SetValue(name, value)) {
-                    throw new ArgumentException("Cannot set registry name:{0}, value:{1}".format(name, value));
+                    throw new ArgumentException("Cannot set registry name:{0}, value:{1}".FormatString(name, value));
                 }
             }
 
             public void DeleteValue(string name) {
 
                 if (!__DeleteValue(name)) {
-                    throw new ArgumentException("Cannot delete registry name:{0}".format(name));
+                    throw new ArgumentException("Cannot delete registry name:{0}".FormatString(name));
                 }
             }
 

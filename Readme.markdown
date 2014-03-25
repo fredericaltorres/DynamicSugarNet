@@ -41,6 +41,9 @@ To download the library in your project enter the following command in the Packa
 
 	Date        Version Features/Bug Fixes
 	--------------------------------------------------------------------
+	2014-03-29  0.2.4
+						Breaking Change: Rename extension method String.format() to String.FormatString
+						Update support for MonoTouch
     2011-09-05  0.1.21  Support of MacOS and iOS. Just the begining.
 	2011-07-23  0.1.20  Add methods
                             SaveBinaryResourceAsFiles

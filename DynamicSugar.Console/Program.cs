@@ -47,10 +47,10 @@ namespace DynamicSugar.ConsoleApplication {
             // First syntax with DynamicSugar
             LastName = "TORRES";
             Age      = 45;
-            s1       = "LastName:{0}, Age:{1:000}".format(LastName, Age);
+            s1       = "LastName:{0}, Age:{1:000}".FormatString(LastName, Age);
 
             // Second syntax with DynamicSugar            
-            s1       = "LastName:{LastName}, Age:{Age:000}".Format( new { LastName, Age } );
+            s1       = "LastName:{LastName}, Age:{Age:000}".Template( new { LastName, Age } );
         }
         static void Why(){
 
@@ -176,7 +176,7 @@ namespace DynamicSugar.ConsoleApplication {
             var s1 = String.Format("firstName:{0}, age:{1}", firstName, age);                                 
 
             // Dynamic Sugar Syntax
-            var s2 = "firstName:{firstName}, age:{age}".Format( new { firstName , age } );
+            var s2 = "firstName:{firstName}, age:{age}".Template(new { firstName, age });
 
             Console.WriteLine(s1);
             Console.WriteLine(s2);
@@ -189,10 +189,10 @@ namespace DynamicSugar.ConsoleApplication {
                 DrivingLicenses = DS.List("Car", "Moto Bike")
             };
             //DrivingLicenses = new List<string>() { "Car", "Moto Bike" }
-            Console.WriteLine( // Call 3 properties in the format
+            Console.WriteLine( // Call 3 properties in the FormatString
                 p.Format("FullName:'{LastName},{FirstName}', BirthDay:{BirthDay:MM/dd/yyyy}, DrivingLicenses:{DrivingLicenses}")
             );
-            Console.WriteLine( // Call a method in the format
+            Console.WriteLine( // Call a method in the FormatString
                 p.Format("LoadInformation:{LoadInformation()} ")
             );
         }

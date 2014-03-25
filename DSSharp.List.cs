@@ -252,7 +252,7 @@ namespace DynamicSugar {
                 return v;
             }    
             /// <summary>
-            /// Format a List Of T, with default format parameters
+            /// Format a List Of T, with default FormatString parameters
             /// </summary>
             /// <typeparam name="T"></typeparam>
             /// <param name="l"></param>

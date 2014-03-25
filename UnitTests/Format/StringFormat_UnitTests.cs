@@ -12,14 +12,26 @@ namespace DynamicSugarSharp_UnitTests{
     public class StringFormat_UnitTests {
 
         [TestMethod]
-        public void String_format() {
+        public void string_format() {
                         
             var s = String.Format("[{0}] Age={1:000}", "TORRES", 45);
             Assert.AreEqual("[TORRES] Age=045",s);
 
-            s = "[{0}] Age={1:000}".format("TORRES", 45);
+            s = "[{0}] Age={1:000}".FormatString("TORRES", 45);
             Assert.AreEqual("[TORRES] Age=045",s);
         }
+
+        [TestMethod]
+        public void String_Format()
+        {
+            var s = String.Format("[{0}] Age={1:000}", "TORRES", 45);
+            Assert.AreEqual("[TORRES] Age=045", s);
+
+            string a = "[{0}] Age={1:000}";
+            s = a.FormatString("TORRES", 45);
+            Assert.AreEqual("[TORRES] Age=045", s);
+        }
+        
         [TestMethod]
         public void String_Format__WithDictionary() {
                         
@@ -27,19 +39,19 @@ namespace DynamicSugarSharp_UnitTests{
                 { "LastName" , "TORRES" },
                 { "Age"      , 45       }
             };
-            var s = "[{LastName}] Age={Age:000}".Format(dic);
+            var s = "[{LastName}] Age={Age:000}".Template(dic);
             Assert.AreEqual("[TORRES] Age=045",s);
         }
         [TestMethod]
         public void String_Format__WithAnonymousType() {
-                 
-            var s = "[{LastName}] Age={Age:000}".Format( new { LastName="TORRES", Age=45 } );
+
+            var s = "[{LastName}] Age={Age:000}".Template(new { LastName = "TORRES", Age = 45 });
             Assert.AreEqual("[TORRES] Age=045", s);
         }
         [TestMethod,ExpectedException(typeof(ExtendedFormatException))]
         public void String_Format__WithAnonymousType_WithTypoInFormat() {
-                 
-            var s = "[{LastName_BAD}] Age={Age:000}".Format( new { LastName="TORRES", Age=45 } );
+
+            var s = "[{LastName_BAD}] Age={Age:000}".Template(new { LastName = "TORRES", Age = 45 });
             Assert.AreEqual("[TORRES] Age=045", s);
         }
         [TestMethod]
@@ -48,7 +60,7 @@ namespace DynamicSugarSharp_UnitTests{
             dynamic eo  = new ExpandoObject();
             eo.LastName = "TORRES";
             eo.Age      = 45;
-            var s       = "[{LastName}] Age={Age:000}".Format(eo as ExpandoObject);
+            var s = "[{LastName}] Age={Age:000}".Template(eo as ExpandoObject);
             Assert.AreEqual("[TORRES] Age=045",s);
         }
     }

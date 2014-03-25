@@ -8,7 +8,7 @@ using System.Dynamic;
 
 namespace DynamicSugarSharp_UnitTests {
 
-    [TestClass]
+    [TestClass, Ignore]
     public class DS_Registry_UnitTests {
 
         [TestMethod]

@@ -73,7 +73,7 @@ void Sample5(){
     var s1 = String.Format("firstName:{0}, age:{1}", firstName, age ); // Regular C#
 
     // Dynamic Sugar Syntax. Is that beautiful?
-    var s2 = "firstName:{firstName}, age:{age}".Format( new { firstName , age } );
+    var s2 = "firstName:{firstName}, age:{age}".Template(new { firstName, age });
 }
     
 
