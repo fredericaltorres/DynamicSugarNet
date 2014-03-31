@@ -16,9 +16,9 @@ GitHub
 # Blog Posts:
 How to Write a Spelling Corrector? From Python to C# with Dynamic Sugar 
   
-Screen Casts: 
-# The Format() Method
-# Dynamic Sugar Demo
+# Screen Casts: 
+* The Format() Method
+* Dynamic Sugar Demo
 
 # Platforms Casts: 
 * Microsoft Windows and Windows Phone, .NET v 4.x
