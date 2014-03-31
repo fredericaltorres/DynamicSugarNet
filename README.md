@@ -8,9 +8,6 @@ DynamicSugar.net
 # License:
 You may use DynamicSugar.Net under the terms of the MIT License.
   
-# Source Code: 
-GitHub
-  
 # NuGet Install-Package DynamicSugar
 
 # Blog Posts:
