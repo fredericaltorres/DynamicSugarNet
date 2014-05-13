@@ -17,6 +17,6 @@ How to Write a Spelling Corrector? From Python to C# with Dynamic Sugar
 * The Format() Method
 * Dynamic Sugar Demo
 
-# Platforms Casts: 
+# Platforms: 
 * Microsoft Windows and Windows Phone, .NET v 4.x
 * Xamarin iOS and Android
