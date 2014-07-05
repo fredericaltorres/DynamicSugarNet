@@ -66,6 +66,31 @@ namespace DynamicSugar {
                 }
             }
             /// <summary>
+            /// Return the content of a text file embed as a resource.
+            /// The function takes care of finding the fully qualify name, in the first
+            /// assembly when the resource is found
+            /// </summary>
+            /// <param name="resourceFileName">The file name of the resource</param>
+            /// <param name="assemblies">A list of assemblies in which to search for the resources</param>
+            /// <returns></returns>
+            public static string GetTextResource(string resourceFileName, List<Assembly> assemblies)
+            {
+                System.Exception lastEx = null;
+                foreach (var a in assemblies)
+                {
+                    try
+                    {
+                        return GetTextResource(resourceFileName, a);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        lastEx = ex;
+                    }
+                }
+                throw lastEx;
+            }
+
+            /// <summary>
             /// Return multiple text files embed as a resource in a dictionary.
             /// The key in the resource name, the value is the text data
             /// The function takes care of finding the fully qualify name, in the passed
@@ -169,7 +194,7 @@ namespace DynamicSugar {
             /// <returns></returns>
             public static string SaveBinaryResourceAsFile(Assembly assembly, string path, string resourceFileName) {
 
-                var outputFileName = String.Format(@"{0}\{1}", path, resourceFileName);
+                var outputFileName = System.IO.Path.Combine(path, resourceFileName);
                 if (System.IO.File.Exists(outputFileName))
                     return outputFileName;
 
