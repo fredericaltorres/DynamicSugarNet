@@ -15,18 +15,34 @@ namespace DynamicSugarSharp_UnitTests {
     public class DS_Assert_GetTextResource {
 
         [TestMethod]
-        public void AssertValueTypeProperties() {
+        public void AreEqualProperties_Poco() {
 
             var o = new { a=1, b=2, c="ok", d=true, e = DateTime.Now, f=1.2, g=1.2M, h=1.2f };
-            DS.Assert.ValueTypeProperties(o, o);
+            DS.Assert.AreEqualProperties(o, o);
         }
 
         [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
-        public void AssertValueTypeProperties_Fail() {
+        public void AreEqualProperties_Poco_Fail() {
 
             var o1 = new { a=1, b=2, c="ok", d=true, e = DateTime.Now, f=1.2, g=1.2M, h=1.2f };
             var o2 = new { a=1, b=2, c="ok", d=true, e = DateTime.Now, f=1.2, g=1.2M, h=1.1f };
-            DS.Assert.ValueTypeProperties(o1, o2);
+            DS.Assert.AreEqualProperties(o1, o2);
         }
+
+        [TestMethod]
+        public void AreEqualProperties_Dictionary() {
+
+            var o = new { a=1, b=2, c="ok", d=true, e = DateTime.Now, f=1.2, g=1.2M, h=1.2f };
+            DS.Assert.AreEqualProperties(DS.Dictionary(o), DS.Dictionary(o));
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void AreEqualProperties_Dictionary_Fail() {
+
+            var o1 = new { a=1, b=2, c="ok", d=true, e = DateTime.Now, f=1.2, g=1.2M, h=1.2f };
+            var o2 = new { a=2, b=2, c="ok", d=true, e = DateTime.Now, f=1.2, g=1.2M, h=1.1f };
+            DS.Assert.AreEqualProperties(DS.Dictionary(o1), DS.Dictionary(o2));
+        }
+
     }
 }
