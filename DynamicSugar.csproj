@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="DynamicObjects\MultiValue.cs" />
     <Compile Include="__Version.cs" />
+    <None Include="createNuGetPackage.ps1" />
     <None Include="DynamicSugar.snk" />
     <None Include="DynamicSugar.md">
       <SubType>Designer</SubType>

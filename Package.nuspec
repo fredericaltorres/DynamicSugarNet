@@ -2,10 +2,11 @@
 <package>
   <metadata>
     <id>DynamicSugar2</id>
-    <version>0.3.0</version>
+    <version>0.0.0</version><!-- Overriden by command line -->
     <authors>ftorres</authors>
     <owners>ftorres</owners>
-    <licenseUrl>https://raw.githubusercontent.com/fredericaltorres/DynamicSugarNet/master/README.md</licenseUrl>
+    <!--<licenseUrl>https://raw.githubusercontent.com/fredericaltorres/DynamicSugarNet/master/README.md</licenseUrl>-->
+    <license type="expression">Apache-2.0</license>
     <projectUrl>https://raw.githubusercontent.com/fredericaltorres/DynamicSugarNet/master/README.md</projectUrl>
     <iconUrl>https://ftorres.azurewebsites.net/images/hardware/GamePad/LogiTech_F310.jpg</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -25,8 +26,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\release\DynamicSugar.md" target="content\DynamicSugar.md" />
-    <file src="bin\release\*.dll" target="lib\net40"/>
-    <file src="bin\release\*.pdb" target="lib\net40"/>
+    <file src="bin\$Configuration$\DynamicSugar.md" target="content\DynamicSugar.md" />
+    <file src="bin\$Configuration$\*.dll" target="lib\net40"/>
+    <file src="bin\$Configuration$\*.pdb" target="lib\net40"/>
   </files>
 </package>
