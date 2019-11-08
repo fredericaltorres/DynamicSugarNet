@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TORRES Frederic")]
 [assembly: AssemblyProduct("DynamicSugar")]
-[assembly: AssemblyCopyright("Copyright © TORRES Frederic 2011,2014")]
+[assembly: AssemblyCopyright("Copyright © TORRES Frederic 2011,2019")]
 [assembly: AssemblyTrademark("TORRES Frederic")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

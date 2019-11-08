@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>DynamicSugar2</id>
+    <version>0.3.0</version>
+    <authors>ftorres</authors>
+    <owners>ftorres</owners>
+    <licenseUrl>https://raw.githubusercontent.com/fredericaltorres/DynamicSugarNet/master/README.md</licenseUrl>
+    <projectUrl>https://raw.githubusercontent.com/fredericaltorres/DynamicSugarNet/master/README.md</projectUrl>
+    <iconUrl>https://ftorres.azurewebsites.net/images/hardware/GamePad/LogiTech_F310.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#.
+      The library support .NET and Xamarin iOS and Android.
+    </description>
+    <releaseNotes>Reset NuGet Package to new standard</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>CSHARP DynamicSugar</tags>
+    <dependencies>
+      <!--
+      Add dependency of the project here
+      <dependency id="SampleDependency" version="1.0" />
+      -->
+      <group targetFramework=".NETFramework4" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\release\DynamicSugar.md" target="content\DynamicSugar.md" />
+    <file src="bin\release\*.dll" target="lib\net40"/>
+    <file src="bin\release\*.pdb" target="lib\net40"/>
+  </files>
+</package>
