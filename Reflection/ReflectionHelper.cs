@@ -37,15 +37,15 @@ namespace DynamicSugar {
     /// </summary>
     public class ReflectionHelper {
 
-        const BindingFlags GET_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
-        const BindingFlags GET_FLAGS_STATIC = BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
-        const BindingFlags CALL_METHOD_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
-        const BindingFlags CALL_STATIC_METHOD_FLAGS = BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase;
+        const BindingFlags GET_FLAGS                = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
+        const BindingFlags GET_FLAGS_STATIC         = BindingFlags.Static   | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
+        const BindingFlags CALL_METHOD_FLAGS        = BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod;
+        const BindingFlags CALL_STATIC_METHOD_FLAGS = BindingFlags.Static   | BindingFlags.Public | BindingFlags.InvokeMethod;
         
         public static string GetStackCall() {
             try {
                 System.Reflection.MethodBase method = null;
-                System.Text.StringBuilder B = new StringBuilder();
+                var b = new StringBuilder();
                 int i = 1;
                 int max = (new System.Diagnostics.StackTrace(true)).FrameCount;
                 while (i < max) {
@@ -60,12 +60,12 @@ namespace DynamicSugar {
                             (method.Name.ToLower() != "trace_error")    &&
                             (method.Name.ToLower() != "trace_method")
                         ) {
-                            B.AppendFormat("{1}.{0} -> ", method.Name, method.ReflectedType.FullName);
+                            b.AppendFormat("{1}.{0} -> ", method.Name, method.ReflectedType.FullName);
                         }
                     }
                     i++;
                 }
-                return B.ToString();
+                return b.ToString();
             }
             catch {
                 return null;
@@ -268,6 +268,20 @@ namespace DynamicSugar {
                 return false;
             }
         }
+
+
+        public static bool MethodExist(object o, string methodName)
+        {
+            try
+            {
+                return o.GetType().GetMethod(methodName) != null;
+            }
+            catch (AmbiguousMatchException)
+            {
+                return true; // ambiguous means there is more than one result which means: a method with that name does exist
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -403,7 +417,7 @@ namespace DynamicSugar {
             object retValue;
 
             if (parameters.Length == 0)
-                retValue = instance.GetType().InvokeMember(method, CALL_METHOD_FLAGS, null, instance, null);            
+                retValue = instance.GetType().InvokeMember(method, CALL_METHOD_FLAGS, null, instance, null);
             else
                 retValue = instance.GetType().InvokeMember(method, CALL_METHOD_FLAGS, null, instance, parameters);
             return retValue;

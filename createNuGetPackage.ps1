@@ -4,13 +4,12 @@ param(
     [Alias('a')]
     [ValidateSet('pack')]
     [string]$action = "pack",
-
     
     [Parameter(Mandatory=$false)]
-    [string]$packageVersion = "0.3.1",
+    [string]$packageVersion = "0.3.2",
 
     [Parameter(Mandatory=$false)]
-    [string]$configuration = "Debug"
+    [string]$configuration = "Release"
 )
 <#
     https://docs.microsoft.com/en-us/nuget/reference/cli-reference/cli-ref-pack

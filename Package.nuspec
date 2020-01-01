@@ -2,6 +2,7 @@
 <package>
   <metadata>
     <id>DynamicSugar2</id>
+    <title>DynamicSugar2</title>
     <version>0.0.0</version><!-- Overriden by command line -->
     <authors>ftorres</authors>
     <owners>ftorres</owners>
@@ -14,7 +15,15 @@
       The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#.
       The library support .NET and Xamarin iOS and Android.
     </description>
-    <releaseNotes>Reset NuGet Package to new standard</releaseNotes>
+
+    <summary>
+      The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#.
+      The library support .NET and Xamarin iOS and Android.
+    </summary>
+
+    <releaseNotes>Added ReflectionHelper.MethodExist</releaseNotes>
+    
+
     <copyright>Copyright 2019</copyright>
     <tags>CSHARP DynamicSugar</tags>
     <dependencies>

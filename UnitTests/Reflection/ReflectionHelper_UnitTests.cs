@@ -286,6 +286,13 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.IsFalse(DynamicSugar.ReflectionHelper.PropertyExist(TestDataInstanceManager.TestPersonInstance, "NotAvailableProperty"));
         }
         [TestMethod]
+        public void MethodExist()
+        {
+            Assert.IsTrue(DynamicSugar.ReflectionHelper.MethodExist(TestDataInstanceManager.TestPersonInstance, "GetLastName"));
+            Assert.IsFalse(DynamicSugar.ReflectionHelper.MethodExist(TestDataInstanceManager.TestPersonInstance, "InvalidMethod"));
+        }
+
+        [TestMethod]
         public void GetProperty() {
 
             Assert.AreEqual(TestDataInstanceManager.LASTNAME,   DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "LastName").ToString());
