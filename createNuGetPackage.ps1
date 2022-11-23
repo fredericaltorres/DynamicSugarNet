@@ -30,3 +30,12 @@ if(Test-Path $PACKAGE_FILE) {
 }
 
 & .\NuGet.exe pack .\Package.nuspec -Version $packageVersion -Properties Configuration=$Configuration -OutputDirectory "$NUGET_OUTPUT_FOLDER"
+
+
+
+<#
+https://learn.microsoft.com/en-us/nuget/reference/nuspec
+upload
+  https://www.nuget.org/packages/DynamicSugar2
+  fredericaltorres@live.com
+#>
