@@ -37,8 +37,11 @@ namespace DynamicSugar {
     /// </summary>
     public class ReflectionHelper {
 
-        const BindingFlags GET_FLAGS                = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
-        const BindingFlags GET_FLAGS_STATIC         = BindingFlags.Static   | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
+        const BindingFlags GET_PRIVATE_PROPERTY_FLAGS               = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.GetProperty;
+        const BindingFlags GET_PUBLIC_PROPERTY_FLAGS                = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public    | BindingFlags.GetField | BindingFlags.GetProperty;
+
+        const BindingFlags GET_PUBLIC_STATIC_PROPERTY_FLAGS         = BindingFlags.Static   | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
+
         const BindingFlags CALL_METHOD_FLAGS        = BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod;
         const BindingFlags CALL_STATIC_METHOD_FLAGS = BindingFlags.Static   | BindingFlags.Public | BindingFlags.InvokeMethod;
         
@@ -243,11 +246,11 @@ namespace DynamicSugar {
 
             var dic = new Dictionary<string,object>();
 
-            foreach(var p in o.GetType().GetProperties(GET_FLAGS))
+            foreach(var p in o.GetType().GetProperties(GET_PUBLIC_PROPERTY_FLAGS))
                 if((propertiesToInclude==null)||(propertiesToInclude.Contains(p.Name)))
                     dic.Add( p.Name, p.GetValue(o, new object[0]) );
 
-            foreach(var p in o.GetType().GetFields(GET_FLAGS))
+            foreach(var p in o.GetType().GetFields(GET_PUBLIC_PROPERTY_FLAGS))
                 if((propertiesToInclude==null)||(propertiesToInclude.Contains(p.Name)))
                     dic.Add( p.Name, p.GetValue(o) );
 
@@ -261,7 +264,7 @@ namespace DynamicSugar {
         /// <returns></returns>
         public static bool PropertyExist(object o, string propertyName) {
             try {
-                object oValue = o.GetType().InvokeMember(propertyName, GET_FLAGS, null, o, null);
+                object oValue = o.GetType().InvokeMember(propertyName, GET_PUBLIC_PROPERTY_FLAGS, null, o, null);
                 return true;
             }
             catch {
@@ -282,16 +285,45 @@ namespace DynamicSugar {
             }
         }
 
+        public static object GetStaticProperty(Type typer, string propertyName, object defaultValue = null, bool isPrivate = false)
+        {
+            try
+            {
+                if (isPrivate)
+                {
+                    object oValue = typer.GetProperty(propertyName).GetValue(null, null);
+                    return oValue;
+                }
+                else
+                {
+                    object oValue = typer.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
+                    return oValue;
+                }
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="o"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static object GetProperty(object o, string propertyName, object defaultValue = null) {
-            try {
-                object oValue = o.GetType().InvokeMember(propertyName, GET_FLAGS, null, o, null);
-                return oValue;
+        public static object GetProperty(object o, string propertyName, object defaultValue = null, bool isPrivate = false) {
+            try  {
+                if(isPrivate)
+                {
+                    object oValue = o.GetType().InvokeMember(propertyName, GET_PRIVATE_PROPERTY_FLAGS, null, o, null);
+                    return oValue;
+                }
+                else
+                {
+                    object oValue = o.GetType().InvokeMember(propertyName, GET_PUBLIC_PROPERTY_FLAGS, null, o, null);
+                    return oValue;
+                }
             }
             catch {
                 return defaultValue;
@@ -308,7 +340,7 @@ namespace DynamicSugar {
         {
             try
             {
-                object oValue = o.InvokeMember(propertyName, GET_FLAGS_STATIC, null, null, null);
+                object oValue = o.InvokeMember(propertyName, GET_PUBLIC_STATIC_PROPERTY_FLAGS, null, null, null);
                 return oValue;
             }
             catch(System.Exception ex)

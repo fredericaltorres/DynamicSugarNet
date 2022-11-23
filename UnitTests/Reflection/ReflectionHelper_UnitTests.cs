@@ -293,6 +293,30 @@ namespace DynamicSugarSharp_UnitTests {
         }
 
         [TestMethod]
+        public void GetPrivateProperty()
+        {
+            var privateTitle = DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "PrivateTitle", isPrivate: true);
+            Assert.AreEqual("privateSomething", privateTitle);
+        }
+
+
+        [TestMethod]
+        public void GetPublicStaticProperty()
+        {
+            // WE CAN CALL A PUBLIC STATIC PROPERTY USING AN INSTANCE 
+            // BUT USING A TYPE DOES NOT WORK
+            Assert.AreEqual("PublicStaticTitle", DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "PublicStaticTitle").ToString());
+            // Assert.AreEqual("PublicStaticTitle", DynamicSugar.ReflectionHelper.GetProperty(typeof(Person), "PublicStaticTitle").ToString());
+        }
+
+
+        [TestMethod]
+        public void GetPrivateStaticProperty()
+        {
+            Assert.AreEqual("PrivateStaticTitle", DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "PrivateStaticTitle", isPrivate: true).ToString());
+        }
+
+        [TestMethod]
         public void GetProperty() {
 
             Assert.AreEqual(TestDataInstanceManager.LASTNAME,   DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "LastName").ToString());
@@ -300,9 +324,12 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(TestDataInstanceManager.AGE,        (int)DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "Age"));
             Assert.AreEqual(TestDataInstanceManager.BIRTH_DAY, (DateTime)DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "BirthDay"));
 
+            // Is case sensitive
             Assert.AreEqual(null, DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "lastname"));
+
             Assert.AreEqual(null, DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "NotAvailableProperty"));
         }
+
         [TestMethod]
         public void GetPropertyForObject() {
 
@@ -310,7 +337,11 @@ namespace DynamicSugarSharp_UnitTests {
             var p            = TestDataInstanceManager.TestPersonInstance;
             p.Address.Street = streetValue;
             dynamic address  = DynamicSugar.ReflectionHelper.GetProperty(p, "Address");
+            
             Assert.AreEqual(streetValue, address.Street);
+
+            var privateTitle = DynamicSugar.ReflectionHelper.GetProperty(p, "PrivateTitle", isPrivate: true);
+            Assert.AreEqual("privateSomething", privateTitle);
         }
     }
 }

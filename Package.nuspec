@@ -18,25 +18,26 @@
 
     <summary>
       The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#.
-      The library support .NET and Xamarin iOS and Android.
+      The library support .NET and does not support Xamarin iOS and Android anymore.
     </summary>
 
-    <releaseNotes>Added ReflectionHelper.MethodExist</releaseNotes>
-    
+    <releaseNotes>Added ReflectionHelper.GetProperty privtae property</releaseNotes>
 
-    <copyright>Copyright 2019</copyright>
+    <copyright>Copyright 2019, 2022</copyright>
     <tags>CSHARP DynamicSugar</tags>
     <dependencies>
-      <!--
-      Add dependency of the project here
-      <dependency id="SampleDependency" version="1.0" />
-      -->
-      <group targetFramework=".NETFramework4" />
+      <!--<group targetFramework=".NETFramework4" />-->
+      <group targetFramework=".NETFramework4.6.1" />
     </dependencies>
   </metadata>
   <files>
     <file src="bin\$Configuration$\DynamicSugar.md" target="content\DynamicSugar.md" />
-    <file src="bin\$Configuration$\*.dll" target="lib\net40"/>
-    <file src="bin\$Configuration$\*.pdb" target="lib\net40"/>
+    <file src="bin\$Configuration$\*.dll" target="lib\net461"/>
+    <file src="bin\$Configuration$\*.pdb" target="lib\net461"/>
   </files>
 </package>
+
+
+<!--
+https://learn.microsoft.com/en-us/nuget/reference/nuspec
+-->

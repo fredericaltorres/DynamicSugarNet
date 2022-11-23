@@ -21,6 +21,11 @@ namespace DynamicSugarSharp_UnitTests {
         public int Age           { get; set; }
         public DateTime BirthDay { get; set; }
 
+
+        public static string PublicStaticTitle = "PublicStaticTitle";
+        private static string PrivateStaticTitle = "PrivateStaticTitle";
+        private string PrivateTitle { get; set; } = "privateSomething";
+
         public Address Address = new Address();
 
         public List<string> DrivingLicenses = new List<string>();
