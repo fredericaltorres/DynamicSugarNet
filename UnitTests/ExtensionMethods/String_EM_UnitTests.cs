@@ -12,6 +12,16 @@ namespace DynamicSugarSharp_UnitTests {
     public class String_EM_UnitTests {
 
         [TestMethod]
+        public void TokenReplacer()
+        {
+            var pid = 123;
+            Assert.AreEqual("/ pid:123 /", "/ pid:[PID] /".TokenReplacer(new { pid }));
+            Assert.AreEqual("/ pid:123 /", "/ pid:[PID] /".TokenReplacer(new { pid = pid }));
+            Assert.AreEqual("/ pid:123 /", "/ pid:[PID] /".TokenReplacer(new { PID = pid }));
+            Assert.AreEqual("/ pid:123 /", "/ pid:<PID> /".TokenReplacer(new { pid }, "<", ">"));
+        }
+
+        [TestMethod]
         public void ToXXXX() {
 
             Assert.AreEqual(123, "123".ToInt());

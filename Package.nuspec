@@ -6,22 +6,25 @@
     <version>0.0.0</version><!-- Overriden by command line -->
     <authors>ftorres</authors>
     <owners>ftorres</owners>
-    <!--<licenseUrl>https://raw.githubusercontent.com/fredericaltorres/DynamicSugarNet/master/README.md</licenseUrl>-->
     <license type="expression">Apache-2.0</license>
-    <projectUrl>https://raw.githubusercontent.com/fredericaltorres/DynamicSugarNet/master/README.md</projectUrl>
-    <iconUrl>https://ftorres.azurewebsites.net/images/hardware/GamePad/LogiTech_F310.jpg</iconUrl>
+    <projectUrl>https://github.com/fredericaltorres/DynamicSugarNet</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+
+ 
+    
     <description>
       The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#.
       The library support .NET and Xamarin iOS and Android.
     </description>
+
+      <!--<icon>images\DynamicSugar2.Logo.jpg</icon>-->
 
     <summary>
       The Dynamic Sugar Library provides methods, functions and classes inspired by the dynamic languages Python and JavaScript to write more readable code in C#.
       The library support .NET and does not support Xamarin iOS and Android anymore.
     </summary>
 
-    <releaseNotes>Added ReflectionHelper.GetProperty privtae property</releaseNotes>
+    <releaseNotes>Add TokenReplacer method for strings</releaseNotes>
 
     <copyright>Copyright 2019, 2022</copyright>
     <tags>CSHARP DynamicSugar</tags>
@@ -31,6 +34,7 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="images\DynamicSugar2.Logo.jpg" target="images\" />
     <file src="bin\$Configuration$\DynamicSugar.md" target="content\DynamicSugar.md" />
     <file src="bin\$Configuration$\*.dll" target="lib\net461"/>
     <file src="bin\$Configuration$\*.pdb" target="lib\net461"/>

@@ -31,7 +31,20 @@ namespace DynamicSugar {
         public static DateTime ToDateTime(this string s, DateTime? defaultValue = null) { try { return DateTime.Parse(s);  } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }     
         public static Guid     ToGuid    (this string s, Guid? defaultValue = null) { try { return new Guid(s);        } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
         public static bool     ToBool    (this string s, bool? defaultValue = null) { try { return bool.Parse(s);      } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }
-        
+
+
+        public static string TokenReplacer(this string s, object poco, string startBracket = "[", string endBracket = "]")
+        {
+            return TokenReplacer(s, DS.Dictionary(poco), startBracket, endBracket);
+        }
+
+        private static string TokenReplacer(this string s, Dictionary<string, object> values, string startBracket = "[", string endBracket = "]")
+        {
+            foreach (var v in values)
+                s = s.Replace($"{startBracket}{v.Key.ToUpperInvariant()}{endBracket}", v.Value.ToString());
+            return s;
+        }
+
         /// <summary>
         /// The slice() method selects a part of a string.
         /// The original string is not be changed.

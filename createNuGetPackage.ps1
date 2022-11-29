@@ -6,7 +6,7 @@ param(
     [string]$action = "pack",
     
     [Parameter(Mandatory=$false)]
-    [string]$packageVersion = "0.4.0",
+    [string]$packageVersion = "0.4.1",
 
     [Parameter(Mandatory=$false)]
     [string]$configuration = "Release"
