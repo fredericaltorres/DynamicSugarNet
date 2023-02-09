@@ -1,14 +1,24 @@
-DynamicSugar.net
+DynamicSugar.net /Standard
 ===============
 
 ## What is DynamicSugar.Net?
-The Dynamic Sugar Library provides methods and classes inspired by the dynamic languages Python and JavaScript to write shorter and more readable source code in C# 4.0.
+* In 2011 I created the Dynamic Sugar Library which 
+provides methods and classes inspired by the dynamic 
+languages Python and JavaScript to write shorter and more readable source code in C# 4.0.
+
+* From 2011 to 2022, I sligthly updated the library. 
+* From 2011 to 2020, the C# language evolved and some feature in DynamicSugar are no obsolete, like
+the DynamicSugar string interpolation feature. But most of the feature are still usefull and I want 
+to use them in my .NET 4.6.1 and .NET Core development in 2023.
+
+* In 2023 I moved the library to .NET Standard 2.0, so it can be used with .NET 4.6.1 and .NET Core.
+
 
 # License:
 You may use DynamicSugar.Net under the terms of the MIT License.
   
 # NuGet
-Install-Package DynamicSugar
+Install-Package DynamicSugarStandard
 
 # Blog Posts:
 How to Write a Spelling Corrector? From Python to C# with Dynamic Sugar 
@@ -20,7 +30,6 @@ How to Write a Spelling Corrector? From Python to C# with Dynamic Sugar
 # Platforms: 
 * Microsoft Windows and Windows Phone, .NET v 4.x
 * Xamarin iOS and Android
-
 
 DynamicSugarCore.net
 ===============

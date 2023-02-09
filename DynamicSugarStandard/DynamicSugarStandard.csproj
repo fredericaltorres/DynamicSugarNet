@@ -9,6 +9,7 @@
     <RepositoryUrl>https://github.com/fredericaltorres/DynamicSugarNet</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
