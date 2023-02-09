@@ -29,7 +29,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DYNAMIC_SUGAR_STANDARD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -38,7 +38,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;DYNAMIC_SUGAR_STANDARD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -148,9 +148,9 @@
     <EmbeddedResource Include="Files\ac.txt.gzip" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSugar.csproj">
-      <Project>{9411fd91-3c80-47db-8dfb-8ffc68c18592}</Project>
-      <Name>DynamicSugar</Name>
+    <ProjectReference Include="..\DynamicSugarStandard\DynamicSugarStandard.csproj">
+      <Project>{60fe6dd3-e75c-4111-9a43-09fd17af2949}</Project>
+      <Name>DynamicSugarStandard</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

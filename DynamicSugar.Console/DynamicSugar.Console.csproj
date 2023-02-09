@@ -73,9 +73,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSugar.csproj">
-      <Project>{9411FD91-3C80-47DB-8DFB-8FFC68C18592}</Project>
-      <Name>DynamicSugar</Name>
+    <ProjectReference Include="..\DynamicSugarStandard\DynamicSugarStandard.csproj">
+      <Project>{60fe6dd3-e75c-4111-9a43-09fd17af2949}</Project>
+      <Name>DynamicSugarStandard</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

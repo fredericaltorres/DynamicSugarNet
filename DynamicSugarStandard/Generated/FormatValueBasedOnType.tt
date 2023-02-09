@@ -1,0 +1,64 @@
+﻿<#@ output extension="cs" #>
+/*
+ * DO NOT CHANGE THIS FILE.
+ * THIS FILE WAS GENERATED.
+ */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Reflection;
+using System.Text.RegularExpressions; 
+
+namespace DynamicSugar {
+
+public static class Generated {
+
+<#
+	const string TYPES = @"
+DateTime
+byte
+Byte
+sbyte
+SByte
+decimal
+Decimal
+double
+Double
+float
+Single
+int
+Int32
+uint
+UInt32
+long
+Int64
+ulong
+UInt64
+short
+Int16
+ushort
+UInt16
+";
+#> 
+
+		 public static string FormatValueBasedOnType(object v, string format){
+
+			if(v==null) return null;
+			if(v==System.DBNull.Value) return null;
+
+			var t = v.GetType();			
+
+			<#
+			foreach(string t in TYPES.Replace(System.Environment.NewLine,"|").Split('|')){			
+			    if(t.Trim()=="") continue;
+			#> 
+			if(t == typeof(<#= t #>)) return ((<#= t #>)v).ToString(format);
+			<#
+			}
+			#>
+
+return v.ToString();            
+		}
+	}
+}

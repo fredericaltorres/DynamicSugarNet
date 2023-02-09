@@ -59,6 +59,8 @@ namespace DynamicSugarSharp_UnitTests {
             var alphabet = DS.Resources.GetTextResource("Alphabet.txt", Assembly.GetExecutingAssembly());
             Assert.AreEqual(exepectedAlphabet, alphabet);
         }
+
+#if !DYNAMIC_SUGAR_STANDARD
         [TestMethod]
         public void GetBitmapResource() {
 
@@ -66,6 +68,7 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(100, b.Width);
             Assert.AreEqual(100, b.Height);
         }
+#endif
         [TestMethod]
         public void GetBinaryResource() {
 
