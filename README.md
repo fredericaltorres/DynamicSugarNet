@@ -7,7 +7,7 @@ provides methods and classes inspired by the dynamic
 languages Python and JavaScript to write shorter and more readable source code in C# 4.0.
 
 * From 2011 to 2022, I sligthly updated the library. 
-* From 2011 to 2020, the C# language evolved and some feature in DynamicSugar are no obsolete, like
+* From 2011 to 2020, the C# language evolved and some features in DynamicSugar became obsolete, like
 the DynamicSugar string interpolation feature. But most of the feature are still usefull and I want 
 to use them in my .NET 4.6.1 and .NET Core development in 2023.
 
