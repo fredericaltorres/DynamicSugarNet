@@ -330,6 +330,22 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(null, DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "NotAvailableProperty"));
         }
 
+
+        [TestMethod]
+        public void EvaluatePath()
+        {
+
+            //Assert.AreEqual(TestDataInstanceManager.LASTNAME, DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "LastName").ToString());
+            //Assert.AreEqual(TestDataInstanceManager.FIRSTNAME, DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "FirstName").ToString());
+            //Assert.AreEqual(TestDataInstanceManager.AGE, (int)DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "Age"));
+            //Assert.AreEqual(TestDataInstanceManager.BIRTH_DAY, (DateTime)DynamicSugar.ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "BirthDay"));
+            var r = DynamicSugar.ReflectionHelper.EvaluatePath(TestDataInstanceManager.TestPersonInstance, "LastName");
+
+
+            // Is case sensitive
+
+        }
+
         [TestMethod]
         public void GetPropertyForObject() {
 

@@ -1,9 +1,9 @@
-﻿using System;
+﻿//using System;
 
-namespace DynamicSugarStandard
-{
-    public class Class1
-    {
+//namespace DynamicSugarStandard
+//{
+//    public class Class1
+//    {
 
-    }
-}
+//    }
+//}

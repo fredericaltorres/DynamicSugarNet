@@ -113,6 +113,52 @@ namespace DynamicSugarSharp_UnitTests {
         }
 
         [TestMethod]
+        public void SplitByCRLF()
+        {
+            var text = "A\r\nB\r\nC";
+            var lines = text.SplitByCRLF();
+            Assert.AreEqual(3, lines.Count);
+            Assert.AreEqual("A", lines[0]);
+            Assert.AreEqual("B", lines[1]);
+            Assert.AreEqual("C", lines[2]);
+        }
+
+
+        [TestMethod]
+        public void SplitByCRLF_TrimEnd()
+        {
+            var text = "A  \r\nB  \r\nC  ";
+            var lines = text.SplitByCRLF().TrimEnd();
+            Assert.AreEqual(3, lines.Count);
+            Assert.AreEqual("A", lines[0]);
+            Assert.AreEqual("B", lines[1]);
+            Assert.AreEqual("C", lines[2]);
+        }
+
+
+        [TestMethod]
+        public void SplitByCRLF_TrimEnd_Indent()
+        {
+            var text = "A  \r\nB  \r\nC  ";
+            var lines = text.SplitByCRLF().TrimEnd().Indent("  ", skipFirstOne: false);
+            Assert.AreEqual(3, lines.Count);
+            Assert.AreEqual("  A", lines[0]);
+            Assert.AreEqual("  B", lines[1]);
+            Assert.AreEqual("  C", lines[2]);
+        }
+
+        [TestMethod]
+        public void SplitByCRLF_TrimEnd_Indent_skipFirstOne()
+        {
+            var text = "A  \r\nB  \r\nC  ";
+            var lines = text.SplitByCRLF().TrimEnd().Indent("  ", skipFirstOne: true);
+            Assert.AreEqual(3, lines.Count);
+            Assert.AreEqual("A", lines[0]);
+            Assert.AreEqual("  B", lines[1]);
+            Assert.AreEqual("  C", lines[2]);
+        }
+
+        [TestMethod]
         public void RemoveIfEndsWith() {
 
             string sref = "yesterday I was here";

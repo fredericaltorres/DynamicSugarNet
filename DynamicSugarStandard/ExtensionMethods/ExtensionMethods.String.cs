@@ -157,6 +157,38 @@ namespace DynamicSugar {
         }
 
 
+        public static string ReplaceChar(this string line, int pos, char c)
+        {
+            var sb = new System.Text.StringBuilder(line);
+            sb[pos] = c;
+            return sb.ToString();
+        }
+
+        public static List<string> SplitByCRLF(this string line)
+        {
+            return line.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        }
+
+        public static List<string> TrimEnd(this List<string> li)
+        {
+            return li.Select(l => l.TrimEnd()).ToList(); // Remove space at the end of the line;
+        }
+
+        public static List<string> Indent(this List<string> li, string indentString, bool skipFirstOne)
+        {
+            if (skipFirstOne)
+            {
+                var r = li.Select(l => indentString + l).ToList();
+                r.RemoveAt(0);
+                r.Insert(0, li[0]);
+                return r;
+            }
+            else
+            {
+                return li.Select(l => indentString + l).ToList();
+            }
+        }
+
         /// <summary>
         /// Remove the first char
         /// </summary>
