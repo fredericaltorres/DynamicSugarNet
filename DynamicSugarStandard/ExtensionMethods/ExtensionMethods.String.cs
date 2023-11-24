@@ -345,6 +345,93 @@ namespace DynamicSugar {
 
             return ExtendedFormat.Format(s, ReflectionHelper.GetDictionary(poco));
         }
+
+        public enum StringComment
+        {
+            C_Comment_SlashStar,
+            CPP_Comment_SlashSlash,
+            Python_Comment_Hash,
+            SQL_Comment_DoubleDash
+        }
+
+
+        public static string RemoveComment(this string s, StringComment commentType = StringComment.C_Comment_SlashStar)
+        {
+            switch(commentType)
+            {
+                case StringComment.C_Comment_SlashStar:
+                    return Remove_C_MultiLineComment(s);
+                case StringComment.CPP_Comment_SlashSlash:
+                    return Remove_CPP_SingleLineComment(s);
+                case StringComment.Python_Comment_Hash:
+                    return Remove_Python_SingleLineComment(s);
+                case StringComment.SQL_Comment_DoubleDash:
+                    return Remove_SQL_SingleLineComment(s);
+                default:
+                    throw new Exception($"Comment type {commentType} not supported");
+            }
+        }
+
+        private static string Remove_SQL_SingleLineComment(string s)
+        {
+            return RemoveEndOfLineCommentForOnline(s, "--");
+        }
+
+        private static string Remove_Python_SingleLineComment(string s)
+        {
+            return RemoveEndOfLineCommentForOnline(s, "#");
+        }
+
+        private static string Remove_CPP_SingleLineComment(string s)
+        {
+            return RemoveEndOfLineCommentForOnline(s, "//");
+        }
+
+        public static string RemoveEndOfLineCommentForOnline(string line, string marker = "--")
+        {
+            if (string.IsNullOrEmpty(line))
+                return line;
+            var x = line.LastIndexOf(marker);
+
+            if (x == 0) // full commented line
+                return string.Empty;
+
+            if (x >= 0)
+                line = line.Substring(0, x);
+
+            return line;
+        }
+
+        public static string Remove_C_MultiLineComment(string line)
+        {
+            char replacementChar = (char)1;
+            var replacementCharStr = replacementChar.ToString();
+            var sb = new StringBuilder(1024);
+            sb.Append(line);
+            var x = 0;
+            var eraseMode = false;
+            while (x < sb.Length)
+            {
+                if ((sb[x] == '/') && (x < sb.Length - 1) && (sb[x + 1] == '*'))
+                {
+                    eraseMode = true;
+                    sb[x] = sb[x + 1] = replacementChar;
+                }
+
+                if (eraseMode && (sb[x] == '*') && (x < sb.Length - 1) && (sb[x + 1] == '/'))
+                {
+                    eraseMode = false;
+                    sb[x] = sb[x + 1] = replacementChar;
+                }
+
+                if (eraseMode && sb[x] != 13 && sb[x] != 10)
+                {
+                    sb[x] = replacementChar;
+                }
+                x += 1;
+            }
+            return sb.ToString().Replace(replacementCharStr, "");
+        }
     }
 }
 /*

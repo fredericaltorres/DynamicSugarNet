@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
+using System.Net.Mime;
 
 namespace DynamicSugarSharp_UnitTests{
 
@@ -62,6 +63,46 @@ namespace DynamicSugarSharp_UnitTests{
             eo.Age      = 45;
             var s = "[{LastName}] Age={Age:000}".Template(eo as ExpandoObject);
             Assert.AreEqual("[TORRES] Age=045",s);
+        }
+
+        [TestMethod]
+        public void RemoveComment__C_Comment_SlashStar()
+        {
+            var result = $"[/* comment */]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C_Comment_SlashStar);
+            var expected = $"[]";
+            Assert.AreEqual(expected, result);
+
+
+            result = @"[Hello/* comment 
+*/]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C_Comment_SlashStar);
+            expected = @"[Hello
+]";
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void RemoveComment__Pyhton_Comment()
+        {
+            var result = @"print(""Hello World"") # a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.Python_Comment_Hash);
+            var expected = @"print(""Hello World"") ";
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void RemoveComment__SQL_Comment()
+        {
+            var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL_Comment_DoubleDash);
+            var expected = @"print(""Hello World"") ";
+            Assert.AreEqual(expected, result);
+        }
+
+
+        [TestMethod]
+        public void RemoveComment__CPP_Comment()
+        {
+            var result = @"print(""Hello World"") // a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.CPP_Comment_SlashSlash);
+            var expected = @"print(""Hello World"") ";
+            Assert.AreEqual(expected, result);
         }
     }
 }

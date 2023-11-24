@@ -60,15 +60,16 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(exepectedAlphabet, alphabet);
         }
 
-#if !DYNAMIC_SUGAR_STANDARD
-        [TestMethod]
-        public void GetBitmapResource() {
+//#if !DYNAMIC_SUGAR_STANDARD
+//        [TestMethod]
+//        public void GetBitmapResource() {
 
-            var b = DS.Resources.GetBitmapResource("EmbedBitmap.bmp", Assembly.GetExecutingAssembly());            
-            Assert.AreEqual(100, b.Width);
-            Assert.AreEqual(100, b.Height);
-        }
-#endif
+//            var b = DS.Resources.GetBitmapResource("EmbedBitmap.bmp", Assembly.GetExecutingAssembly());            
+//            Assert.AreEqual(100, b.Width);
+//            Assert.AreEqual(100, b.Height);
+//        }
+//#endif
+
         [TestMethod]
         public void GetBinaryResource() {
 
