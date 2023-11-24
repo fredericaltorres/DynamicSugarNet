@@ -68,13 +68,13 @@ namespace DynamicSugarSharp_UnitTests{
         [TestMethod]
         public void RemoveComment__C_Comment_SlashStar()
         {
-            var result = $"[/* comment */]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C_Comment_SlashStar);
+            var result = $"[/* comment */]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C);
             var expected = $"[]";
             Assert.AreEqual(expected, result);
 
 
             result = @"[Hello/* comment 
-*/]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C_Comment_SlashStar);
+*/]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C);
             expected = @"[Hello
 ]";
             Assert.AreEqual(expected, result);
@@ -83,7 +83,7 @@ namespace DynamicSugarSharp_UnitTests{
         [TestMethod]
         public void RemoveComment__Pyhton_Comment()
         {
-            var result = @"print(""Hello World"") # a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.Python_Comment_Hash);
+            var result = @"print(""Hello World"") # a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.Python);
             var expected = @"print(""Hello World"") ";
             Assert.AreEqual(expected, result);
         }
@@ -91,7 +91,7 @@ namespace DynamicSugarSharp_UnitTests{
         [TestMethod]
         public void RemoveComment__SQL_Comment()
         {
-            var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL_Comment_DoubleDash);
+            var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
             var expected = @"print(""Hello World"") ";
             Assert.AreEqual(expected, result);
         }
@@ -100,7 +100,7 @@ namespace DynamicSugarSharp_UnitTests{
         [TestMethod]
         public void RemoveComment__CPP_Comment()
         {
-            var result = @"print(""Hello World"") // a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.CPP_Comment_SlashSlash);
+            var result = @"print(""Hello World"") // a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.CPP);
             var expected = @"print(""Hello World"") ";
             Assert.AreEqual(expected, result);
         }

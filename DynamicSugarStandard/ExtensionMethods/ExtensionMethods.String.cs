@@ -348,24 +348,23 @@ namespace DynamicSugar {
 
         public enum StringComment
         {
-            C_Comment_SlashStar,
-            CPP_Comment_SlashSlash,
-            Python_Comment_Hash,
-            SQL_Comment_DoubleDash
+            C,
+            CPP,
+            Python,
+            SQL
         }
 
-
-        public static string RemoveComment(this string s, StringComment commentType = StringComment.C_Comment_SlashStar)
+        public static string RemoveComment(this string s, StringComment commentType = StringComment.C)
         {
             switch(commentType)
             {
-                case StringComment.C_Comment_SlashStar:
+                case StringComment.C:
                     return Remove_C_MultiLineComment(s);
-                case StringComment.CPP_Comment_SlashSlash:
+                case StringComment.CPP:
                     return Remove_CPP_SingleLineComment(s);
-                case StringComment.Python_Comment_Hash:
+                case StringComment.Python:
                     return Remove_Python_SingleLineComment(s);
-                case StringComment.SQL_Comment_DoubleDash:
+                case StringComment.SQL:
                     return Remove_SQL_SingleLineComment(s);
                 default:
                     throw new Exception($"Comment type {commentType} not supported");
