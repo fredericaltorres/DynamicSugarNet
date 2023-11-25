@@ -6,13 +6,14 @@ DynamicSugar.net /Standard
 provides methods and classes inspired by the dynamic 
 languages Python and JavaScript to write shorter and more readable source code in C# 4.0.
 
-* From 2011 to 2022, I sligthly updated the library. 
+* From 2011 to 2022, I slightly updated the library. 
 * From 2011 to 2020, the C# language evolved and some features in DynamicSugar became obsolete, like
-the DynamicSugar string interpolation feature. But most of the feature are still usefull and I want 
+the DynamicSugar string interpolation feature. But most of the feature are still useful and I want 
 to use them in my .NET 4.6.1 and .NET Core development in 2023.
 
 * In 2023 I moved the library to .NET Standard 2.0, so it can be used with .NET 4.6.1 and .NET Core.
 
+![Logo ](.\DynamicSugarNet.png "Logo")
 
 # License:
 You may use DynamicSugar.Net under the terms of the MIT License.
@@ -47,7 +48,7 @@ in C# 4.0.
 since C# support string interpolation.
 - The class MultiValues was an attempt to create functions returning multiple values, which is now supported by C#.
 
-### A lot of the features are still usefull see  [Examples](http://frederictorres.blogspot.com/2014/03/dynamicsugarnet.html)
+### A lot of the features are still useful see  [Examples](http://frederictorres.blogspot.com/2014/03/dynamicsugarnet.html)
 
 # Videos
 * [DynamicSugar.Demo](https://www.youtube.com/watch?v=aUDxnU4VY2s&feature=youtu.be)
