@@ -13,7 +13,7 @@ to use them in my .NET 4.6.1 and .NET Core development in 2023.
 
 * In 2023 I moved the library to .NET Standard 2.0, so it can be used with .NET 4.6.1 and .NET Core.
 
-![Logo ](DynamicSugarNet.png "Logo")
+![Logo ](DynamicSugarNet.50.png "Logo")
 
 # License:
 You may use DynamicSugar.Net under the terms of the MIT License.
