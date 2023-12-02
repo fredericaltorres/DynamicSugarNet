@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Diagnostics.SymbolStore;
 
 namespace DynamicSugar
 {
@@ -221,12 +222,33 @@ namespace DynamicSugar
             private static Dictionary<string, List<string>> __TypeDefined = new Dictionary<string, List<string>>();
 #endif
 
+        public static Dictionary<string, string> GetDictionaryWithType(object o, List<string> propertiesToInclude = null, bool removeSystemDot = true)
+        {
+            var dic = new Dictionary<string, string>();
+            dic = DynamicSugar.ReflectionHelper.GetDictionaryWithTypeReflection(o, propertiesToInclude);
+            if(removeSystemDot)
+            {
+                const string TAG = "System.";
+                var dic2 = new Dictionary<string, string>();
+                foreach (var k in dic)
+                {
+                    if (k.Value.StartsWith(TAG))
+                        dic2.Add(k.Key, k.Value.Replace(TAG, ""));
+                    else
+                        dic2.Add(k.Key, k.Value);
+                }
+
+                dic = dic2;
+            }
+            return dic;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> GetDictionary(object o, List<string> propertiesToInclude = null)
+            public static Dictionary<string, object> GetDictionary(object o, List<string> propertiesToInclude = null)
         {
 
             var dic = new Dictionary<string, object>();
@@ -259,6 +281,66 @@ namespace DynamicSugar
 #else
             dic = DynamicSugar.ReflectionHelper.GetDictionaryReflection(o, propertiesToInclude);
 #endif
+            return dic;
+        }
+
+        private static string ExtractListType(Type type)
+        {
+            if (type.Name.StartsWith("List`"))
+            {
+                if (type.GenericTypeArguments.Length > 0)
+                    return $"List<{type.GenericTypeArguments[0].Name}>";
+            }
+            return "List<Unknown>";
+        }
+
+        private static string ExtractDictionaryType(Type type)
+        {
+            if (type.Name.StartsWith("Dictionary`"))
+            {
+                if (type.GenericTypeArguments.Length > 1)
+                    return $"Dictionary<{type.GenericTypeArguments[0].Name}, {type.GenericTypeArguments[1].Name}>";
+            }
+            return "Dictionary<Unknown, Unknown>";
+        }
+
+        /// <summary>
+        /// Get a dictionary from an poco object using reflection only, the value is the type of the property
+        /// as a string
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="propertiesToInclude"></param>
+        /// <returns></returns>
+        private static Dictionary<string, string> GetDictionaryWithTypeReflection(object o, List<string> propertiesToInclude = null)
+        {
+            var dic = new Dictionary<string, string>();
+
+            foreach (var p in o.GetType().GetProperties(GET_PUBLIC_PROPERTY_FLAGS))
+            {
+                if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
+                {
+                    if (p.GetMethod.ReturnType.Name.StartsWith("List`"))
+                        dic.Add(p.Name, ExtractListType(p.GetMethod.ReturnType));
+                    else if (p.GetMethod.ReturnType.Name.StartsWith("Dictionary`"))
+                        dic.Add(p.Name, ExtractDictionaryType(p.GetMethod.ReturnType));
+                    else
+                        dic.Add(p.Name, p.GetMethod.ReturnParameter.ParameterType.FullName);
+                }
+            }
+
+            foreach (var p in o.GetType().GetFields(GET_PUBLIC_PROPERTY_FLAGS))
+            {
+                if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
+                {
+                    if (p.FieldType.Name.StartsWith("List`"))
+                        dic.Add(p.Name, ExtractListType(p.FieldType));
+                    else if (p.FieldType.Name.StartsWith("Dictionary`"))
+                        dic.Add(p.Name, ExtractDictionaryType(p.FieldType));
+                    else
+                        dic.Add(p.Name, p.FieldType.FullName);
+                }
+            }
+
             return dic;
         }
         /// <summary>

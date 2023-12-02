@@ -5,6 +5,25 @@ using System.Text;
 
 namespace DynamicSugarSharp_UnitTests {
 
+    public class TypeTestClass
+    {
+        public string LastName;
+        public string FirstName { get; set; }
+        public int Age { get; set; }
+        public DateTime BirthDay { get; set; }
+
+        private string PrivateTitle { get; set; } = "privateSomething";
+
+        public List<string> ListOfString1 = new List<string>();
+        public List<string> ListOfString2 { get; set; } = new List<string>();
+
+        public Dictionary<string, string> DictionaryOfString1 = new Dictionary<string, string>();
+        public Dictionary<string, string> DictionaryOfString2 { get; set; } = new Dictionary<string, string>();
+
+        public Stack<string> StackOfString2 { get; set; } = new Stack<string>();
+
+    }
+
     public class Address {
         public string Street;
         public string ZipCode;
