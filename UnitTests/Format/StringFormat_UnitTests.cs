@@ -104,5 +104,17 @@ namespace DynamicSugarSharp_UnitTests{
             var expected = @"print(""Hello World"") ";
             Assert.AreEqual(expected, result);
         }
+
+
+        [TestMethod]
+        public void String_TemplateWithDifferentMacro()
+        {
+            var dic = new Dictionary<string, object>() {
+                { "LastName" , "TORRES" },
+                { "Age"      , 45       }
+            };
+            var s = "[LastName]:[Age]".Template(dic, "[", "]");
+            Assert.AreEqual("TORRES:45", s);
+        }
     }
 }

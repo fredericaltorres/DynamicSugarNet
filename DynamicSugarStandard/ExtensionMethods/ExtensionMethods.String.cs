@@ -341,9 +341,16 @@ namespace DynamicSugar {
         /// <param name="s"></param>
         /// <param name="poco">Any poco object</param>
         /// <returns></returns>
-        public static string Template(this string s, object poco) {
+        public static string Template(this string s, object poco, string startMacro = "{", string endMacro = "}") {
 
-            return ExtendedFormat.Format(s, ReflectionHelper.GetDictionary(poco));
+            if(startMacro == "}")
+                return ExtendedFormat.Format(s, ReflectionHelper.GetDictionary(poco));
+
+            // New implementation in 2023.12 to allow to change the macro
+            var dic = ReflectionHelper.GetDictionary(poco);
+            foreach (var e in dic)
+                s = s.Replace($"{startMacro}{e.Key}{endMacro}", e.Value.ToString());
+            return s;
         }
 
         public enum StringComment

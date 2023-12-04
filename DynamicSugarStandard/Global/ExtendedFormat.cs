@@ -151,7 +151,7 @@ namespace DynamicSugar {
             if (format == null)
                 throw new ArgumentNullException("format");
 
-            StringBuilder b = new StringBuilder(1024);            
+            StringBuilder b = new StringBuilder(1024);
             var values      = TokenizeFormat(format);
 
             for (int i = 0; i < values.Count; i++) {
