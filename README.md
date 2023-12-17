@@ -17,11 +17,12 @@ to use them in my .NET 4.6.1 and .NET Core development in 2023.
 # Examples:
 ## List
 ```cssharp
-
+// Creating quick lists
 var intList   = DS.List(1,2,3);
 var intString = DS.List("a","b");
 var l1        = DS.Range(10);
 
+// New list methods
 var b = l1.Include(5);
 var l2 = l1.Without(0, 2, 4, 6, 8);
 var l3 = l1.Without(DS.List(0, 2, 4, 6, 8));
@@ -31,6 +32,7 @@ Console.WriteLine(l3.Format()); // => 1, 3, 5, 7, 9
 
 var l = DS.List(1,2,3,4).Map( e => e*e );
 
+// Clear syntax
 int i = 1;
 if(i.In(1,2,3)) {
   // ...
@@ -46,10 +48,12 @@ if(i.In(l)) {
 ## String Processing
 ```cssharp
 
+// Deprecated since we have now string interpolation
 var LastName = "TORRES";
 var Age      = 45;
 var s1 = "LastName:{LastName}, Age:{Age:000}".Template( new { LastName, Age } );
 
+// Template
 s1 = "LastName:[LastName], Age:[Age]".Template(new { LastName, Age }, "[", "]");
 
 ``````
@@ -57,14 +61,17 @@ s1 = "LastName:[LastName], Age:[Age]".Template(new { LastName, Age }, "[", "]");
 ## Reflection
 ```cssharp
 
+// Get all the properties of one POCO into a Dictionary
 var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance);
 Assert.AreEqual("TORRES", dic["LastName"]);
 Assert.AreEqual("Frederic", dic["FirstName"]);
 Assert.AreEqual(45, dic["Age"]);
 Assert.AreEqual(new DateTime(1964, 12, 11), dic["BirthDay"]);
 
+// Include private property
 var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance, isPrivate: false);
 
+// Just getting one property, including static property though you need to pass an instance
 var lastName = ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "LastName").ToString();
 
 var b = ReflectionHelper.MethodExist(TestDataInstanceManager.TestPersonInstance, "GetLastName");
