@@ -20,17 +20,17 @@ to use them in my .NET 4.6.1 and .NET Core development in 2023.
 // Quick and clean way to create lists
 var intList   = DS.List(1,2,3);
 var intString = DS.List("a","b");
-var l1        = DS.Range(10);
+var l1        = DS.Range(10); // Range of number like in Python
 
 // New list methods
-var b = l1.Include(5);
+var b  = l1.Include(5);
 var l2 = l1.Without(0, 2, 4, 6, 8);
 var l3 = l1.Without(DS.List(0, 2, 4, 6, 8));
-var b = l1.IsEmpty();
+var b  = l1.IsEmpty();
 Console.WriteLine(l2.Format()); // => 1, 3, 5, 7, 9
 Console.WriteLine(l3.Format()); // => 1, 3, 5, 7, 9
 
-var l = DS.List(1,2,3,4).Map( e => e*e );
+var l = DS.List(1,2,3,4).Map( e => e * e );
 
 // Clear syntax
 int i = 1;
@@ -48,7 +48,7 @@ if(i.In(l)) {
 ## String Processing
 ```csharp
 
-// Deprecated since we have now string interpolation
+// Deprecated since we have now string interpolation, but still works
 var LastName = "TORRES";
 var Age      = 45;
 var s1 = "LastName:{LastName}, Age:{Age:000}".Template( new { LastName, Age } );
@@ -67,9 +67,7 @@ var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true });
 // Get all the properties of one POCO into a Dictionary
 var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance);
 Assert.AreEqual("TORRES", dic["LastName"]);
-Assert.AreEqual("Frederic", dic["FirstName"]);
 Assert.AreEqual(45, dic["Age"]);
-Assert.AreEqual(new DateTime(1964, 12, 11), dic["BirthDay"]);
 
 // Include private property
 var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance, isPrivate: false);
