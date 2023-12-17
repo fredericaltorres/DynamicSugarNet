@@ -16,7 +16,7 @@ to use them in my .NET 4.6.1 and .NET Core development in 2023.
 
 # Examples:
 ## List
-```cssharp
+```csharp
 // Creating quick lists
 var intList   = DS.List(1,2,3);
 var intString = DS.List("a","b");
@@ -46,7 +46,7 @@ if(i.In(l)) {
 ```
 
 ## String Processing
-```cssharp
+```csharp
 
 // Deprecated since we have now string interpolation
 var LastName = "TORRES";
@@ -58,8 +58,11 @@ s1 = "LastName:[LastName], Age:[Age]".Template(new { LastName, Age }, "[", "]");
 
 ``````
 
-## Reflection
-```cssharp
+## Reflection Dictionary
+```csharp
+
+// Quick way to create a dictionary of <string, object>
+var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true });
 
 // Get all the properties of one POCO into a Dictionary
 var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance);
@@ -71,6 +74,24 @@ Assert.AreEqual(new DateTime(1964, 12, 11), dic["BirthDay"]);
 // Include private property
 var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance, isPrivate: false);
 
+// Clone
+var d2 = ReflectionHelper.CloneDictionary<string, object>(d);
+
+// Format
+var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true});
+Assert.AreEqual(@"{ i:1, f:1.1, s:""string"", b:True }", dic.Format());
+
+var dsi = new Dictionary<string, int>();
+Type keyType, valueType;
+ReflectionHelper.GetDictionaryType(dsi.GetType(), out keyType, out valueType);
+Assert.AreEqual(typeof(string), keyType);
+Assert.AreEqual(typeof(int), valueType);
+
+``````
+
+## Reflection List and Property
+```csharp
+
 // Just getting one property, including static property though you need to pass an instance
 var lastName = ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "LastName").ToString();
 
@@ -78,9 +99,44 @@ var b = ReflectionHelper.MethodExist(TestDataInstanceManager.TestPersonInstance,
 
 var privateTitle = ReflectionHelper.GetProperty(TestDataInstanceManager.TestPersonInstance, "PrivateTitle", isPrivate: true);
 
+// Retrieve the type of a generic list or dictionary
+var li = new List<int>();
+Assert.AreEqual(typeof(int), ReflectionHelper.GetListType(li.GetType()));
 
 ``````
 
+## Resource files
+```csharp
+
+// Retreive the content of a text file embedded as a resource
+var alphabet = DS.Resources.GetTextResource("Alphabet.txt", Assembly.GetExecutingAssembly());
+
+// Retreive multiple content of a text files embedded as a resource
+Dictionary<string, string> alphabetDic = DS.Resources.GetTextResource(new Regex("DataClasses.Alphabet", RegexOptions.IgnoreCase), Assembly.GetExecutingAssembly());
+
+// Retreive the content of a GZip text file embedded as a resource
+var text = DS.Resources.GetTextResource("DS_Compression.txt.gzip", Assembly.GetExecutingAssembly(), true, DS.TextResourceEncoding.UTF8);
+
+// Retreive the content of bitmap embedded as a resource
+byte [] b = DS.Resources.GetBinaryResource("EmbedBitmap.bmp", Assembly.GetExecutingAssembly());
+
+``````
+
+``````
+
+## String methods
+```csharp
+
+// Removing comment C like comment
+var result = $"[/* comment */]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C);
+
+// Removing comment Python and Powershell like comment
+var result = @"print(""Hello World"") # a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.Python);
+
+// Removing comment SQL like comment
+var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
+
+``````
 # License:
 You may use DynamicSugar.Net under the terms of the MIT License.
   

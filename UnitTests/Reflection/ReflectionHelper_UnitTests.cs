@@ -165,6 +165,15 @@ namespace DynamicSugarSharp_UnitTests
             var dic = ReflectionHelper.GetLocals(i, d, s);
             return dic;
         }
+
+
+        [TestMethod]
+        public void Dictionary_Format()
+        {
+            var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true});
+            Assert.AreEqual(@"{ i:1, f:1.1, s:""string"", b:True }", dic.Format());
+        }
+
         [TestMethod]
         public void GetLocals()
         {
@@ -305,10 +314,10 @@ namespace DynamicSugarSharp_UnitTests
             Assert.IsFalse(dic.ContainsKey("FirstName"));
             Assert.IsFalse(dic.ContainsKey("BirthDay"));
         }
+
         [TestMethod]
         public void GetProperties_WithExpandoObject()
         {
-
             dynamic ex = new ExpandoObject();
             ex.LastName = "TORRES";
             ex.FirstName = "Frederic";
@@ -321,6 +330,7 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(45, dic["Age"]);
             Assert.AreEqual(new DateTime(1964, 12, 11), dic["BirthDay"]);
         }
+
         [TestMethod]
         public void PropertyExist()
         {
@@ -333,6 +343,7 @@ namespace DynamicSugarSharp_UnitTests
             Assert.IsFalse(DynamicSugar.ReflectionHelper.PropertyExist(TestDataInstanceManager.TestPersonInstance, "lastname"));
             Assert.IsFalse(DynamicSugar.ReflectionHelper.PropertyExist(TestDataInstanceManager.TestPersonInstance, "NotAvailableProperty"));
         }
+
         [TestMethod]
         public void MethodExist()
         {
