@@ -11,9 +11,8 @@ namespace DynamicSugar.ConsoleApplication {
 
         static void Main(string[] args) {
 
-            N.samples.Sample6_2();
-
-            Console.WriteLine("Dynamic Sugar # Library\r\n");
+            //N.samples.Sample6_2();
+            //Console.WriteLine("Dynamic Sugar # Library\r\n");
             Why();
             Why2();            
             In();
@@ -49,10 +48,21 @@ namespace DynamicSugar.ConsoleApplication {
             Age      = 45;
             s1       = "LastName:{0}, Age:{1:000}".FormatString(LastName, Age);
 
+
+
             // Second syntax with DynamicSugar            
-            s1       = "LastName:{LastName}, Age:{Age:000}".Template( new { LastName, Age } );
+            s1 = "LastName:{LastName}, Age:{Age:000}".Template(new { LastName, Age });
+
+            // Third syntax with DynamicSugar            
+            s1 = "LastName:[LastName], Age:[Age]".Template(new { LastName, Age }, "[", "]");
         }
         static void Why(){
+
+            var intList = DS.List(1,2,3);
+            var intString = DS.List("a","b");
+
+            var name = "fred";
+            var result = "Hellow {name}".Template(new { name });
 
             // Syntax 1, with regular C#
             List<int> someIntegers = new List<int>() { 1, 2 ,3 };

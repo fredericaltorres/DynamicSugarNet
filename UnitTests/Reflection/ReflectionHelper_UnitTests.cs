@@ -266,7 +266,7 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void GetDictionary()
         {
-            var dic = DynamicSugar.ReflectionHelper.GetDictionary(TestDataInstanceManager.TestPersonInstance);
+            var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance);
             Assert.AreEqual("TORRES", dic["LastName"]);
             Assert.AreEqual("Frederic", dic["FirstName"]);
             Assert.AreEqual(45, dic["Age"]);
@@ -282,7 +282,10 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void GetDictionary_PrivateProperty()
         {
-            var dic = DynamicSugar.ReflectionHelper.GetDictionary(TestDataInstanceManager.TestPersonInstance, publicOnly: false);
+            var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance, allProperties: true);
+            Assert.AreEqual("privateSomething", dic["PrivateTitle"]);
+
+            dic = DynamicSugar.ReflectionHelper.GetDictionary(TestDataInstanceManager.TestPersonInstance, allProperties: true);
             Assert.AreEqual("privateSomething", dic["PrivateTitle"]);
         }
 

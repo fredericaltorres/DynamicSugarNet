@@ -249,7 +249,7 @@ namespace DynamicSugar
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> GetDictionary(object o, List<string> propertiesToInclude = null, bool publicOnly = true)
+        public static Dictionary<string, object> GetDictionary(object o, List<string> propertiesToInclude = null, bool allProperties = false)
         {
 
             var dic = new Dictionary<string, object>();
@@ -280,7 +280,7 @@ namespace DynamicSugar
                     dic.Add(p, FastProperty<object, object>.Make(pp).Get(o));
                 }
 #else
-            dic = DynamicSugar.ReflectionHelper.GetDictionaryReflection(o, propertiesToInclude, publicOnly);
+            dic = DynamicSugar.ReflectionHelper.GetDictionaryReflection(o, propertiesToInclude, allProperties);
 #endif
             return dic;
         }
@@ -350,11 +350,11 @@ namespace DynamicSugar
         /// <param name="o"></param>
         /// <param name="propertiesToInclude"></param>
         /// <returns></returns>
-        private static Dictionary<string, object> GetDictionaryReflection(object o, List<string> propertiesToInclude = null, bool publicOnly = true)
+        private static Dictionary<string, object> GetDictionaryReflection(object o, List<string> propertiesToInclude = null, bool allProperties = false)
         {
             var dic = new Dictionary<string, object>();
 
-            var flags = publicOnly ? GET_PUBLIC_PROPERTY_FLAGS : GET_PRIVATE_AND_PUBLIC_PROPERTY_FLAGS;
+            var flags = allProperties ? GET_PRIVATE_AND_PUBLIC_PROPERTY_FLAGS : GET_PUBLIC_PROPERTY_FLAGS;
 
             foreach (var p in o.GetType().GetProperties(flags))
                 if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))

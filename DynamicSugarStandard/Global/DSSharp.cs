@@ -133,9 +133,9 @@ namespace DynamicSugar {
         /// <param name="instance">The instance</param>
         /// <param name="properties">Define the list of property and field to return. All properties and fields are returned if this parameter is not defined</param>
         /// <returns></returns>
-        public static Dictionary<string,object> Dictionary(object instance, List<string> properties = null) {
+        public static Dictionary<string,object> Dictionary(object instance, List<string> properties = null, bool allProperties = false) {
 
-            return ReflectionHelper.GetDictionary(instance, properties);
+            return ReflectionHelper.GetDictionary(instance, properties, allProperties);
         }
         /// <summary>
         /// Return in a dictionary of string, T all the properties and fields of an instance.
