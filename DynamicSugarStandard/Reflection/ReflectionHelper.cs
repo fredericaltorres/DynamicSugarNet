@@ -41,9 +41,10 @@ namespace DynamicSugar
     /// </summary>
     public class ReflectionHelper
     {
-
         const BindingFlags GET_PRIVATE_PROPERTY_FLAGS = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.GetProperty;
-        const BindingFlags GET_PUBLIC_PROPERTY_FLAGS = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
+        const BindingFlags GET_PUBLIC_PROPERTY_FLAGS  = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public    | BindingFlags.GetField | BindingFlags.GetProperty;
+
+        const BindingFlags GET_PRIVATE_AND_PUBLIC_PROPERTY_FLAGS = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
 
         const BindingFlags GET_PUBLIC_STATIC_PROPERTY_FLAGS = BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty;
 
@@ -248,7 +249,7 @@ namespace DynamicSugar
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-            public static Dictionary<string, object> GetDictionary(object o, List<string> propertiesToInclude = null)
+        public static Dictionary<string, object> GetDictionary(object o, List<string> propertiesToInclude = null, bool publicOnly = true)
         {
 
             var dic = new Dictionary<string, object>();
@@ -279,7 +280,7 @@ namespace DynamicSugar
                     dic.Add(p, FastProperty<object, object>.Make(pp).Get(o));
                 }
 #else
-            dic = DynamicSugar.ReflectionHelper.GetDictionaryReflection(o, propertiesToInclude);
+            dic = DynamicSugar.ReflectionHelper.GetDictionaryReflection(o, propertiesToInclude, publicOnly);
 #endif
             return dic;
         }
@@ -349,16 +350,17 @@ namespace DynamicSugar
         /// <param name="o"></param>
         /// <param name="propertiesToInclude"></param>
         /// <returns></returns>
-        private static Dictionary<string, object> GetDictionaryReflection(object o, List<string> propertiesToInclude = null)
+        private static Dictionary<string, object> GetDictionaryReflection(object o, List<string> propertiesToInclude = null, bool publicOnly = true)
         {
-
             var dic = new Dictionary<string, object>();
 
-            foreach (var p in o.GetType().GetProperties(GET_PUBLIC_PROPERTY_FLAGS))
+            var flags = publicOnly ? GET_PUBLIC_PROPERTY_FLAGS : GET_PRIVATE_AND_PUBLIC_PROPERTY_FLAGS;
+
+            foreach (var p in o.GetType().GetProperties(flags))
                 if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
                     dic.Add(p.Name, p.GetValue(o, new object[0]));
 
-            foreach (var p in o.GetType().GetFields(GET_PUBLIC_PROPERTY_FLAGS))
+            foreach (var p in o.GetType().GetFields(flags))
                 if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
                     dic.Add(p.Name, p.GetValue(o));
 

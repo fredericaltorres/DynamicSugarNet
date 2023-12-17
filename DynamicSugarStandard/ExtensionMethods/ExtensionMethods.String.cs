@@ -343,7 +343,7 @@ namespace DynamicSugar {
         /// <returns></returns>
         public static string Template(this string s, object poco, string startMacro = "{", string endMacro = "}") {
 
-            if(startMacro == "}")
+            if(startMacro == "{")
                 return ExtendedFormat.Format(s, ReflectionHelper.GetDictionary(poco));
 
             // New implementation in 2023.12 to allow to change the macro

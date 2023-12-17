@@ -262,10 +262,10 @@ namespace DynamicSugarSharp_UnitTests
             var dsi = new Dictionary<string, int>();
             Assert.IsTrue(ReflectionHelper.IsDictionaryOfKV(dsi.GetType()));
         }
+
         [TestMethod]
         public void GetDictionary()
         {
-
             var dic = DynamicSugar.ReflectionHelper.GetDictionary(TestDataInstanceManager.TestPersonInstance);
             Assert.AreEqual("TORRES", dic["LastName"]);
             Assert.AreEqual("Frederic", dic["FirstName"]);
@@ -278,6 +278,14 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(45, dic["Age"]);
             Assert.AreEqual(new DateTime(1964, 12, 11), dic["BirthDay"]);
         }
+
+        [TestMethod]
+        public void GetDictionary_PrivateProperty()
+        {
+            var dic = DynamicSugar.ReflectionHelper.GetDictionary(TestDataInstanceManager.TestPersonInstance, publicOnly: false);
+            Assert.AreEqual("privateSomething", dic["PrivateTitle"]);
+        }
+
         [TestMethod]
         public void GetDictionary_GetSubList()
         {
