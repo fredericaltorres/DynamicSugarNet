@@ -17,7 +17,7 @@ to use them in my .NET 4.6.1 and .NET Core development in 2023.
 # Examples:
 ## List
 ```csharp
-// Creating quick lists
+// Quick and clean way to create lists
 var intList   = DS.List(1,2,3);
 var intString = DS.List("a","b");
 var l1        = DS.Range(10);
@@ -61,7 +61,7 @@ s1 = "LastName:[LastName], Age:[Age]".Template(new { LastName, Age }, "[", "]");
 ## Reflection Dictionary
 ```csharp
 
-// Quick way to create a dictionary of <string, object>
+// Quick and clean way to create dictionary of <string, object>
 var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true });
 
 // Get all the properties of one POCO into a Dictionary
