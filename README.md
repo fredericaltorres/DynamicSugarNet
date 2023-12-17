@@ -23,14 +23,23 @@ var intString = DS.List("a","b");
 var l1        = DS.Range(10); // Range of number like in Python
 
 // New list methods
-var b  = l1.Include(5);
-var l2 = l1.Without(0, 2, 4, 6, 8);
-var l3 = l1.Without(DS.List(0, 2, 4, 6, 8));
-var b  = l1.IsEmpty();
-Console.WriteLine(l2.Format()); // => 1, 3, 5, 7, 9
-Console.WriteLine(l3.Format()); // => 1, 3, 5, 7, 9
-
+var b = l1.Include(5);
+var l = l1.Without(0, 2, 4, 6, 8);
+var l = l1.Without(DS.List(0, 2, 4, 6, 8));
+var b = l1.IsEmpty();
+var b = l1.IsNullOrEmpty();
+var l = DS.List(1, 2, 3).Filter( e => e % 2 == 0 );
+var l = DS.List(1, 2, 3).Merge( DS.List(3, 4, 5) );
+var l = DS.List(1, 2, 3).Substract( DS.List( 3, 4, 5) );
+var l = DS.List(1, 2, 3).Intersect( DS.List( 3, 4, 5) );
+var l = DS.List(1, 2, 3).Identical( DS.List( 1, 2, 3 ) );
+var l = DS.List(1, 2, 3).Reject( e => e % 2 == 0 );
 var l = DS.List(1,2,3,4).Map( e => e * e );
+
+// Format
+var l1  = DS.List(1,2,3);
+Assert.AreEqual(@"1, 2, 3", DS.List(1, 2, 3).Format());
+Assert.AreEqual(@"[1]:[2]:[3]", DS.List(1, 2, 3).Format("[{0}]", ":"));
 
 // Clear syntax
 int i = 1;
@@ -43,6 +52,10 @@ if(i.In(l)) {
   // ...
 }
 
+// Other Types
+var l = DS.Array(1, 2, 3);
+var l = DS.Queue(1, 2, 3);
+var l = DS.Stack(1, 2, 3);
 ```
 
 ## String Processing
@@ -58,7 +71,7 @@ s1 = "LastName:[LastName], Age:[Age]".Template(new { LastName, Age }, "[", "]");
 
 ``````
 
-## Reflection Dictionary
+## Dictionary
 ```csharp
 
 // Quick and clean way to create dictionary of <string, object>
@@ -75,9 +88,26 @@ var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance, isPrivate: f
 // Clone
 var d2 = ReflectionHelper.CloneDictionary<string, object>(d);
 
+// Dictionary includes sub Dictionary 
+var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3, d = 4, e = 5 });
+Assert.IsTrue(dic1.Include(dic1));
+
 // Format
 var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true});
 Assert.AreEqual(@"{ i:1, f:1.1, s:""string"", b:True }", dic.Format());
+
+// Custom format
+var a = dic.Format("{0} ~ {1}", ",", "<", ">");
+Assert.AreEqual(@"<i ~ 1,f ~ 1.1,s ~ ""string"",b ~ True>", dic.Format("{0} ~ {1}", "," , "<", ">"));
+
+var d1 = DS.Dictionary( new { a=1, b=2, c=3 } );
+Assert.IsTrue(DS.DictionaryHelper.Identical<string,object>(d1,d1));
+
+// Get a dictionary of the properties types
+var testInstance = new TypeTestClass();
+var dicType = DynamicSugar.ReflectionHelper.GetDictionaryWithType(testInstance);
+Assert.AreEqual("String", dicType["LastName"]);
+Assert.AreEqual("Int32", dicType["Age"]);
 
 var dsi = new Dictionary<string, int>();
 Type keyType, valueType;
@@ -87,7 +117,7 @@ Assert.AreEqual(typeof(int), valueType);
 
 ``````
 
-## Reflection List and Property
+## Reflection and Property
 ```csharp
 
 // Just getting one property, including static property though you need to pass an instance
@@ -100,6 +130,11 @@ var privateTitle = ReflectionHelper.GetProperty(TestDataInstanceManager.TestPers
 // Retrieve the type of a generic list or dictionary
 var li = new List<int>();
 Assert.AreEqual(typeof(int), ReflectionHelper.GetListType(li.GetType()));
+
+// Get or set indexer property
+var f = new IndexerTestClass();
+ReflectionHelper.SetIndexer(f, 2, 123);
+Assert.AreEqual(2 * 123, ReflectionHelper.GetIndexer(f, 1));
 
 ``````
 
@@ -135,6 +170,17 @@ var result = @"print(""Hello World"") # a comment".RemoveComment(commentType: Ex
 var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
 
 ``````
+
+## .NET GZip format, Zipping Unzipping file
+```csharp
+
+var gzipFilename = DynamicSugar.Compression.GZip.GZipFile(fileName);
+var newTextFileName = DynamicSugar.Compression.GZip.UnGZipFile(gzipFilename);
+
+GZip.GZipFolder(string path, string wildCard);
+
+``````
+
 # License:
 You may use DynamicSugar.Net under the terms of the MIT License.
   

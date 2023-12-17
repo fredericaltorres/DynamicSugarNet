@@ -8,14 +8,11 @@ using System.Dynamic;
 
 namespace DynamicSugarSharp_UnitTests
 {
-
     [TestClass]
     public class ReflectionHelper_UnitTests
     {
-
         public class FredPropertyClass
         {
-
             public string FieldString { get; set; }
             public DateTime FieldDate { get; set; }
             public double FieldDouble { get; set; }
@@ -41,7 +38,6 @@ namespace DynamicSugarSharp_UnitTests
 
         public class IndexerTestClass
         {
-
             private int _index;
             public int this[int index]
             {
@@ -76,7 +72,6 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Indexer_Set()
         {
-
             var f = new IndexerTestClass();
             ReflectionHelper.SetIndexer(f, 2, 123);
             Assert.AreEqual(2 * 123, ReflectionHelper.GetIndexer(f, 1));
@@ -85,7 +80,6 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Indexer_Get()
         {
-
             var f = new FredPropertyClass();
             Assert.AreEqual(2, ReflectionHelper.GetIndexer(f, 1));
             Assert.AreEqual(16, ReflectionHelper.GetIndexer(f, 8));
@@ -94,7 +88,6 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void Indexer_Get_NoIndexerDefined()
         {
-
             var f = new ConsTest2();
             ReflectionHelper.GetIndexer(f, 1);
         }
@@ -102,14 +95,12 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void Indexer_Get_FromNull()
         {
-
             ReflectionHelper.GetIndexer(null, 1);
         }
 
         [TestMethod]
         public void Constructor_MultipleConstructor_GenericMethod()
         {
-
             var consTestInstance = ReflectionHelper.Constructor<ConsTest2>(typeof(ConsTest2));
             Assert.AreEqual("Toto", consTestInstance.Name);
 
@@ -120,7 +111,6 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Constructor_MultipleConstructor()
         {
-
             var consTestInstance = ReflectionHelper.Constructor(typeof(ConsTest2)) as ConsTest2;
             Assert.AreEqual("Toto", consTestInstance.Name);
 
@@ -131,14 +121,12 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod, ExpectedException(typeof(MissingMethodException))]
         public void Constructor_ConstructorWithInvalidParameters()
         {
-
             var consTestInstance = ReflectionHelper.Constructor(typeof(ConsTest2), "Tata", true);
         }
 
         [TestMethod]
         public void Constructor_DefaultConstructor()
         {
-
             var consTestInstance = ReflectionHelper.Constructor(typeof(ConsTest1)) as ConsTest1;
             Assert.AreEqual("Toto", consTestInstance.Name);
         }
@@ -156,12 +144,11 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void GetLocalsEx()
         {
-
             var d = MyMethod_ParameterMetadata(1, 2.0, "A");
         }
+
         private Dictionary<string, object> MyMethod(int i, double d, string s)
         {
-
             var dic = ReflectionHelper.GetLocals(i, d, s);
             return dic;
         }
@@ -172,6 +159,9 @@ namespace DynamicSugarSharp_UnitTests
         {
             var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true});
             Assert.AreEqual(@"{ i:1, f:1.1, s:""string"", b:True }", dic.Format());
+
+            var a = dic.Format("{0} ~ {1}", ",", "<", ">"); // Custom formatting
+            Assert.AreEqual(@"<i ~ 1,f ~ 1.1,s ~ ""string"",b ~ True>", dic.Format("{0} ~ {1}", "," , "<", ">"));
         }
 
         [TestMethod]

@@ -142,33 +142,37 @@ void Sample8(){
 
     foreach(var i in DS.Range(10))  // Dynamic Sugar Syntax
         Console.WriteLine(i);
-}
+        }
 
 
-public static void Sample9(){
-        
-    var v1  = DS.List(1, 2, 3).Add( DS.List( 4, 5, 6 ) );
-    var v2  = DS.List(1, 2, 3).Clone();
-    var v3  = DS.List(1, 2, 3).Filter( e => e % 2 == 0 );      // Same as FindAll() for IEnumerable<>
-    var v5  = DS.List(1, 2, 3).Identical( DS.List( 1, 2, 3 ) );
-    var v6  = DS.List(1, 2, 3).Include( DS.List( 2, 3 ) );
-    var v7  = DS.List(1, 2, 3).Include( 2, 3 );
-    var v8  = DS.List(1, 2, 3).Intersect( DS.List( 3, 4, 5) ); // Same as Intersect() for IEnumerable<>
-    var v9  = DS.List(1, 2, 3).IsNullOrEmpty();
-    var v10 = DS.List(1, 2, 3).Map( e => e * 2 );              // Same as Select() for IEnumerable<>    
-    var v11 = DS.List(1, 2, 3).Merge( DS.List(3, 4, 5) );
-    var v12 = DS.List(1, 2, 3).Reject( e => e % 2 == 0 );
-    var v13 = DS.List(1, 2, 3).Substract( DS.List( 3, 4, 5) );
-              DS.List(1, 2, 3).ToFile(@"C:\MyFile.txt");
-    var v15 = DS.ListHelper.FromFile<int>(@"C:\MyFile.txt");
-    var v16 = DS.List(1, 2, 3).Without( DS.List(2, 3) );
-    var v17 = DS.List(1, 2, 3).Without( 2, 3 );
-}
-    
-    
+        public static void Sample9()
+        {
+
+            var v1 = DS.List(1, 2, 3).Add(DS.List(4, 5, 6));
+            var v2 = DS.List(1, 2, 3).Clone();
+            var v3 = DS.List(1, 2, 3).Filter(e => e % 2 == 0);      // Same as FindAll() for IEnumerable<>
+            var v5 = DS.List(1, 2, 3).Identical(DS.List(1, 2, 3));
+            var v6 = DS.List(1, 2, 3).Include(DS.List(2, 3));
+            var v7 = DS.List(1, 2, 3).Include(2, 3);
+            var v8 = DS.List(1, 2, 3).Intersect(DS.List(3, 4, 5)); // Same as Intersect() for IEnumerable<>
+            var v9 = DS.List(1, 2, 3).IsNullOrEmpty();
+            var v10 = DS.List(1, 2, 3).Map(e => e * 2);              // Same as Select() for IEnumerable<>    
+            var v11 = DS.List(1, 2, 3).Merge(DS.List(3, 4, 5));
+            var v12 = DS.List(1, 2, 3).Reject(e => e % 2 == 0);
+            var v13 = DS.List(1, 2, 3).Substract(DS.List(3, 4, 5));
+            DS.List(1, 2, 3).ToFile(@"C:\MyFile.txt");
+            var v15 = DS.ListHelper.FromFile<int>(@"C:\MyFile.txt");
+            var v16 = DS.List(1, 2, 3).Without(DS.List(2, 3));
+            var v17 = DS.List(1, 2, 3).Without(2, 3);
+
+            var l1 = DS.List(1, 2, 3);
+            Console.WriteLine(l1.Format()); // => 1, 2, 3
+        }
 
 
-void Sample10(){
+
+
+        void Sample10(){
 
     var v1  = DS.List(1, 2, 3);
     while(!v1.IsEmpty()) {

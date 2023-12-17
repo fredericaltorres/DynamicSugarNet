@@ -196,6 +196,12 @@ namespace DynamicSugarSharp_UnitTests {
                         
             Assert.AreEqual("1, 2, 3", DS.List(1, 2, 3).Format());            
         }
+
+        [TestMethod]
+        public void Format_Custom_Integer()
+        {
+            Assert.AreEqual(@"[1]:[2]:[3]", DS.List(1, 2, 3).Format("[{0}]", ":"));
+        }
         [TestMethod]
         public void Format_Boolean() {
             
