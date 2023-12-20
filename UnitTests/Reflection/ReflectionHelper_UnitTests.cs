@@ -5,6 +5,8 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
+using System.Net.Cache;
+using System.Text.RegularExpressions;
 
 namespace DynamicSugarSharp_UnitTests
 {
@@ -157,11 +159,11 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Dictionary_Format()
         {
-            var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true});
+            var dic = DS.Dictionary(new { i = 1, f = 1.1f, s = "string", b = true });
             Assert.AreEqual(@"{ i:1, f:1.1, s:""string"", b:True }", dic.Format());
 
             var a = dic.Format("{0} ~ {1}", ",", "<", ">"); // Custom formatting
-            Assert.AreEqual(@"<i ~ 1,f ~ 1.1,s ~ ""string"",b ~ True>", dic.Format("{0} ~ {1}", "," , "<", ">"));
+            Assert.AreEqual(@"<i ~ 1,f ~ 1.1,s ~ ""string"",b ~ True>", dic.Format("{0} ~ {1}", ",", "<", ">"));
         }
 
         [TestMethod]
@@ -308,13 +310,13 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void GetProperties_WithExpandoObject()
         {
-            dynamic ex = new ExpandoObject();
-            ex.LastName = "TORRES";
-            ex.FirstName = "Frederic";
-            ex.Age = 45;
-            ex.BirthDay = new DateTime(1964, 12, 11);
+            dynamic expandoO = new ExpandoObject();
+            expandoO.LastName = "TORRES";
+            expandoO.FirstName = "Frederic";
+            expandoO.Age = 45;
+            expandoO.BirthDay = new DateTime(1964, 12, 11);
 
-            var dic = DynamicSugar.ReflectionHelper.GetDictionary(ex);
+            var dic = DynamicSugar.ReflectionHelper.GetDictionary(expandoO);
             Assert.AreEqual("TORRES", dic["LastName"]);
             Assert.AreEqual("Frederic", dic["FirstName"]);
             Assert.AreEqual(45, dic["Age"]);
@@ -324,7 +326,6 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void PropertyExist()
         {
-
             Assert.IsTrue(DynamicSugar.ReflectionHelper.PropertyExist(TestDataInstanceManager.TestPersonInstance, "LastName"));
             Assert.IsTrue(DynamicSugar.ReflectionHelper.PropertyExist(TestDataInstanceManager.TestPersonInstance, "FirstName"));
             Assert.IsTrue(DynamicSugar.ReflectionHelper.PropertyExist(TestDataInstanceManager.TestPersonInstance, "Age"));
@@ -434,6 +435,40 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(0, ((List<string>)dicValue["ListOfString2"]).Count);
             Assert.AreEqual(0, ((Dictionary<String, String>)dicValue["DictionaryOfString1"]).Count);
             Assert.AreEqual(0, ((Dictionary<String, String>)dicValue["DictionaryOfString2"]).Count);
+        }
+        [TestMethod]
+        public void AssertPoco()
+        {
+            var testInstance = TestDataInstanceManager.TestPersonInstance;
+            Assert.IsTrue(ReflectionHelper.AssertPoco(testInstance, new { LastName = "TORRES", Age = 45, FirstName = new Regex("F.*c") }));
+        }
+
+        [TestMethod]
+        public void AssertPoco_AllType()
+        {
+            var testInstance = TestDataInstanceManager.TestClassAllTypeInstance;
+            Assert.IsTrue(ReflectionHelper.AssertPoco(testInstance, new {
+                IntValue = 123,
+                LongValue = 123l,
+                DoubleValue = 123.456,
+                DecimalValue = 123.456m,
+                DateTimeValue = new DateTime(1964, 12, 11, 0, 0, 0),
+                StringValue = "Hello",
+                BoolValue = true,
+                CharValue = 'A',
+                ByteValue = (byte)123,
+                ShortValue = (short)123,
+                FloatValue = 123.456f,
+                SingleValue = 123.456f,
+                UIntValue = (uint)123,
+                ULongValue = (ulong)123,
+                UShortValue = (ushort)123,
+                SByteValue = (sbyte)123,
+                 GuidValue = Guid.Parse("A4E7E546-D75C-4B4C-B717-EC0D66085CA0"),
+                TimeSpanValue = TimeSpan.FromDays(1),
+                //DateTimeOffsetValue = new DateTimeOffset(1234567, new TimeSpan(0, 0, 1)),
+                UriValue = new Uri("http://www.flogviewer.com")
+        }));
         }
     }
 }

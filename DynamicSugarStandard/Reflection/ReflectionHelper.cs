@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics.SymbolStore;
+using System.Text.RegularExpressions;
 
 namespace DynamicSugar
 {
@@ -702,6 +703,86 @@ namespace DynamicSugar
             if (t.IsGenericType)
                 return (t.GetGenericTypeDefinition() == typeof(List<>));
             return false;
+        }
+   
+        public static bool AssertPoco(object sourcePoco, object propertiesPoco, bool throwException = false)
+        {
+            var sb = new StringBuilder();
+            var dic = ReflectionHelper.GetDictionary(propertiesPoco);
+            var dicType = DynamicSugar.ReflectionHelper.GetDictionaryWithType(sourcePoco);
+            sb.AppendLine($"Assert Object: {sourcePoco.GetType().Name}:");
+            var errorCount = 0;
+            foreach (var e in dic)
+            {
+                var expectedValue = e.Value;
+                var actualValue = ReflectionHelper.GetProperty(sourcePoco, e.Key);
+                var expectedType = dicType[e.Key];
+
+                if (expectedValue is Regex)
+                {
+                    var expectedRegEx = expectedValue as Regex;
+                    if (!expectedRegEx.IsMatch(actualValue.ToString()))
+                    {
+                        sb.AppendLine($"Property: {e.Key}, expected:{expectedRegEx}, actual:{actualValue}");
+                        errorCount += 1;
+                    }
+                }
+                else
+                {
+                    var isEquals = false;
+                    switch(expectedType)
+                    {
+                        case "Byte": isEquals = (byte)expectedValue == (byte)actualValue; break;
+                        case "SByte":  isEquals = (sbyte)expectedValue == (sbyte)actualValue; break;
+
+                        case "short":
+                        case "Int16": isEquals = (Int16)expectedValue == (Int16)actualValue; break;
+
+                        case "int": 
+                        case "Int32": isEquals = (Int32)expectedValue == (Int32)actualValue; break;
+
+                        case "long":
+                        case "Int64": isEquals = (Int64)expectedValue == (Int64)actualValue; break;
+
+                        case "ushort":
+                        case "UInt16": isEquals = (UInt16)expectedValue == (UInt16)actualValue; break;
+
+                        case "uint":
+                        case "UInt32": isEquals = (UInt32)expectedValue == (UInt32)actualValue; break;
+
+                        case "ulong":
+                        case "UInt64": isEquals = (UInt64)expectedValue == (UInt64)actualValue; break;
+
+                        case "Double":
+                        case "double": isEquals = (double)expectedValue == (double)actualValue; break;
+
+                        case "Decimal":
+                        case "decimal": isEquals = (decimal)expectedValue == (decimal)actualValue; break;
+
+                        case "bool":
+                        case "Boolean": isEquals = (bool)expectedValue == (bool)actualValue; break;
+
+                        case "Single":
+                        case "Float":
+                        case "float": isEquals = (float)expectedValue == (float)actualValue; break;
+
+                        case "DateTime": isEquals = (DateTime)expectedValue == (DateTime)actualValue; break;
+                        case "DateTimeOffset": 
+                            isEquals = (DateTimeOffset)expectedValue == (DateTimeOffset)actualValue; break;
+
+                        default:  isEquals = expectedValue.ToString() == actualValue.ToString(); break;
+                    }
+                    if (!isEquals)
+                    {
+                        sb.AppendLine($"Property: {e.Key}, expected:{expectedValue}, actual:{actualValue}");
+                        errorCount += 1;
+                    }
+                }
+            }
+            if(throwException)
+                throw new ApplicationException(sb.ToString());
+
+            return errorCount == 0;
         }
     }
 }

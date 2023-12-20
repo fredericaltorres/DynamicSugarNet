@@ -24,6 +24,32 @@ namespace DynamicSugarSharp_UnitTests {
 
     }
 
+    public class TestClassAllType
+    {
+        public int IntValue { get; set; } = 123;
+        public long LongValue { get; set; } = 123;
+        public double DoubleValue { get; set; } = 123.456;  
+        public decimal DecimalValue { get; set; } = 123.456m;
+        public DateTime DateTimeValue { get; set; } = new DateTime(1964, 12, 11, 0, 0 , 0);
+        public string StringValue { get; set; } = "Hello";
+        public bool BoolValue { get; set; } = true;
+        public char CharValue { get; set; } = 'A';
+        public byte ByteValue { get; set; } = 123;
+        public short ShortValue { get; set; } = 123;
+        public float FloatValue { get; set; } = 123.456f;
+        public Single SingleValue { get; set; } = 123.456f;
+        public uint UIntValue { get; set; } = 123;
+        public ulong ULongValue { get; set; } = 123;    
+        public ushort UShortValue { get; set; } = 123;  
+        public sbyte SByteValue { get; set; } = 123;
+        public Guid GuidValue { get; set; } = Guid.Parse("A4E7E546-D75C-4B4C-B717-EC0D66085CA0");
+        public TimeSpan TimeSpanValue { get; set; } = TimeSpan.FromDays(1);
+        //public DateTimeOffset DateTimeOffsetValue { get; set; } = new DateTimeOffset(1234567, new TimeSpan(0,0,1));
+        public Uri UriValue { get; set; } = new Uri("http://www.flogviewer.com");
+        
+
+    }
+
     public class Address {
         public string Street;
         public string ZipCode;

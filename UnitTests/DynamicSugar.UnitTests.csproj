@@ -104,7 +104,7 @@
     <Compile Include="DS_StaticMethods.cs" />
     <Compile Include="ExtensionMethods\ExtendedFormat_AnonymousType_UnitTests.cs" />
     <Compile Include="Format\StringFormat_UnitTests.cs" />
-    <Compile Include="DataClasses\ClassWithAllTypes.cs" />
+    <Compile Include="DataClasses\ClassWithAllNumericTypes.cs" />
     <Compile Include="Format\FormatValueBasedOnType_UnitTests.cs" />
     <Compile Include="DynamicObjects\MultiValue_UnitTests.cs" />
     <Compile Include="Robert Martin - Prime Factors Kata.cs" />

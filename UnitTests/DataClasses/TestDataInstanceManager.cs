@@ -21,6 +21,7 @@ namespace DynamicSugarSharp_UnitTests {
         public static string PublicStaticTitle = "PublicStaticTitle";
 
 
+        public static TestClassAllType TestClassAllTypeInstance => new TestClassAllType();
 
         public static Person TestPersonInstance {
             get {
@@ -30,9 +31,9 @@ namespace DynamicSugarSharp_UnitTests {
                 return p;
             }
         }
-        public static ClassWithAllTypes ClassWithAllTypesInstance {
+        public static ClassWithAllNumericTypes ClassWithAllTypesInstance {
             get {
-                return new ClassWithAllTypes();
+                return new ClassWithAllNumericTypes();
             }
         }        
     }

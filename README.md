@@ -41,18 +41,17 @@ var l1  = DS.List(1,2,3);
 Assert.AreEqual(@"1, 2, 3", DS.List(1, 2, 3).Format());
 Assert.AreEqual(@"[1]:[2]:[3]", DS.List(1, 2, 3).Format("[{0}]", ":"));
 
-// Clear syntax
+// Cleaner syntax than Contains()
 int i = 1;
 if(i.In(1,2,3)) {
   // ...
 }
-
 var l = DS.List(1,2,3);
 if(i.In(l)) {
   // ...
 }
 
-// Other Types
+// Other Helpers
 var l = DS.Array(1, 2, 3);
 var l = DS.Queue(1, 2, 3);
 var l = DS.Stack(1, 2, 3);
@@ -103,7 +102,7 @@ Assert.AreEqual(@"<i ~ 1,f ~ 1.1,s ~ ""string"",b ~ True>", dic.Format("{0} ~ {1
 var d1 = DS.Dictionary( new { a=1, b=2, c=3 } );
 Assert.IsTrue(DS.DictionaryHelper.Identical<string,object>(d1,d1));
 
-// Get a dictionary of the properties types
+// Get a dictionary of the properties types for a POCO
 var testInstance = new TypeTestClass();
 var dicType = DynamicSugar.ReflectionHelper.GetDictionaryWithType(testInstance);
 Assert.AreEqual("String", dicType["LastName"]);
