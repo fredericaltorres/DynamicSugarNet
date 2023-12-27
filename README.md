@@ -208,7 +208,7 @@ You may use DynamicSugar.Net under the terms of the MIT License.
 # NuGet
 * TODO: Create NuGet Package and publish
 ```powershell
-Install-Package DynamicSugarCore
+Install-Package DynamicSugarStandard
 ```
 
 # Platforms: 
