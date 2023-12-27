@@ -154,8 +154,6 @@ byte [] b = DS.Resources.GetBinaryResource("EmbedBitmap.bmp", Assembly.GetExecut
 
 ``````
 
-``````
-
 ## String methods
 ```csharp
 
