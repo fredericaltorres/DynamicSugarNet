@@ -250,11 +250,9 @@ namespace DynamicSugar
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> GetDictionary(object o, List<string> propertiesToInclude = null, bool allProperties = false)
+        public static Dictionary<string, object> GetDictionary(object o, List<string> propertiesToInclude = null, bool allProperties = false, bool allowDuplicate = false)
         {
-
             var dic = new Dictionary<string, object>();
-
             // Support Dictionary and ExpandoObect
             if (o is IDictionary<string, object>)
             {
@@ -265,25 +263,7 @@ namespace DynamicSugar
                         dic.Add(v.Key, v.Value);
                 return dic;
             }
-#if USE_FAST_REFLECTION
-                var typeFullName  = o.GetType().FullName;
-                if (!__TypeDefined.ContainsKey(typeFullName))
-                {
-                    var l = new List<string>();
-                    foreach (var k in DynamicSugar.ReflectionHelper.GetDictionaryReflection(o))
-                        l.Add(k.Key);                    
-                    __TypeDefined.Add(typeFullName, l);
-                }
-                foreach (var p in __TypeDefined[typeFullName]) {
-                    var pp = o.GetType().GetProperty(p);                    
-                    if(pp==null)
-                        throw new System.ApplicationException("Field '{0}' in object '{1}' is not supported. Only properties are supported".FormatString(p, o));
-                    dic.Add(p, FastProperty<object, object>.Make(pp).Get(o));
-                }
-#else
-            dic = DynamicSugar.ReflectionHelper.GetDictionaryReflection(o, propertiesToInclude, allProperties);
-#endif
-            return dic;
+            return DynamicSugar.ReflectionHelper.GetDictionaryReflection(o, propertiesToInclude, allProperties, allowDuplicate);
         }
 
         private static string ExtractListType(Type type)
@@ -351,19 +331,46 @@ namespace DynamicSugar
         /// <param name="o"></param>
         /// <param name="propertiesToInclude"></param>
         /// <returns></returns>
-        private static Dictionary<string, object> GetDictionaryReflection(object o, List<string> propertiesToInclude = null, bool allProperties = false)
+        private static Dictionary<string, object> GetDictionaryReflection(object o, List<string> propertiesToInclude = null, bool allProperties = false, bool allowDuplicate = false)
         {
             var dic = new Dictionary<string, object>();
-
             var flags = allProperties ? GET_PRIVATE_AND_PUBLIC_PROPERTY_FLAGS : GET_PUBLIC_PROPERTY_FLAGS;
 
-            foreach (var p in o.GetType().GetProperties(flags))
-                if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
-                    dic.Add(p.Name, p.GetValue(o, new object[0]));
+            // mode developed to inspect ASPOSE object
+            if (allowDuplicate)
+            {
+                foreach (var p in o.GetType().GetProperties(flags))
+                {
+                    if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
+                    {
+                        var name = p.Name;
+                        if (dic.ContainsKey(name))
+                            name = $"{name}_{dic.Count}";
+                        dic.Add(name, p.GetValue(o, new object[0]));
+                    }
+                }
 
-            foreach (var p in o.GetType().GetFields(flags))
-                if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
-                    dic.Add(p.Name, p.GetValue(o));
+                foreach (var p in o.GetType().GetFields(flags))
+                {
+                    if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
+                    {
+                        var name = p.Name;
+                        if (dic.ContainsKey(name))
+                            name = $"{name}_{dic.Count}";
+                        dic.Add(name, p.GetValue(o));
+                    }
+                }
+            }
+            else
+            {
+                foreach (var p in o.GetType().GetProperties(flags))
+                    if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
+                        dic.Add(p.Name, p.GetValue(o, new object[0]));
+
+                foreach (var p in o.GetType().GetFields(flags))
+                    if ((propertiesToInclude == null) || (propertiesToInclude.Contains(p.Name)))
+                        dic.Add(p.Name, p.GetValue(o));
+            }
 
             return dic;
         }
