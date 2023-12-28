@@ -21,6 +21,16 @@ namespace DynamicSugar {
             
             DS.ListHelper.ToFile(l, fileName, create);
         }
+
+        public static List<T> FromFile<T>(this List<T> l, string fileName)
+        {
+            var ll = DS.ListHelper.FromFile<T>(fileName);
+            var lr = new List<T>();
+            lr.AddRange(l);
+            lr.AddRange(ll);
+            return lr;
+        }
+
         public static List<T>  Without<T>(this List<T> l1, params T[] values) {
 
             return DS.ListHelper.Without(l1, values.ToList());

@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
+using System.IO;
 
 namespace DynamicSugarSharp_UnitTests {
 
@@ -108,27 +109,27 @@ namespace DynamicSugarSharp_UnitTests {
             var dic1 = DS.Dictionary( new { a=1, b="B", c=33 }  ); // c=33 will be ovweritten
             var dic2 = DS.Dictionary( new { c=3, d=2.2 }  );
             var dic3 = DS.Dictionary( new { a=1, b="B", c=3, d=2.2 }  );
-            var r    = dic1.Add(dic2);
+            var r    = dic1.Merge(dic2);
 
             DS.DictionaryHelper.AssertDictionaryEqual(dic3, r);
         }
         [TestMethod]
-        public void Add_DifferentTypeOfValues_DoNotOverWrite() {
+        public void Merge_DifferentTypeOfValues_DoNotOverWrite() {
 
             var dic1 = DS.Dictionary( new { a=1, b="B" }  );
             var dic2 = DS.Dictionary( new { b="BB", c=3, d=2.2 }  ); //b="BB" will be ignore
             var dic3 = DS.Dictionary( new { a=1, b="B", c=3, d=2.2 }  );                        
 
-            DS.DictionaryHelper.AssertDictionaryEqual(dic3, dic1.Add(dic2, false));
+            DS.DictionaryHelper.AssertDictionaryEqual(dic3, dic1.Merge(dic2, false));
         }
         [TestMethod]
-        public void Add_Int() {
+        public void Merge_Int() {
 
             var dic1 = DS.Dictionary<int>( new { a=1, b=2 }  );
             var dic2 = DS.Dictionary<int>( new { c=3, d=4 }  );
             var dic3 = DS.Dictionary<int>( new { a=1, b=2, c=3, d=4 }  );
 
-            DS.DictionaryHelper.AssertDictionaryEqual(dic3, dic1.Add(dic2));
+            DS.DictionaryHelper.AssertDictionaryEqual(dic3, dic1.Merge(dic2));
         }
         [TestMethod]
         public void Clone() {
@@ -157,6 +158,32 @@ namespace DynamicSugarSharp_UnitTests {
             Dictionary<string, int> dic = DS.Dictionary<int>( new { a="1", b="2", c="3", d="4" } );
             Assert.AreEqual("d", dic.Max( DS.List("a","b","c","d")));
             Assert.AreEqual("b", dic.Max( DS.List("a","b")));
+        }
+
+        [TestMethod]
+        public void ToFile_FromFile()
+        {
+            Dictionary<string, int> dic = DS.Dictionary<int>(new { a = "1", b = "2", c = "3", d = "4" } );
+            var fileName = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), @"DSSharpLibrary_UnitTests.txt");
+            List_EM_UnitTests.DeleteFile(fileName);
+            dic.ToFile(fileName, create: true);
+
+            Dictionary<string, int> dic2 = new Dictionary<string, int>();
+            var dic3 = dic2.FromFile(fileName);
+
+            Assert.AreEqual(dic.Count, dic3.Count);
+            dic.Keys.ToList().ForEach(k => Assert.AreEqual(dic[k], dic3[k]));
+
+            Dictionary<string, int> dic22 = new Dictionary<string, int>() { ["e"] = 100 };
+            var dic4 = dic22.FromFile(fileName);
+
+            Assert.AreEqual(dic.Count+1, dic4.Count);
+            dic.Keys.ToList().ForEach(k => Assert.AreEqual(dic[k], dic4[k]));
+
+            Assert.AreEqual(100, dic4["e"]);
+
+            var dic5 = (new Dictionary<string, int>()).FromFile(fileName);
+            Assert.AreEqual(dic.Count, dic5.Count);
         }
     }
 }

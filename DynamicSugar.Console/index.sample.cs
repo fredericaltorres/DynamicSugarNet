@@ -237,7 +237,7 @@ public static void Sample13() {
 
     // Add or remove entries to a dictionary
     var stones       = DS.Dictionary<int>( new { Mick=1943, Keith=1943, Brian=1942, Bill=1936, Charlie=1941 } );
-    var allTogether  = beatles.Add(stones);
+    var allTogether  = beatles.Merge(stones);
     var noStones     = allTogether.Remove(stones);
 
     // Determine if a dictionary contains a key, a dictionary or literal dictionary

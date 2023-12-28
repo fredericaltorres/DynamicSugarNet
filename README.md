@@ -24,17 +24,19 @@ var l1        = DS.Range(10); // Range of number like in Python
 
 // New list methods
 var b = l1.Include(5);
-var l = l1.Without(0, 2, 4, 6, 8);
-var l = l1.Without(DS.List(0, 2, 4, 6, 8));
+var l = DS.List(1, 2, 3).Without( DS.List(3) );
 var b = l1.IsEmpty();
 var b = l1.IsNullOrEmpty();
 var l = DS.List(1, 2, 3).Filter( e => e % 2 == 0 );
 var l = DS.List(1, 2, 3).Merge( DS.List(3, 4, 5) );
-var l = DS.List(1, 2, 3).Substract( DS.List( 3, 4, 5) );
-var l = DS.List(1, 2, 3).Intersect( DS.List( 3, 4, 5) );
-var l = DS.List(1, 2, 3).Identical( DS.List( 1, 2, 3 ) );
+var l = DS.List(1, 2, 3).Substract( DS.List(3, 4, 5) );
+var l = DS.List(1, 2, 3).Intersect( DS.List(3, 4, 5) );
+var l = DS.List(1, 2, 3).Identical( DS.List(1, 2, 3) );
 var l = DS.List(1, 2, 3).Reject( e => e % 2 == 0 );
 var l = DS.List(1,2,3,4).Map( e => e * e );
+var l = DS.List(1,2,3,4).ToFile(@"c:\temp\list.txt", create: true);
+var l = DS.List<string>().FromFile(fileName);
+var l = DS.List<>(1,2,3).FromFile(fileName);
 
 // Format
 var l1  = DS.List(1,2,3);
@@ -91,6 +93,11 @@ var d2 = ReflectionHelper.CloneDictionary<string, object>(d);
 var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3, d = 4, e = 5 });
 Assert.IsTrue(dic1.Include(dic1));
 
+// Merge
+var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3 });
+var dic2 = DS.Dictionary(new { d = 4, e = 5 });
+var dic3 = dic1.Merge(dic2); // dic1 is not change
+
 // Format
 var dic = DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true});
 Assert.AreEqual(@"{ i:1, f:1.1, s:""string"", b:True }", dic.Format());
@@ -101,6 +108,15 @@ Assert.AreEqual(@"<i ~ 1,f ~ 1.1,s ~ ""string"",b ~ True>", dic.Format("{0} ~ {1
 
 var d1 = DS.Dictionary( new { a=1, b=2, c=3 } );
 Assert.IsTrue(DS.DictionaryHelper.Identical<string,object>(d1,d1));
+
+// File
+var d1 = DS.Dictionary( new { a=1, b=2, c=3 } );
+d1.ToFile(@"c:\temp\dic.txt", create: true);
+
+var d2 = new Dictionary<string, int>() { ["e"] = 100 };
+d2.FromFile(@"c:\temp\dic.txt");
+
+var d3 = (new Dictionary<string, int>()).FromFile(fileName);
 
 // Get a dictionary of the properties types for a POCO
 var testInstance = new TypeTestClass();
@@ -215,3 +231,4 @@ Install-Package DynamicSugarStandard
 * Microsoft Windows and Windows Phone, .NET v 4.x - 2011 - [Source](https://github.com/fredericaltorres/DynamicSugarNet)
 * Xamarin iOS and Android - 2011
 * Dot Net Standard 2.0 - 2019
+
