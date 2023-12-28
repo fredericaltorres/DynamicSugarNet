@@ -2,14 +2,13 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 using System.Collections;
 #if !MONOTOUCH
 using System.Dynamic;
 #endif
-using System.Reflection;
 
-namespace DynamicSugar {
+namespace DynamicSugar
+{
     /// <summary>
     /// Dynamic Sharp Exception
     /// </summary>

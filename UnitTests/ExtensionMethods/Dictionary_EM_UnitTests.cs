@@ -185,5 +185,19 @@ namespace DynamicSugarSharp_UnitTests {
             var dic5 = (new Dictionary<string, int>()).FromFile(fileName);
             Assert.AreEqual(dic.Count, dic5.Count);
         }
+
+        [TestMethod]
+        public void ToFile_FromFile_WithCRLF()
+        {
+            Dictionary<string, object> dic = DS.Dictionary(new { a = "1\r\n1", b = "2\r", c = "3\n", d = $"4{Environment.NewLine}4" });
+            var fileName = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), @"DSSharpLibrary_UnitTests.txt");
+            List_EM_UnitTests.DeleteFile(fileName);
+            dic.ToFile(fileName, create: true);
+
+            Dictionary<string, object> dic2 = new Dictionary<string, object>();
+            var dic3 = dic2.FromFile(fileName);
+
+            DS.DictionaryHelper.AssertDictionaryEqual(dic, dic3);
+        }
     }
 }

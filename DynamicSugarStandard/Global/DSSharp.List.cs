@@ -50,7 +50,7 @@ namespace DynamicSugar
                     var sepa = new string[] { Environment.NewLine };
                     var lines = text.Split(sepa, StringSplitOptions.None);
                     foreach (var e in lines)
-                        l.Add(e);
+                        l.Add(ExtensionMethods_Dictionary.FromFileString(e));
                 }
                 return l;
             }
@@ -66,7 +66,7 @@ namespace DynamicSugar
             {
                 var b = new StringBuilder(1024);
                 foreach (var s in l)
-                    b.Append(s.ToString()).AppendLine();
+                    b.Append(ExtensionMethods_Dictionary.ToFileString(s.ToString())).AppendLine();
 
                 if ((create) && (File.Exists(fileName))) File.Delete(fileName);
 

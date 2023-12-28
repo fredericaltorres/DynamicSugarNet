@@ -8,10 +8,8 @@ using System.Text.RegularExpressions;
 
 namespace DynamicSugar
 {
-
     public static class ExtensionMethods_Dictionary
     {
-
         public static string PreProcess<K, V>(this IDictionary<K, V> d, string template, params object[] args)
         {
 
@@ -99,13 +97,25 @@ namespace DynamicSugar
             return newD;
         }
 
+
+        public static string FromFileString(string s)
+        {
+            return  s.Replace("`r`n", Environment.NewLine);
+        }
+
+        public static string ToFileString(string s)
+        {
+            return s.Replace(Environment.NewLine, "`r`n");
+        }
+
+
         public static void ToFile<K, V>(this IDictionary<K, V> d, string fileName, bool create)
         {
             var b = new StringBuilder(1024);
             foreach (var e in d)
             {
-                b.AppendLine(e.Key.ToString());
-                b.AppendLine(e.Value.ToString());
+                b.AppendLine(ToFileString(e.Key.ToString()));
+                b.AppendLine(ToFileString(e.Value.ToString()));
             }
 
             if ((create) && (File.Exists(fileName))) File.Delete(fileName);
@@ -129,7 +139,7 @@ namespace DynamicSugar
                 var lines = text.Split(sepa, StringSplitOptions.None);
                 for (var i = 0; i < lines.Length; i += 2)
                 {
-                    d.Add(lines[i], lines[i + 1]);
+                    d.Add(FromFileString(lines[i]), FromFileString(lines[i + 1]));
                 }
             }
             return d;

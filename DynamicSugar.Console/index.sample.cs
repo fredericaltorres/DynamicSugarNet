@@ -162,6 +162,7 @@ void Sample8(){
             var v13 = DS.List(1, 2, 3).Substract(DS.List(3, 4, 5));
             DS.List(1, 2, 3).ToFile(@"C:\MyFile.txt");
             var v15 = DS.ListHelper.FromFile<int>(@"C:\MyFile.txt");
+            var v15_1 = DS.List<int>().FromFile(@"C:\MyFile.txt");
             var v16 = DS.List(1, 2, 3).Without(DS.List(2, 3));
             var v17 = DS.List(1, 2, 3).Without(2, 3);
 
