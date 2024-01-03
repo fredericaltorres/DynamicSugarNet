@@ -52,6 +52,11 @@ namespace DynamicSugarSharp_UnitTests {
             DS.Assert.Words("aa bb", "(aa & bb)");
             DS.Assert.Words("aa bb", "aa & (bb)");
 
+            // Operator & is optional
+            DS.Assert.Words("aa bb", "aa  bb");
+            DS.Assert.Words("aa bb", "(aa  bb)");
+            DS.Assert.Words("aa bb", "aa (bb)");
+
         }
         [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
         public void Words_Negative()
@@ -83,6 +88,36 @@ namespace DynamicSugarSharp_UnitTests {
             DS.Assert.Words("aa bb", "aa & (bb & (aa))");
             DS.Assert.Words("aa bb", "aa & (bb & (aa & bb))");
             DS.Assert.Words("aa bb", "aa & (bb & (aa & (a & b)))");
+        }
+
+        [TestMethod]
+        public void Words_OIrExpression()
+        {
+            DS.Assert.Words("aa bb", "aa | bb");
+            DS.Assert.Words("aa bb", "(aa | bb)");
+            DS.Assert.Words("aa bb", "((aa | bb))");
+            DS.Assert.Words("aa bb", "(aa | bb) & (bb | aa)");
+            DS.Assert.Words("aa bb", "((aa | cc))");
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_DoubleParenthesisAndAndSubAndExpression()
+        {
+            DS.Assert.Words("aa bb", "((aa & cc))");
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative_RegExExpression()
+        {
+            DS.Assert.Words("aa bb", "regex z.");
+        }
+
+        [TestMethod]
+        public void Words_RegExExpression()
+        {
+            // RegEx limitation due to the tokenizer charatect ()&| and ' ' cannot be part of the regex
+            DS.Assert.Words("aa bb", "regex a. & regex b.");
+            DS.Assert.Words("aa bb", "(regex a. & regex b.) & (regex b. & regex a.)");
         }
     }
 }

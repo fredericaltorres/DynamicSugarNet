@@ -12,6 +12,12 @@ namespace DynamicSugarSharp_UnitTests {
     public class String_EM_UnitTests {
 
         [TestMethod]
+        public void Reverse()
+        {
+            Assert.AreEqual("DCBA", "ABCD".Reverse());
+        }
+
+        [TestMethod]
         public void TokenReplacer()
         {
             var pid = 123;

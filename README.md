@@ -59,18 +59,6 @@ var l = DS.Queue(1, 2, 3);
 var l = DS.Stack(1, 2, 3);
 ```
 
-## String Processing
-```csharp
-
-// Deprecated since we have now string interpolation, but still works
-var LastName = "TORRES";
-var Age      = 45;
-var s1 = "LastName:{LastName}, Age:{Age:000}".Template( new { LastName, Age } );
-
-// Template
-s1 = "LastName:[LastName], Age:[Age]".Template(new { LastName, Age }, "[", "]");
-
-``````
 
 ## Dictionary
 ```csharp
@@ -153,6 +141,82 @@ Assert.AreEqual(2 * 123, ReflectionHelper.GetIndexer(f, 1));
 
 ``````
 
+
+
+## String Processing
+```csharp
+
+// Deprecated since we have now string interpolation, but still works
+var LastName = "TORRES";
+var Age      = 45;
+var s1 = "LastName:{LastName}, Age:{Age:000}".Template( new { LastName, Age } );
+
+// Template
+s1 = "LastName:[LastName], Age:[Age]".Template(new { LastName, Age }, "[", "]");
+
+``````
+
+## String methods
+```csharp
+
+
+Assert.AreEqual(123, "123".ToInt(defaultValue: -1));
+Assert.AreEqual(new Guid("2E36429B-2695-4CB3-BCF2-9C7C6DC56B45"), "{2E36429B-2695-4CB3-BCF2-9C7C6DC56B45}".ToGuid());
+Assert.AreEqual(new DateTime(1964, 12, 11), "12/11/1964".ToDateTime());
+Assert.AreEqual(false, "false".ToBool(defaultValue: false));
+
+Assert.AreEqual("Abcd", "abcd".Capitalize());
+Assert.AreEqual("Abcd", "ABCD".Capitalize());
+
+Assert.AreEqual("BCD", "ABCD".RemoveFirstChar());
+Assert.AreEqual("ABC", "ABCD".RemoveLastChar());
+
+Assert.AreEqual("terday I was here", "yesterday I was here".RemoveIfStartsWith("yes"));
+Assert.AreEqual("yesterday I was ",  "yesterday I was here".RemoveIfEndsWith("here"));
+
+var text = "A\r\nB\r\nC";
+var lines = text.SplitByCRLF();
+Assert.AreEqual(3, lines.Count);
+
+var text = "A  \r\nB  \r\nC  ";
+var lines = text.SplitByCRLF().TrimEnd();
+
+var text = "A  \r\nB  \r\nC  ";
+var lines = text.SplitByCRLF().TrimEnd().Indent("  ", skipFirstOne: true);
+Assert.AreEqual(3, lines.Count);
+Assert.AreEqual("A", lines[0]);
+Assert.AreEqual("  B", lines[1]);
+Assert.AreEqual("  C", lines[2]);
+
+string s = "";
+Assert.AreEqual("default", s.IfNullOrEmpty("default"));
+string s = null;
+Assert.AreEqual("default", s.IfNull("default"));
+
+string s = null;
+Assert.IsTrue(s.IsNullOrEmpty());
+
+string s = "";
+Assert.IsTrue(s.IsEmpty());
+
+var s = "ABCD";
+Assert.AreEqual("BCD" , s.Slice(1));
+Assert.AreEqual("BC"  , s.Slice(1,2));
+
+Assert.AreEqual("DCBA", "ABCD".Reverse());
+
+// Removing comment C like comment
+var result = $"[/* comment */]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C);
+
+// Removing comment Python and Powershell like comment
+var result = @"print(""Hello World"") # a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.Python);
+
+// Removing comment SQL like comment
+var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
+
+``````
+
+
 ## Resource files
 ```csharp
 
@@ -168,21 +232,7 @@ var text = DS.Resources.GetTextResource("DS_Compression.txt.gzip", Assembly.GetE
 // Retreive the content of bitmap embedded as a resource
 byte [] b = DS.Resources.GetBinaryResource("EmbedBitmap.bmp", Assembly.GetExecutingAssembly());
 
-``````
-
-## String methods
-```csharp
-
-// Removing comment C like comment
-var result = $"[/* comment */]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C);
-
-// Removing comment Python and Powershell like comment
-var result = @"print(""Hello World"") # a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.Python);
-
-// Removing comment SQL like comment
-var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
-
-``````
+```
 
 ## .NET GZip format, Zipping Unzipping file
 ```csharp

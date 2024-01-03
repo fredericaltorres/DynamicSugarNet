@@ -125,8 +125,6 @@ namespace DynamicSugar
 
             public static void Words(string text, string wordExpression)
             {
-                //var expressionTokens = Regex.Split(text, @"(?<=[&\|\(\)\ ])").ToList();
-                //var expressionTokens = Regex.Split(text, @"[&\|\(\)\ ]").ToList();
                 var expressionTokens = Regex.Split(wordExpression, @"([*()\^\/]|(?<!E)[\ \&])").ToList();
                 expressionTokens = expressionTokens.Filter(s => !String.IsNullOrEmpty(s.Trim())).ToList();
                 Words(text, expressionTokens, 0);
@@ -148,8 +146,8 @@ namespace DynamicSugar
                             currentIndex = expressionTokens.Count - 1;
 
                         token = expressionTokens[currentIndex];
-                        if (token != ")")
-                            throw new AssertFailedException($"Expected ')' at index {currentIndex} in expression '{String.Join("", expressionTokens)}'");
+                        //if (token != ")")
+                        //    throw new AssertFailedException($"Expected ')' at index {currentIndex} in expression '{String.Join("", expressionTokens)}'");
                     }
                     else if (token == ")")
                     {
@@ -162,10 +160,21 @@ namespace DynamicSugar
                     else if (token == "|")
                     {
                         // The left token for the | passed, 
+                        break; // we do not need to evaluate the right token
                     }
                     else
                     {
-                        IsTrue(text.Contains(token), $"Text:'{text}' contains '{token}'");
+                        if (token == "regex")
+                        {
+                            currentIndex++;
+                            var regExExp = expressionTokens[currentIndex];
+                            var regex = new Regex(regExExp);
+                            IsTrue(regex.IsMatch(text), $"Text:'{text}' regex '{regExExp}'");
+                        }
+                        else
+                        {
+                            IsTrue(text.Contains(token), $"Text:'{text}' contains '{token}'");
+                        }
                     }
                     currentIndex++;
                     if(currentIndex == expressionTokens.Count)
