@@ -77,9 +77,15 @@ namespace DynamicSugarSharp_UnitTests {
 
 
         [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
-        public void Words_Negative_TripleSubAndExpression()
+        public void Words_Negative_TripleNestedSubAndExpression()
         {
             DS.Assert.Words("aa bb", "aa & (bb & (aa & (a & z)))");
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative_TripleSubAndExpression()
+        {
+            DS.Assert.Words("aa bb", "aa & bb & z");
         }
 
         [TestMethod]

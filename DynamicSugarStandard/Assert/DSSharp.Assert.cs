@@ -149,7 +149,7 @@ namespace DynamicSugar
                     {
                         // The expression return start with the open and close parenthesis
                         var parenthesisExpression = GetBalancedParenthesisExpression(expressionTokens, currentIndex);
-                        r += Words(text, parenthesisExpression, 1, throwException: countMatchMode, expectedMinimumCountMatch);
+                        r += Words(text, parenthesisExpression, 1, throwException: throwException, expectedMinimumCountMatch);
                         currentIndex += parenthesisExpression.Count;
 
                         if (currentIndex >= expressionTokens.Count) // Sometime needed
