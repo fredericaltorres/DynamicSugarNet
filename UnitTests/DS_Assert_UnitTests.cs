@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace DynamicSugarSharp_UnitTests {
 
@@ -44,5 +45,44 @@ namespace DynamicSugarSharp_UnitTests {
             DS.Assert.AreEqualProperties(DS.Dictionary(o1), DS.Dictionary(o2));
         }
 
+        [TestMethod]
+        public void Words_Positive()
+        {
+            DS.Assert.Words("aa bb", "aa & bb");
+            DS.Assert.Words("aa bb", "(aa & bb)");
+            DS.Assert.Words("aa bb", "aa & (bb)");
+
+        }
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative()
+        {
+            DS.Assert.Words("aa bb", "cc");
+        }
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative_SubAndExpression()
+        {
+            DS.Assert.Words("aa bb", "(aa & bb && cc)");
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative_NestedSubAndExpression()
+        {
+            DS.Assert.Words("aa bb", "aa & (bb & (cc)) ");
+        }
+
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative_TripleSubAndExpression()
+        {
+            DS.Assert.Words("aa bb", "aa & (bb & (aa & (a & z)))");
+        }
+
+        [TestMethod]
+        public void Words_DoubleNestedSubAndExpression()
+        {
+            DS.Assert.Words("aa bb", "aa & (bb & (aa))");
+            DS.Assert.Words("aa bb", "aa & (bb & (aa & bb))");
+            DS.Assert.Words("aa bb", "aa & (bb & (aa & (a & b)))");
+        }
     }
 }

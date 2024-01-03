@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using System.Text.RegularExpressions;
 #if !MONOTOUCH
 using System.Dynamic;
 #endif
@@ -19,9 +20,16 @@ namespace DynamicSugar
     /// <summary>
     /// Dynamic Sharp Helper Class
     /// </summary>
-    public static partial class DS {
+    public static partial class DS
+    {
 
-        public static class Assert {
+        public static class Assert
+        {
+            public static void IsTrue(bool exp, string message)
+            {
+                if (!exp)
+                    throw new AssertFailedException($"Expected to be true: {message}");
+            }
 
             public static void AreNotEqual<T>(List<T> l1, List<T> l2)
             {
@@ -35,13 +43,15 @@ namespace DynamicSugar
             /// <typeparam name="T"></typeparam>
             /// <param name="l1"></param>
             /// <param name="l2"></param>
-            public static void AreEqual<T>(List<T> l1, List<T> l2) {
+            public static void AreEqual<T>(List<T> l1, List<T> l2)
+            {
 
-                if (!DS.ListHelper.Identical(l1, l2)) 
+                if (!DS.ListHelper.Identical(l1, l2))
                     throw new AssertFailedException(String.Format("List are not equal L1:'{0}', L2:'{1}'", DS.ListHelper.Format(l1), DS.ListHelper.Format(l2)));
             }
 
-            public static void AreEqualProperties(object poco, Dictionary<string, object> propertyNameValues) {
+            public static void AreEqualProperties(object poco, Dictionary<string, object> propertyNameValues)
+            {
 
                 if (poco is Dictionary<string, object>)
                 {
@@ -72,13 +82,94 @@ namespace DynamicSugar
                 }
             }
 
-            public static void AreEqualProperties(object poco, object propertyNameValues) {
+            public static void AreEqualProperties(object poco, object propertyNameValues)
+            {
 
-                if(propertyNameValues is Dictionary<string, object>) {
-                    AreEqualProperties(poco,  propertyNameValues as Dictionary<string, object>);
+                if (propertyNameValues is Dictionary<string, object>)
+                {
+                    AreEqualProperties(poco, propertyNameValues as Dictionary<string, object>);
                 }
-                else {
+                else
+                {
                     AreEqualProperties(poco, DS.Dictionary(propertyNameValues));
+                }
+            }
+
+            public static List<string> GetBalancedParenthesisExpression(List<string> expressionTokens, int currentIndex)
+            {
+                var r = new List<string>();
+                var parenthesisCount = 0;
+                while (true)
+                {
+                    var token = expressionTokens[currentIndex];
+                    if (token == "(")
+                    {
+                        parenthesisCount++;
+                        r.Add(token);
+                    }
+                    else if (token == ")")
+                    {
+                        parenthesisCount--;
+                        r.Add(token);
+                        if (parenthesisCount == 0)
+                            break;
+                    }
+                    else
+                    {
+                        r.Add(token);
+                    }
+                    currentIndex++;
+                }
+                return r;
+            }
+
+            public static void Words(string text, string wordExpression)
+            {
+                //var expressionTokens = Regex.Split(text, @"(?<=[&\|\(\)\ ])").ToList();
+                //var expressionTokens = Regex.Split(text, @"[&\|\(\)\ ]").ToList();
+                var expressionTokens = Regex.Split(wordExpression, @"([*()\^\/]|(?<!E)[\ \&])").ToList();
+                expressionTokens = expressionTokens.Filter(s => !String.IsNullOrEmpty(s.Trim())).ToList();
+                Words(text, expressionTokens, 0);
+            }
+
+            public static void Words(string text, List<string> expressionTokens, int currentIndex)
+            {
+                while (true)
+                {
+                    var token = expressionTokens[currentIndex];
+                    if (token == "(")
+                    {
+                        // The expression return start with the open and close parenthesis
+                        var parenthesisExpression = GetBalancedParenthesisExpression(expressionTokens, currentIndex);
+                        Words(text, parenthesisExpression, 1);
+                        currentIndex += parenthesisExpression.Count;
+
+                        if (currentIndex >= expressionTokens.Count) // Sometime needed
+                            currentIndex = expressionTokens.Count - 1;
+
+                        token = expressionTokens[currentIndex];
+                        if (token != ")")
+                            throw new AssertFailedException($"Expected ')' at index {currentIndex} in expression '{String.Join("", expressionTokens)}'");
+                    }
+                    else if (token == ")")
+                    {
+
+                    }
+                    else if (token == "&")
+                    {
+                         // Do nothing continue to evaluate the next token
+                    }
+                    else if (token == "|")
+                    {
+                        // The left token for the | passed, 
+                    }
+                    else
+                    {
+                        IsTrue(text.Contains(token), $"Text:'{text}' contains '{token}'");
+                    }
+                    currentIndex++;
+                    if(currentIndex == expressionTokens.Count)
+                        break;
                 }
             }
         }
