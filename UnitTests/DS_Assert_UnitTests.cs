@@ -56,8 +56,8 @@ namespace DynamicSugarSharp_UnitTests {
             DS.Assert.Words("aa bb", "aa  bb");
             DS.Assert.Words("aa bb", "(aa  bb)");
             DS.Assert.Words("aa bb", "aa (bb)");
-
         }
+
         [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
         public void Words_Negative()
         {
@@ -118,6 +118,12 @@ namespace DynamicSugarSharp_UnitTests {
             // RegEx limitation due to the tokenizer charatect ()&| and ' ' cannot be part of the regex
             DS.Assert.Words("aa bb", "regex a. & regex b.");
             DS.Assert.Words("aa bb", "(regex a. & regex b.) & (regex b. & regex a.)");
+        }
+
+        [TestMethod]
+        public void Words_Positive_ExpectCount()
+        {
+            DS.Assert.Words("aa bb", "aa & bb", expectedMinimumCountMatch: 1);
         }
     }
 }

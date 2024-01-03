@@ -123,15 +123,21 @@ namespace DynamicSugar
                 return r;
             }
 
-            public static void Words(string text, string wordExpression)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="text">The text to validate</param>
+            /// <param name="expressionTokens">The expression defining the validation "( aaa & bbb ) | ( ccc)" </param>
+            public static void Words(string text, string wordExpression, int expectedMinimumCountMatch = -1)
             {
                 var expressionTokens = Regex.Split(wordExpression, @"([*()\^\/]|(?<!E)[\ \&])").ToList();
                 expressionTokens = expressionTokens.Filter(s => !String.IsNullOrEmpty(s.Trim())).ToList();
-                Words(text, expressionTokens, 0);
+                Words(text, expressionTokens, 0, throwException: true, expectedMinimumCountMatch: expectedMinimumCountMatch);
             }
-
-            public static void Words(string text, List<string> expressionTokens, int currentIndex)
+       
+            private static int Words(string text, List<string> expressionTokens, int currentIndex, bool throwException, int expectedMinimumCountMatch)
             {
+                var r = 0;
                 while (true)
                 {
                     var token = expressionTokens[currentIndex];
@@ -139,7 +145,7 @@ namespace DynamicSugar
                     {
                         // The expression return start with the open and close parenthesis
                         var parenthesisExpression = GetBalancedParenthesisExpression(expressionTokens, currentIndex);
-                        Words(text, parenthesisExpression, 1);
+                        Words(text, parenthesisExpression, 1, throwException: expectedMinimumCountMatch == -1, expectedMinimumCountMatch);
                         currentIndex += parenthesisExpression.Count;
 
                         if (currentIndex >= expressionTokens.Count) // Sometime needed
@@ -169,17 +175,34 @@ namespace DynamicSugar
                             currentIndex++;
                             var regExExp = expressionTokens[currentIndex];
                             var regex = new Regex(regExExp);
-                            IsTrue(regex.IsMatch(text), $"Text:'{text}' regex '{regExExp}'");
+                            var exp = regex.IsMatch(text);
+                            if (throwException)
+                            {
+                                IsTrue(exp, $"Text:'{text}' regex '{regExExp}'");
+                            }
+                            else
+                            {
+                                if (exp) r++; // We just count the match
+                            }
                         }
                         else
                         {
-                            IsTrue(text.Contains(token), $"Text:'{text}' contains '{token}'");
+                            var exp = text.Contains(token);
+                            if (throwException)
+                            {
+                                IsTrue(exp, $"Text:'{text}' contains '{token}'");
+                            }
+                            else
+                            {
+                                if (exp) r++; // We just count the match
+                            }
                         }
                     }
                     currentIndex++;
                     if(currentIndex == expressionTokens.Count)
                         break;
                 }
+                return r;
             }
         }
     }
