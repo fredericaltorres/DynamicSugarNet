@@ -123,7 +123,40 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Words_Positive_ExpectCount()
         {
+            DS.Assert.Words("aa bb cc", "aa & aaa & bb & bbb", expectedMinimumCountMatch: 2);
             DS.Assert.Words("aa bb", "aa & bb", expectedMinimumCountMatch: 1);
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative_ExpectCount_2_OutOf_3()
+        {
+            // Only aa and bb will match returning 2 and not >= 3
+            DS.Assert.Words("aa bb cc", "aa & aaa & bb & bbb", expectedMinimumCountMatch: 3);
+        }
+
+        [TestMethod]
+        public void Words_Positive_ExpectCount_ZeroMatch_Or()
+        {
+            // Having a or and a minium match does not make sense. But I am supporting it anyway
+            DS.Assert.Words("aa bb cc", "aa | bb | cc", expectedMinimumCountMatch: 3);
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative_ExpectCount_ZeroMatch_Or()
+        {
+            // Having a or and a minium match does not make sense. But I am supporting it anyway
+            DS.Assert.Words("aa bb cc", "zz | yy | xx", expectedMinimumCountMatch: 3);
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Words_Negative_ExpectCount_ZeroMatch_And()
+        {
+            DS.Assert.Words("aa bb cc", "zz & yy & xx", expectedMinimumCountMatch: 3);
+        }
+
+        public void Words_Positive_ExpectCount_ZeroMatch_And()
+        {
+            DS.Assert.Words("aa bb cc", "aa & bb & cc", expectedMinimumCountMatch: 3);
         }
     }
 }

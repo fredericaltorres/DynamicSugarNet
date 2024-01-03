@@ -132,11 +132,15 @@ namespace DynamicSugar
             {
                 var expressionTokens = Regex.Split(wordExpression, @"([*()\^\/]|(?<!E)[\ \&])").ToList();
                 expressionTokens = expressionTokens.Filter(s => !String.IsNullOrEmpty(s.Trim())).ToList();
-                Words(text, expressionTokens, 0, throwException: true, expectedMinimumCountMatch: expectedMinimumCountMatch);
+                var matchCount = Words(text, expressionTokens, 0, throwException: expectedMinimumCountMatch == -1, expectedMinimumCountMatch: expectedMinimumCountMatch);
+
+                if (expectedMinimumCountMatch != -1)
+                    IsTrue(matchCount >= expectedMinimumCountMatch, $"Text:'{text}' expression '{wordExpression}', matchCount:{matchCount}, expectedMinimumCountMatch:{expectedMinimumCountMatch}");
             }
        
             private static int Words(string text, List<string> expressionTokens, int currentIndex, bool throwException, int expectedMinimumCountMatch)
             {
+                var countMatchMode = expectedMinimumCountMatch != -1;
                 var r = 0;
                 while (true)
                 {
@@ -145,7 +149,7 @@ namespace DynamicSugar
                     {
                         // The expression return start with the open and close parenthesis
                         var parenthesisExpression = GetBalancedParenthesisExpression(expressionTokens, currentIndex);
-                        Words(text, parenthesisExpression, 1, throwException: expectedMinimumCountMatch == -1, expectedMinimumCountMatch);
+                        r += Words(text, parenthesisExpression, 1, throwException: countMatchMode, expectedMinimumCountMatch);
                         currentIndex += parenthesisExpression.Count;
 
                         if (currentIndex >= expressionTokens.Count) // Sometime needed
@@ -165,8 +169,12 @@ namespace DynamicSugar
                     }
                     else if (token == "|")
                     {
-                        // The left token for the | passed, 
-                        break; // we do not need to evaluate the right token
+                        if (!countMatchMode)
+                        {
+                            // When we are not in count match mode.
+                            // But eval mode. we short-circuit the evaluation
+                            break;
+                        }
                     }
                     else
                     {
