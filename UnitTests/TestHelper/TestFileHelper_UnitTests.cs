@@ -39,6 +39,24 @@ namespace DynamicSugarSharp_UnitTests {
         }
 
         [TestMethod]
+        public void GetTempFolderWithName()
+        {
+            var tfh = new TestFileHelper();
+            var dir = tfh.GetTempFolder("tutu");
+            Assert.IsTrue(Directory.Exists(dir));
+            Assert.IsTrue(dir.Contains("tutu"));
+            
+            var fileName2 = Path.Combine(dir, "test.txt");
+            tfh.CreateFile(TextContent, fileName2);
+            Assert.IsTrue(File.Exists(fileName2));
+
+            tfh.Clean();
+
+            Assert.IsFalse(File.Exists(fileName2));
+            Assert.IsFalse(Directory.Exists(dir));
+        }
+
+        [TestMethod]
         public void GetTempFileName() 
         {
             var tfh = new TestFileHelper();
