@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
+using System.Web.UI.WebControls;
 
 namespace DynamicSugarSharp_UnitTests {
 
@@ -15,6 +16,28 @@ namespace DynamicSugarSharp_UnitTests {
     [TestClass]
     public class TestFileHelper_UnitTests
     {
+        private const string TextContent = "bla bla";
+
+        [TestMethod]
+        public void GetTempFolder()
+        {
+            var tfh = new TestFileHelper();
+            var dir = tfh.GetTempFolder();
+            Assert.IsTrue(Directory.Exists(dir));
+
+            var fileName1 = tfh.CreateTempFile(TextContent);
+            Assert.IsTrue(File.Exists(fileName1));
+
+            var fileName2 = Path.Combine(dir, "test.txt");
+            tfh.CreateFile(TextContent, fileName2);
+            Assert.IsTrue(File.Exists(fileName2));
+
+            tfh.Clean();
+            Assert.IsFalse(File.Exists(fileName2));
+            Assert.IsFalse(Directory.Exists(dir));
+            Assert.IsFalse(File.Exists(fileName1));
+        }
+
         [TestMethod]
         public void GetTempFileName() 
         {
