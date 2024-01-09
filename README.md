@@ -2,13 +2,18 @@ DynamicSugar.net /Standard
 ===============
 
 ## What is DynamicSugar.Net?
-* In 2011 I created the DynamicSugar.net Library which 
-provides methods and classes inspired by the dynamic 
-languages Python and JavaScript to write shorter and more readable source code in C# 4.0.
+DynamicSugar.net a C# Library which provides methods and classes inspired by the dynamic languages
+- Python and 
+- JavaScript 
+to write shorter and more readable source code in C#.
+
+Created in 2011 for C# v 4.0 and .NET 4.0.
+
+Updated for 2024.
 
 * From 2011 to 2020, the C# language evolved and some features in DynamicSugar became obsolete, like
 the DynamicSugar string interpolation feature. But most of the features are still useful and I want 
-to use them in my .NET 4.6.1 and .NET Core development in 2023.
+to use them in my .NET 4.6.1 and .NET Core development in 2023 and 2024.
 
 * In 2023 I moved the library to .NET Standard 2.0, so it can be used with .NET 4.6.1 and .NET Core.
 
