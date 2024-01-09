@@ -1,0 +1,20 @@
+// Making lists
+DS.List("a","b","c","d","e")
+DS.List(true, false, true)
+var l1 = DS.List(1,2,3,4,5)
+l1.IsEmpty()
+l1.IsNullOrEmpty()
+1.In(l1)
+
+
+// Merge
+DS.List(1,2).Merge(DS.List(3,4))
+DS.List(1,2).Intersect(DS.List(2,3,4))
+DS.List(1,2).Substract(DS.List(2,3,4))
+DS.List(1,2,3).Select(v => v*v).Reverse()
+
+var testFileName = @"c:\temp\test.txt";
+new TestFileHelper().DeleteFile(testFileName);
+DS.List(1,2,3).ToFile(testFileName);
+
+DS.List<int>().FromFile(testFileName)

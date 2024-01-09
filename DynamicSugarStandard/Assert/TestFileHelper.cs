@@ -49,11 +49,24 @@ namespace DynamicSugar
             }
         }
 
-        public void Clean()
+        public static void RemoveReadOnlyAttribute(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                var f = new FileInfo(fileName);
+                if (f.IsReadOnly)
+                    f.IsReadOnly = false;
+            }
+        }
+
+        public void Clean(bool removeReadOnlyFileAtrribute = false)
         {
             var notDeletedFileName = new List<string>();
             foreach(var fileName in FileNamesToDelete)
             {
+                if(removeReadOnlyFileAtrribute)
+                    RemoveReadOnlyAttribute(fileName);
+
                 if(!DeleteFile(fileName))
                     notDeletedFileName.Add(fileName);
             }
