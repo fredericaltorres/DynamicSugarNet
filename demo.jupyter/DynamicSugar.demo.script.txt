@@ -18,3 +18,42 @@ new TestFileHelper().DeleteFile(testFileName);
 DS.List(1,2,3).ToFile(testFileName);
 
 DS.List<int>().FromFile(testFileName)
+
+
+
+// Dictionary
+
+// Quick and clean way to create dictionary of <string, object>
+DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true })
+DS.Dictionary(new { i = 1,  f = 1.1f , s = "string", b = true }).Format("<{0}>", ", ")
+
+
+class ConsTest1
+{
+    public string Name = "Toto";
+    private string Secret = "Secret";
+}
+var instance = new ConsTest1();
+
+DS.Dictionary(instance).Format();
+DS.Dictionary(instance, allProperties:true).Format();
+
+var d = DS.Dictionary(instance, allProperties:true);
+var dd = ReflectionHelper.CloneDictionary<string, object>(d);
+dd.Format();
+dd.Format(@"""{0}"" = {1}", ", ", "[", "]")
+
+
+
+// Merge
+var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3 });
+var dic2 = DS.Dictionary(new { d = 4, e = 5 });
+dic1.Merge(dic2).Format()
+
+/ Include
+var dic1 = DS.Dictionary(new { a = 1, b = 2, c = 3 });
+var dic2 = DS.Dictionary(new { b =2 });
+
+dic1.Include(dic2) 
+
+dic2.Include(dic1)

@@ -77,7 +77,7 @@ Assert.AreEqual("TORRES", dic["LastName"]);
 Assert.AreEqual(45, dic["Age"]);
 
 // Include private property
-var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance, isPrivate: false);
+var dic = DS.Dictionary(TestDataInstanceManager.TestPersonInstance, allProperties: true);
 
 // Clone
 var d2 = ReflectionHelper.CloneDictionary<string, object>(d);

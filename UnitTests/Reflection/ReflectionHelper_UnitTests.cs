@@ -57,6 +57,7 @@ namespace DynamicSugarSharp_UnitTests
         class ConsTest1
         {
             public string Name = "Toto";
+            private string Secret = "Secret";
         }
         class ConsTest2
         {
