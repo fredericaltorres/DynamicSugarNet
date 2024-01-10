@@ -57,3 +57,30 @@ var dic2 = DS.Dictionary(new { b =2 });
 dic1.Include(dic2) 
 
 dic2.Include(dic1)
+
+
+// Identical
+var d1 = DS.Dictionary( new { a=1, b=2, c=3 } );
+
+DS.DictionaryHelper.Identical<string,object>(d1,d1)
+
+
+
+
+// ToFile
+var d1 = DS.Dictionary( new { a=1, b=2, c=3 } );
+d1.ToFile(@"c:\temp\dic.txt", create: true);
+
+var d2 = new Dictionary<string, int>() ;
+d2.FromFile(@"c:\temp\dic.txt")
+
+
+class ConsTest1
+{
+    public string Name = "Toto";
+    public int Count = 1;
+    public bool IsOk = true;
+}
+var instance = new ConsTest1();
+var dicType = DynamicSugar.ReflectionHelper.GetDictionaryWithType(instance);
+dicType
