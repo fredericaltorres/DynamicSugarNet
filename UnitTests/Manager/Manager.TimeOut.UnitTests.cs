@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace DynamicSugarSharp_UnitTests
 {
     [TestClass]
-    public class ManagerUnitTests
+    public class ManagerTimeOutUnitTests
     {
         [TestMethod]
         public void TimeOutManager_Success_ThrowError()
@@ -30,7 +30,7 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void TimeOutManager_Fail_NoThrowError()
         {
-            var r = Managers.TimeOutManager("Test", 1, () => false, throwError: false);
+            var r = Managers.TimeOutManager("Test", 0.1, () => false, throwError: false);
             Assert.IsFalse(r);
         }
 

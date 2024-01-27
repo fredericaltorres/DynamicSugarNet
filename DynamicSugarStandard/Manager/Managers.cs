@@ -5,29 +5,35 @@ using System.Threading;
 
 namespace DynamicSugar
 {
-    public class ManagerTimeOutException : Exception
-    {
-        public ManagerTimeOutException()
-        {
-        }
-        public ManagerTimeOutException(string text) : base(text)
-        {
-        }
-    }
-
-    public class ManagerRunTimeException : Exception
-    {
-        public ManagerRunTimeException()
-        {
-        }
-        public ManagerRunTimeException(string text) : base(text)
-        {
-
-        }
-    }
-
     public class Managers
     {
+        public static T Retry<T>(
+            Func<T> callBack,
+            int maxRetry = 2,
+            double sleepTimeInMinute = 1,
+            bool throwException = false,
+            Action<Exception> onException = null)
+        {
+            for (var x = 0; x <= maxRetry; x++)
+            {
+                try
+                {
+                    var r = callBack();
+                    return r;
+                }
+                catch (Exception ex)
+                {
+                    if(onException != null)
+                        onException(ex);
+                    Thread.Sleep(((int)(sleepTimeInMinute*60)) * 1000);
+                }
+            }
+            if(throwException)
+                throw new ManagerReTryException($"[RETRY] Failed after {maxRetry} retries");  
+
+            return default(T);
+        }
+
         public static void Wait(int second)
         {
             Thread.Sleep(second * 1000);
