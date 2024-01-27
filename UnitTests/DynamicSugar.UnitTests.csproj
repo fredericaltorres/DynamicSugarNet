@@ -107,6 +107,7 @@
     <Compile Include="DataClasses\ClassWithAllNumericTypes.cs" />
     <Compile Include="Format\FormatValueBasedOnType_UnitTests.cs" />
     <Compile Include="DynamicObjects\MultiValue_UnitTests.cs" />
+    <Compile Include="Manager\ManagerUnitTests.cs" />
     <Compile Include="Robert Martin - Prime Factors Kata.cs" />
     <Compile Include="DataClasses\TestDataInstanceManager.cs" />
     <Compile Include="Format\FormatWithDictionary_UnitTests.cs" />

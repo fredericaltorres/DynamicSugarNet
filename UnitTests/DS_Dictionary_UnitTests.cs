@@ -8,10 +8,9 @@ using System.Dynamic;
 
 namespace DynamicSugarSharp_UnitTests {
 
-    //TODO:Try extension method to List<T>
-
     [TestClass]
     public class DS_Dictionary_UnitTests {
+
         [TestMethod]
         public void Dictionary_In() {
 
@@ -19,6 +18,7 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.IsTrue("a".In(d1));
             Assert.IsFalse("aaaa".In(d1));
         }
+
         [TestMethod]
         public void Dictionary_Identical() {
 
@@ -26,6 +26,7 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.IsTrue(DS.DictionaryHelper.Identical<string,object>(d1,d1));
             DS.DictionaryHelper.AssertDictionaryEqual(d1,d1);
         }
+
         [TestMethod,ExpectedException(typeof(DynamicSugarSharpException))]
         public void Dictionary_Identical_NegativeCase() {
 
@@ -34,6 +35,7 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.IsFalse(DS.DictionaryHelper.Identical(d1,d2));
             DS.DictionaryHelper.AssertDictionaryEqual(d1,d2);
         }
+
         [TestMethod]
         public void DictionaryFormat_StaticMemberAndExtensionMethod() {
             
@@ -51,7 +53,6 @@ namespace DynamicSugarSharp_UnitTests {
 
             Assert.AreEqual(expected, DS.Dictionary(  new { a=1, b=2, c=3 } ).Format());
         }
-        
     }
 }
 
