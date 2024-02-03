@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 
@@ -45,14 +46,43 @@ namespace DynamicSugar
             return $"{ts.TotalSeconds:00}s";
         }
 
+        public static T TimeOutManager<T>(string message, double minuteTimeOut, Func<T> callBack, int sleepDuration = 10, bool throwError = true)
+        {
+            var startWaitingTime = DateTime.Now;
+            var actualSleepDuration = sleepDuration / 2; // The first time we wait half the time
+            while (true)
+            {
+                Wait(actualSleepDuration);
+                actualSleepDuration = sleepDuration; // restore full sleep duration
+                if (DateTime.Now.Subtract(startWaitingTime).Seconds > ((int)(minuteTimeOut * 60)))
+                {
+                    if (throwError)
+                        throw new ManagerTimeOutException($"[TIMEOUT]{message} timed out, duration: {GetDuration(startWaitingTime)}");
+                    return default(T);
+                }
+                try
+                {
+                    var t = callBack();
+                    if(t != null)
+                        return t;
+                }
+                catch (Exception ex)
+                {
+                    if (throwError)
+                        throw new ManagerRunTimeException($"aborting - error:{ex.Message}, duration: {GetDuration(startWaitingTime)}");
+                    return default(T);
+                }
+            }
+        }
+
         public static bool TimeOutManager(string message, double minuteTimeOut, Func<bool> callBack, int sleepDuration = 10, bool throwError = true)
         {
             var startWaitingTime = DateTime.Now;
             var actualSleepDuration = sleepDuration / 2; // The first time we wait half the time
             while (true)
             {
-                Wait(actualSleepDuration); // The first time we wait half the time
-                actualSleepDuration = sleepDuration;
+                Wait(actualSleepDuration);
+                actualSleepDuration = sleepDuration; // restore full sleep duration
                 if (DateTime.Now.Subtract(startWaitingTime).Seconds > ((int)(minuteTimeOut * 60)))
                 {
                     if (throwError)
