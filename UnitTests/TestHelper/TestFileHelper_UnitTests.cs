@@ -11,12 +11,11 @@ using System.Web.UI.WebControls;
 
 namespace DynamicSugarSharp_UnitTests {
 
-    //TODO:Try extension method to List<T>
-
     [TestClass]
     public class TestFileHelper_UnitTests
     {
         private const string TextContent = "bla bla";
+
 
         [TestMethod]
         public void GetTempFolder()

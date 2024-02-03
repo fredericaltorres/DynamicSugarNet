@@ -121,6 +121,7 @@
     <Compile Include="Reflection\ReflectionHelper_UnitTests.cs" />
     <Compile Include="Format\TokenizeFormat_UnitTests.cs" />
     <Compile Include="DynamicObjects\Expando_UnitTests.cs" />
+    <Compile Include="TestHelper\FileSequenceManager_UnitTests.cs" />
     <Compile Include="TestHelper\TestFileHelper_UnitTests.cs" />
   </ItemGroup>
   <ItemGroup>

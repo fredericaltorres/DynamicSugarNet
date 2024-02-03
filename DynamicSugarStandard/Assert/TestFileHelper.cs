@@ -7,6 +7,7 @@ using System.Reflection;
 
 namespace DynamicSugar
 {
+
     public class TestFileHelper : IDisposable
     {
         public List<string> FileNamesToDelete = new List<string>();
@@ -20,6 +21,25 @@ namespace DynamicSugar
                 if (File.Exists(fileName))
                 {
                     File.Delete(fileName);
+                    return true;
+                }
+                else return true;
+            }
+            catch (Exception ex)
+            {
+                Exceptions.Add(ex);
+                return false;
+            }
+        }
+
+
+        public bool CreateDirectory(string dirName)
+        {
+            try
+            {
+                if (!Directory.Exists(dirName))
+                {
+                    Directory.CreateDirectory(dirName);
                     return true;
                 }
                 else return true;
