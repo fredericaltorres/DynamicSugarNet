@@ -14,6 +14,8 @@ namespace DynamicSugar
         public List<string> DirectoryToDelete = new List<string>();
         public List<Exception> Exceptions = new List<Exception>();
 
+        public bool CleanInTheEnd { get; set; } = true;
+
         public bool DeleteFile(string fileName)
         {
             try
@@ -150,7 +152,8 @@ namespace DynamicSugar
 
         public void Dispose()
         {
-            this.Clean();
+            if (CleanInTheEnd)
+                this.Clean();
         }
     }
 }
