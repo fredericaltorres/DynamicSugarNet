@@ -158,6 +158,12 @@
       <Name>DynamicSugarStandard</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Files\sequence.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Files\sequence.folder.not.found.md" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -51,5 +51,29 @@ namespace DynamicSugarSharp_UnitTests {
                 }
             }
         }
+
+        [TestMethod]
+        public void FileSequenceManager_LoadSequenceFile()
+        {
+            var text = DS.Resources.GetTextResource("sequence.md", Assembly.GetExecutingAssembly());
+            var tfh = new TestFileHelper();
+            var localSequenceFileName = tfh.CreateTempFile(text, ".md");
+
+            var fileSequences = new FileSequenceManager();
+            var errors = fileSequences.LoadSequenceFile(localSequenceFileName, verifyExistenceOfFile: false);
+            Assert.AreEqual(28, fileSequences.FileNames.Count);
+        }
+
+        [TestMethod]
+        public void FileSequenceManager_LoadSequenceFile_FolderNotFound()
+        {
+            var text = DS.Resources.GetTextResource("sequence.folder.not.found.md", Assembly.GetExecutingAssembly());
+            var tfh = new TestFileHelper();
+            var localSequenceFileName = tfh.CreateTempFile(text, ".md");
+
+            var fileSequences = new FileSequenceManager();
+            var errors = fileSequences.LoadSequenceFile(localSequenceFileName, verifyExistenceOfFile: true);
+            Assert.AreEqual(5, errors.Count);
+        }
     }
 }
