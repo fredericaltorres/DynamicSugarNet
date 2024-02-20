@@ -221,6 +221,20 @@ var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: E
 
 ``````
 
+## Unit Test Helper
+```csharp
+
+// Comparing the properties of 2 POCO
+var o = new { a = 1, b = 2, c = "ok", d = true, e = DateTime.Now, f = 1.2, g = 1.2M, h = 1.2f };
+DS.Assert.AreEqualProperties(o, o);
+
+// Comparing 2 Dictionary<string, object> 
+var o = new { a = 1, b = 2, c = "ok", d = true, e = DateTime.Now, f = 1.2, g = 1.2M, h = 1.2f };
+DS.Assert.AreEqualProperties(DS.Dictionary(o), DS.Dictionary(o));
+
+// Assert a string contains some sets of words
+DS.Assert.Words("aa bb", "(aa | bb) & (bb | aa)");
+```
 
 ## Resource files
 ```csharp
