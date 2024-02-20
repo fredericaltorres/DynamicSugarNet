@@ -169,6 +169,11 @@ namespace DynamicSugar {
             return line.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
 
+        public static List<string> TrimStart(this List<string> li)
+        {
+            return li.Select(l => l.TrimStart()).ToList(); // Remove space at the end of the line;
+        }
+
         public static List<string> TrimEnd(this List<string> li)
         {
             return li.Select(l => l.TrimEnd()).ToList(); // Remove space at the end of the line;

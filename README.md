@@ -217,7 +217,7 @@ var result = $"[/* comment */]".RemoveComment(commentType: ExtensionMethods_Form
 var result = @"print(""Hello World"") # a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.Python);
 
 // Removing comment SQL like comment
-var result = @"print(""Hello World"") -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
+var result = @"select * from customers -- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
 
 ``````
 
