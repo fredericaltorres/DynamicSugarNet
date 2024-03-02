@@ -21,10 +21,26 @@ namespace DynamicSugarSharp_UnitTests
             DS.Assert.AreEqualProperties(o, o);
         }
 
+        [TestMethod]
+        public void AreEqualProperties_Poco_RegEx()
+        {
+            var o1 = new { a = 1, Letters = "ABC123foo" };
+            var o2 = new { a = 1, Letters = new Regex("[A-Z]+[0-9]+foo") };
+            DS.Assert.AreEqualProperties(o1, o2);
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void AreEqualProperties_Poco_RegEx_Fail()
+        {
+            var o1 = new { a = 1, Letters = "ABC123foo" };
+            var o2 = new { a = 1, Letters = new Regex("[A-Z]+foo") };
+            DS.Assert.AreEqualProperties(o1, o2);
+        }
+
         [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
         public void AreEqualProperties_Poco_Fail()
         {
-            var o1 = new { a = 1, b = 2, c = "ok", d = true, e = DateTime.Now, f = 1.2, g = 1.2M, h = 1.2f };
+            var o1 = new { a = 1, b = 2, c = "ok", d = true, e = DateTime.Now, f = 1.2, g = 1.2M, h = 1.2f};
             var o2 = new { a = 1, b = 2, c = "ok", d = true, e = DateTime.Now, f = 1.2, g = 1.2M, h = 1.1f };
             DS.Assert.AreEqualProperties(o1, o2);
         }

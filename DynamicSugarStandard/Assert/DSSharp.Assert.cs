@@ -52,39 +52,49 @@ namespace DynamicSugar
 
             public static void AreEqualProperties(object poco, Dictionary<string, object> propertyNameValues)
             {
-
-                if (poco is Dictionary<string, object>)
+                if (poco is Dictionary<string, object>) // Assert A Dictionary
                 {
                     var dic = poco as Dictionary<string, object>;
                     foreach (var k in dic)
                     {
                         var actualValue = k.Value;
-                        if (actualValue == null && propertyNameValues[k.Key] == null)
-                        {
-                            // null == null
-                        }
-                        else if (!actualValue.Equals(propertyNameValues[k.Key]))
-                            throw new AssertFailedException("AssertValueTypeProperties failed Property:{0}, Actual:{1}, Expected:{2}".FormatString(k.Key, actualValue, propertyNameValues[k.Key]));
+                        var expectedValue = propertyNameValues[k.Key];
+                        CompareExpectedAndActualValues(k.Key, actualValue, expectedValue);
                     }
                 }
                 else
                 {
-                    foreach (var k in propertyNameValues)
+                    foreach (var k in propertyNameValues) // Assert a POCO
                     {
                         var actualValue = ReflectionHelper.GetProperty(poco, k.Key);
-                        if (actualValue == null && propertyNameValues[k.Key] == null)
-                        {
-                            // null == null
-                        }
-                        else if (!actualValue.Equals(propertyNameValues[k.Key]))
-                            throw new AssertFailedException("AssertValueTypeProperties failed Property:{0}, Actual:{1}, Expected:{2}".FormatString(k.Key, actualValue, propertyNameValues[k.Key]));
+                        var expectedValue = propertyNameValues[k.Key];
+                        CompareExpectedAndActualValues(k.Key, actualValue, expectedValue);
                     }
+                }
+            }
+
+            private static void CompareExpectedAndActualValues(string key, object actualValue, object expectedValue)
+            {
+                if (expectedValue is Regex)
+                {
+                    var rx = expectedValue as Regex;
+                    var r = rx.IsMatch(actualValue.ToString());
+                    if (!r)
+                        throw new AssertFailedException($"AssertValueTypeProperties failed Property:{key}, Actual:{actualValue}, Expected:{expectedValue}");
+                }
+                else
+                {
+                    if (actualValue == null && expectedValue == null)
+                    {
+                        // null == null
+                    }
+                    else if (!actualValue.Equals(expectedValue))
+                        throw new AssertFailedException($"AssertValueTypeProperties failed Property:{key}, Actual:{actualValue}, Expected:{expectedValue}");
                 }
             }
 
             public static void AreEqualProperties(object poco, object propertyNameValues)
             {
-
                 if (propertyNameValues is Dictionary<string, object>)
                 {
                     AreEqualProperties(poco, propertyNameValues as Dictionary<string, object>);
