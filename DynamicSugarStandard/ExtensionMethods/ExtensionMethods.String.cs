@@ -164,9 +164,12 @@ namespace DynamicSugar {
             return sb.ToString();
         }
 
-        public static List<string> SplitByCRLF(this string line)
+        public static List<string> SplitByCRLF(this string line, string separator = "\r\n", bool removeBlankEntries = true)
         {
-            return line.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var r = line.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if(removeBlankEntries)
+                r = r.Where(l => !string.IsNullOrEmpty(l.Trim())).ToList();
+            return r;
         }
 
         public static List<string> TrimStart(this List<string> li)

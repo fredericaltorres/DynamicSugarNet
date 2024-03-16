@@ -129,6 +129,16 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual("C", lines[2]);
         }
 
+        [TestMethod]
+        public void SplitByCRLF_RemoveBlankEntry()
+        {
+            var text = "A\r\nB\r\n    \r\nC";
+            var lines = text.SplitByCRLF();
+            Assert.AreEqual(3, lines.Count);
+            Assert.AreEqual("A", lines[0]);
+            Assert.AreEqual("B", lines[1]);
+            Assert.AreEqual("C", lines[2]);
+        }
 
         [TestMethod]
         public void SplitByCRLF_TrimEnd()
