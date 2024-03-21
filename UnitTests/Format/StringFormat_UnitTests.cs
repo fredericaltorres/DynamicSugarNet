@@ -80,6 +80,22 @@ namespace DynamicSugarSharp_UnitTests{
             Assert.AreEqual(expected, result);
         }
 
+
+        [TestMethod]
+        public void RemoveComments__C_Comment_SlashStar()
+        {
+            var result = $"[/* comment */]".RemoveComments(commentType: ExtensionMethods_Format.StringComment.C);
+            var expected = $"[]";
+            Assert.AreEqual(expected, result);
+
+
+            result = @"[Hello/* comment 
+*/]".RemoveComments(commentType: ExtensionMethods_Format.StringComment.C);
+            expected = @"[Hello
+]";
+            Assert.AreEqual(expected, result);
+        }
+
         [TestMethod]
         public void RemoveComment__Pyhton_Comment()
         {
@@ -96,7 +112,6 @@ namespace DynamicSugarSharp_UnitTests{
             Assert.AreEqual(expected, result);
         }
 
-
         [TestMethod]
         public void RemoveComment__CPP_Comment()
         {
@@ -105,6 +120,20 @@ namespace DynamicSugarSharp_UnitTests{
             Assert.AreEqual(expected, result);
         }
 
+        [TestMethod]
+        public void RemoveComments__CPP_Comment()
+        {
+            var text = @"
+print(""Hello World"") // a comment
+var a = 1; // a comment
+";
+
+            var expected = @"print(""Hello World"") 
+var a = 1; ";
+
+            var result = text.RemoveComments(commentType: ExtensionMethods_Format.StringComment.CPP);
+            Assert.AreEqual(expected, result);
+        }
 
         [TestMethod]
         public void String_TemplateWithDifferentMacro()

@@ -5,6 +5,7 @@ using System.Linq;
 using System.IO;
 using System.Collections;
 using System.Globalization;
+using System.Net;
 
 #if !MONOTOUCH
 using System.Dynamic;
@@ -367,6 +368,38 @@ namespace DynamicSugar {
             CPP,
             Python,
             SQL
+        }
+
+        public static string RemoveComments(this string s, StringComment commentType = StringComment.C)
+        {
+            if(commentType == StringComment.C)
+                return Remove_C_MultiLineComment(s);
+
+            var lines = s.SplitByCRLF();
+             var r = RemoveComment(lines, commentType);
+            return string.Join(Environment.NewLine, r);
+        }
+
+        public static List<string> RemoveComment(this List<string> lines, StringComment commentType = StringComment.C)
+        {
+            var r = new List<string>();
+            var s = string.Empty;
+            foreach (var line in lines)
+            {
+                switch (commentType)
+                {
+                    case StringComment.CPP:
+                        s = Remove_CPP_SingleLineComment(line); break;
+                    case StringComment.Python:
+                        s = Remove_Python_SingleLineComment(line); break;
+                    case StringComment.SQL:
+                        s = Remove_SQL_SingleLineComment(line); break;
+                    default:
+                        throw new Exception($"Comment type {commentType} not supported");
+                }
+                r.Add(s);
+            }
+            return r;
         }
 
         public static string RemoveComment(this string s, StringComment commentType = StringComment.C)
