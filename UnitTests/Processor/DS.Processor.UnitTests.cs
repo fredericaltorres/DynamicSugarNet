@@ -24,9 +24,8 @@ message2: __BAR__
         [TestMethod]
         public void Processor_Process_Basic()
         {
-            var p = new DS.Processor(SOURCE_TEXT1);
-            var macros = p.ExtractMacros();
-            Assert.AreEqual(2, macros.Count);
+            var p = new DS.Processor(SOURCE_TEXT1).ExtractMacros();
+            Assert.AreEqual(2, p.Macros.Count);
 
             var expected = @"
 
@@ -50,9 +49,8 @@ message2: __BAR__
         [TestMethod]
         public void Processor_Process_Strings()
         {
-            var p = new DS.Processor(SOURCE_TEXT2_STRING);
-            var macros = p.ExtractMacros();
-            Assert.AreEqual(2, macros.Count);
+            var p = new DS.Processor(SOURCE_TEXT2_STRING).ExtractMacros();
+            Assert.AreEqual(2, p.Macros.Count);
 
             var expected = @"
 
@@ -64,6 +62,17 @@ message2: bar
             Assert.AreEqual(expected, result);
         }
 
+        const string SOURCE_TEXT3_EXTERNAL_MACROS = @"[__PID__]";
+
+        [TestMethod]
+        public void Processor_Process_ExternalIds()
+        {
+            var p = new DS.Processor(SOURCE_TEXT3_EXTERNAL_MACROS).ExtractMacros(@"C:\temp\fLogViewer.IDs.json");
+            Assert.IsTrue(p.Macros.Count > 0);
+
+            var result = p.Process();
+            Assert.IsTrue(result.Length > 4);
+        }
     }
 
 

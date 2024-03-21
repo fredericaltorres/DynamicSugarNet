@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using System.IO;
+using Newtonsoft.Json.Linq;
 #if !MONOTOUCH
 using System.Dynamic;
 #endif
@@ -34,7 +37,7 @@ namespace DynamicSugar
                 SourceText = text;
             }
 
-            public Dictionary<string, string> ExtractMacros()
+            public Processor ExtractMacros(string jsonIdsFile = null)
             {
                 var linesWithNoDashDefiles = new List<string>();
 
@@ -61,10 +64,27 @@ namespace DynamicSugar
                     }
                     else linesWithNoDashDefiles.Add(line);
                 }
+                LoadMacros(jsonIdsFile);
                 TextToBeProcessed = string.Join(Environment.NewLine, linesWithNoDashDefiles) + Environment.NewLine;
-                return Macros;
+                return this;
             }
+            private void LoadMacros(string jsonIdsFile)
+            {
+                if (jsonIdsFile != null && File.Exists(jsonIdsFile))
+                {
+                    var json = File.ReadAllText(jsonIdsFile);
+                    var jsonO = JObject.Parse(json);
+                    var keys = jsonO.Properties().Select(p => p.Name);
+                    foreach (var key in keys)
+                    {
+                        var val = jsonO[key].ToString();
+                        if(Macros.ContainsKey(key))
+                            Macros.Remove(key);
 
+                        Macros.Add(key, val);
+                    }
+                }
+            }
             public string Process()
             {
                 var text = TextToBeProcessed;
