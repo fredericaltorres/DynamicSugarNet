@@ -110,6 +110,7 @@
     <Compile Include="Manager\Manager.Retry.UnitTests.cs" />
     <Compile Include="Manager\Manager.TimeOut.Generic.UnitTests.cs" />
     <Compile Include="Manager\Manager.TimeOut.UnitTests.cs" />
+    <Compile Include="Processor\DS.Processor.UnitTests.cs" />
     <Compile Include="Robert Martin - Prime Factors Kata.cs" />
     <Compile Include="DataClasses\TestDataInstanceManager.cs" />
     <Compile Include="Format\FormatWithDictionary_UnitTests.cs" />
