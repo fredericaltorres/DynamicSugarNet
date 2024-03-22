@@ -167,9 +167,10 @@ namespace DynamicSugar
             public string ProcessMain()
             {
                 string text = TextToBeProcessed;
-                var go = false;
-                while (true)
+                var go = true;
+                while (go)
                 {
+                    go = false;
                     foreach (var m in Macros.Values)
                     {
                         if (!m.HasParameter && text.Contains(m.Name))
@@ -184,10 +185,10 @@ namespace DynamicSugar
                         if (m.HasParameter && m.ApplyToText(text))
                         {
                             text = m.Replace(text, this.Macros);
+                            go = true;
                         }
                     }
                 }
-
                 return text;
             }
         }

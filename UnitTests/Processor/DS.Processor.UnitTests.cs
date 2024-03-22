@@ -93,9 +93,9 @@ message2: bar
 
         const string SOURCE_TEXT_PARAMETERS_2 = @"
 #define CURRENT_DAY_ROOT	2023-09-19
-#define CONVERT_DATE(x)		(DateTimeToTimestamp( x ) / 1000)
-#define CURRENT_DAY			(CONVERT_DATE(""CURRENT_DAY_ROOTT00:00:00""))
-#define CURRENT_END_OF_DAY	(CONVERT_DATE(""CURRENT_DAY_ROOTT23:59:59"")) 
+#define CONVERT_DATE(x)		DateTimeToTimestamp( x ) / 1000
+#define CURRENT_DAY			CONVERT_DATE(""CURRENT_DAY_ROOTT00:00:00"")
+#define CURRENT_END_OF_DAY	CONVERT_DATE(""CURRENT_DAY_ROOTT23:59:59"") 
 
 select c as record FROM c WHERE c._ts > CURRENT_DAY and c._ts < CURRENT_END_OF_DAY
 ";
@@ -106,10 +106,10 @@ select c as record FROM c WHERE c._ts > CURRENT_DAY and c._ts < CURRENT_END_OF_D
             var p = new DS.Processor(SOURCE_TEXT_PARAMETERS_2).ExtractMacros();
             Assert.AreEqual(4, p.Macros.Count);
 
-            var expected = @"";
+            var expected = @"select c as record FROM c WHERE c._ts > DateTimeToTimestamp( ""2023-09-19T00:00:00"" ) / 1000 and c._ts < DateTimeToTimestamp( ""2023-09-19T23:59:59"" ) / 1000";
 
             var result = p.ProcessMain();
-            ///////Assert.AreEqual(expected, result.Trim());
+            Assert.AreEqual(expected, result.Trim());
         }
     }
 
