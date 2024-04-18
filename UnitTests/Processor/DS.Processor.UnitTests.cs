@@ -42,8 +42,10 @@ message2: bar
 #define __FOO__ ""foo""
 #define __BAR__ ""bar""
 
+#if true
 message1: __FOO__ 
 message2: __BAR__
+#endif
 ";
 
         [TestMethod]
@@ -54,8 +56,10 @@ message2: __BAR__
 
             var expected = @"
 
+#if true
 message1: foo 
 message2: bar
+#endif
 ";
 
             var result = p.ProcessMain();

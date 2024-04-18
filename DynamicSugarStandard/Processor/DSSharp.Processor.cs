@@ -86,7 +86,7 @@ namespace DynamicSugar
                 var lines = SourceText.SplitByCRLF();
                 foreach (var line in lines)
                 {
-                    if (line.TrimStart().StartsWith("#"))
+                    if (line.TrimStart().StartsWith("#") && (!line.TrimStart().StartsWith("#if")) && (!line.TrimStart().StartsWith("#endif")))
                     {
                         var m1 = Regex.Match(line, regExWithParameter);
                         if (m1.Success)
