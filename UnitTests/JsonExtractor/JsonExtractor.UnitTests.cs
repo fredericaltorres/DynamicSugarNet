@@ -111,5 +111,37 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(expectedJson1, result);
         }
 
+
+        [TestMethod]
+        public void Extract_DateInBracket_JsonBracketContainingOneObject()
+        {
+            var Json1 = @"[2024-07-12T10:23:50.403Z]  JSON Message [{""JobId"":14669442}]";
+            var expectedJson1 = @"[
+  {
+    ""JobId"": 14669442
+  }
+]";
+            var text = Json1;
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(expectedJson1, result);
+        }
+
+
+        [TestMethod]
+        public void Extract_DateInBracket_JsonBracketContainingTwoObject()
+        {
+            var Json1 = @"[2024-07-12T10:23:50.403Z]  JSON Message [{""JobId"":1111}, {""JobId"":2222}]";
+            var expectedJson1 = @"[
+  {
+    ""JobId"": 1111
+  },
+  {
+    ""JobId"": 2222
+  }
+]";
+            var text = Json1;
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(expectedJson1, result);
+        }
     }
 }

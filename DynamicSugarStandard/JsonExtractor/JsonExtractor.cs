@@ -74,30 +74,38 @@ namespace DynamicSugar
         {
             var startBracket = bracketType == BracketType.Curly ? "{" : "[";
             var endBracket = bracketType == BracketType.Curly ? "}" : "]";
+            var searchStartIndex = 0;
 
-            var startBracketIndex = text.IndexOf(startBracket);
-            var endBracketIndex = text.LastIndexOf(endBracket);
-
-            if(endBracketIndex == -1 || startBracketIndex == -1)
-                return null;
-
-            if (startBracketIndex >=  endBracketIndex)
-                return null;
-
-            var subText = text.Substring(startBracketIndex, endBracketIndex - startBracketIndex + 1);
-
-            if (IsValidJson(subText))
+            while (true)
             {
-                if(format)
+                var startBracketIndex = text.IndexOf(startBracket, searchStartIndex);
+                if(startBracketIndex ==-1)
+                    return null;
+
+                var endBracketIndex = text.IndexOf(endBracket, startBracketIndex);
+
+                if (endBracketIndex == -1 || startBracketIndex == -1)
+                    return null;
+
+                if (startBracketIndex >= endBracketIndex)
+                    return null;
+
+                var subText = text.Substring(startBracketIndex, endBracketIndex - startBracketIndex + 1);
+
+                if (IsValidJson(subText))
                 {
-                    subText = Format(subText);
+                    if (format)
+                    {
+                        subText = Format(subText);
+                    }
+                    return subText;
                 }
-                return subText;
+                else
+                {
+                    searchStartIndex = startBracketIndex + 1;
+                }
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public static JsonExtractionType DetectJsonType(string text)
@@ -113,13 +121,18 @@ namespace DynamicSugar
 
             if (curlyBraceIndex > -1 && squareBraceIndex > -1)
             {
-                var r = Grab(text, BracketType.Curly);
-                if (r != null)
-                    return JsonExtractionType.Object;
+                var rCurly = Grab(text, BracketType.Curly) != null;
+                var rSquare = Grab(text, BracketType.Square) != null;
 
-                r = Grab(text, BracketType.Square);
-                if (r != null)
+                if (rCurly && !rSquare)
+                    return JsonExtractionType.Object;
+                if (!rCurly && rSquare)
                     return JsonExtractionType.Array;
+
+                if (rCurly && rSquare)
+                {
+                    return JsonExtractionType.Array; // most likely an array containing objects
+                }
             }
 
             return JsonExtractionType.Unknown;
