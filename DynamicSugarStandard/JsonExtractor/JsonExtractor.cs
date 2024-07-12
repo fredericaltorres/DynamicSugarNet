@@ -77,6 +77,13 @@ namespace DynamicSugar
 
             var startBracketIndex = text.IndexOf(startBracket);
             var endBracketIndex = text.LastIndexOf(endBracket);
+
+            if(endBracketIndex == -1 || startBracketIndex == -1)
+                return null;
+
+            if (startBracketIndex >=  endBracketIndex)
+                return null;
+
             var subText = text.Substring(startBracketIndex, endBracketIndex - startBracketIndex + 1);
 
             if (IsValidJson(subText))
@@ -131,5 +138,10 @@ namespace DynamicSugar
                     return null;
             }
         }
+
+
+
+
+
     }
 }

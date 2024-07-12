@@ -25,6 +25,24 @@ namespace DynamicSugarSharp_UnitTests
         }
 
         [TestMethod]
+        public void ExtractOneInvalidObject_BadCurlyBracketPosition ()
+        {
+            var Json1 = @"}   ""a""   :   1 {";
+            var text = $"noiseStart {Json1} noiseEnd";
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(null, result);
+        }
+
+        [TestMethod]
+        public void ExtractOneInvalidObject_JsonSyntaxError()
+        {
+            var Json1 = @"{   ""a""      1 }";
+            var text = $"noiseStart {Json1} noiseEnd";
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(null, result);
+        }
+
+        [TestMethod]
         public void ExtractOneObject()
         {
             var Json1 = @"{   ""a""   :   1 }";
@@ -43,5 +61,55 @@ namespace DynamicSugarSharp_UnitTests
             var result = JsonExtractor.Extract(text);
             Assert.AreEqual(expectedJson1, result);
         }
+
+
+        [TestMethod]
+        public void ExtractOneArrayOfObject()
+        {
+            var Json1 = @"[{ ""a"":1 }, { ""b"":1 }]";
+            var expectedJson1 = @"[
+  {
+    ""a"": 1
+  },
+  {
+    ""b"": 1
+  }
+]";
+            var text = $"noiseStart {Json1} noiseEnd";
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(expectedJson1, result);
+        }
+
+
+        [TestMethod]
+        public void ExtractInvalidJson()
+        {
+            var Json1 = @"[1,2,3";
+            var text = $"noiseStart {Json1} noiseEnd";
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(null, result);
+        }
+
+        [TestMethod]
+        public void ExtractOneInvalidArrayOfInt()
+        {
+            var Json1 = @"]1,2,3[";
+            var text = $"noiseStart {Json1} noiseEnd";
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(null, result);
+        }
+
+        [TestMethod]
+        public void ExtractOneObjectWithTimeStampInBraket()
+        {
+            var Json1 = @"[2021-12-10T00:00:20.257Z]  {""IsSuccessStatusCode"":true } ";
+            var expectedJson1 = @"{
+  ""IsSuccessStatusCode"": true
+}";
+            var text = Json1;
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(expectedJson1, result);
+        }
+
     }
 }
