@@ -110,6 +110,7 @@
     <Compile Include="DataClasses\ClassWithAllNumericTypes.cs" />
     <Compile Include="Format\FormatValueBasedOnType_UnitTests.cs" />
     <Compile Include="DynamicObjects\MultiValue_UnitTests.cs" />
+    <Compile Include="JsonExtractor\JsonExtractor.UnitTests.cs" />
     <Compile Include="Manager\Manager.Retry.UnitTests.cs" />
     <Compile Include="Manager\Manager.TimeOut.Generic.UnitTests.cs" />
     <Compile Include="Manager\Manager.TimeOut.UnitTests.cs" />
