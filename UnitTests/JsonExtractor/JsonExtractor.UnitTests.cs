@@ -100,9 +100,23 @@ namespace DynamicSugarSharp_UnitTests
         }
 
         [TestMethod]
-        public void ExtractOneObjectWithTimeStampInBraket()
+        public void ExtractOneObjectWithTimeStampInSquareBraket()
         {
             var Json1 = @"[2021-12-10T00:00:20.257Z]  {""IsSuccessStatusCode"":true } ";
+            var expectedJson1 = @"{
+  ""IsSuccessStatusCode"": true
+}";
+            var text = Json1;
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(expectedJson1, result);
+        }
+
+
+
+        [TestMethod]
+        public void ExtractOneObjectWithTimeStampInCurlyBraket()
+        {
+            var Json1 = @"{2021-12-10T00:00:20.257Z}  {""IsSuccessStatusCode"":true } ";
             var expectedJson1 = @"{
   ""IsSuccessStatusCode"": true
 }";
