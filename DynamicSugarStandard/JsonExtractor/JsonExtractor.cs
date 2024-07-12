@@ -119,19 +119,27 @@ namespace DynamicSugar
             if (curlyBraceIndex == -1 && squareBraceIndex > -1)
                 return JsonExtractionType.Array;
 
-            if (curlyBraceIndex > -1 && squareBraceIndex > -1)
+            if (curlyBraceIndex > -1 && squareBraceIndex > -1) // case we found both [ and {
             {
-                var rCurly = Grab(text, BracketType.Curly) != null;
-                var rSquare = Grab(text, BracketType.Square) != null;
+                var rCurlyJson = Grab(text, BracketType.Curly);
+                var rSquareJson = Grab(text, BracketType.Square);
+                var rCurly = rCurlyJson != null;
+                var rSquare = rSquareJson != null;
 
                 if (rCurly && !rSquare)
                     return JsonExtractionType.Object;
                 if (!rCurly && rSquare)
                     return JsonExtractionType.Array;
 
+                var rCurlyJsonIndex = rCurlyJson == null ? 0 : text.IndexOf(rCurlyJson);
+                var rSquareJsonIndex = rSquareJson == null ? 0 : text.IndexOf(rSquareJson);
+
                 if (rCurly && rSquare)
                 {
-                    return JsonExtractionType.Array; // most likely an array containing objects
+                    if(rSquareJsonIndex < rCurlyJsonIndex) // The '[' was detected before the '{'
+                        return JsonExtractionType.Array; // most likely an array containing objects
+                    else
+                        return JsonExtractionType.Object; // most likely an object containing an array
                 }
             }
 

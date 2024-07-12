@@ -157,5 +157,19 @@ namespace DynamicSugarSharp_UnitTests
             var result = JsonExtractor.Extract(text);
             Assert.AreEqual(expectedJson1, result);
         }
+
+        [TestMethod]
+        public void Extract_DateInBracket_JsonObjectContainingArray()
+        {
+            var Json1 = @"[2024-07-12T10:23:40.325Z] | [HTTPCallStatus] Content:{""VideoId"":0, ""Timings"":[], ""mimeType"":null }";
+            var expectedJson1 = @"{
+  ""VideoId"": 0,
+  ""Timings"": [],
+  ""mimeType"": null
+}";
+            var text = Json1;
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(expectedJson1, result);
+        }
     }
 }
