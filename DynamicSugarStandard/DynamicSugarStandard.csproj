@@ -10,9 +10,9 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>1.0.34.0</AssemblyVersion>
-    <FileVersion>1.0.34.0</FileVersion>
-    <VersionPrefix>1.0.34.0</VersionPrefix>
+    <AssemblyVersion>1.0.36.0</AssemblyVersion>
+    <FileVersion>1.0.36.0</FileVersion>
+    <VersionPrefix>1.0.36.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

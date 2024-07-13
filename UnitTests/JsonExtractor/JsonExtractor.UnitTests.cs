@@ -171,5 +171,39 @@ namespace DynamicSugarSharp_UnitTests
             var result = JsonExtractor.Extract(text);
             Assert.AreEqual(expectedJson1, result);
         }
+
+
+        [TestMethod]
+        public void Extract_DateInBracket_DoubleJsonObjectNested()
+        {
+            var Json1 = @"{ ""created"": ""2024-07-12T06:26:00.78"", ""author"": { ""authorFullName"": ""Frederic Torres"" } }";
+            var expectedJson1 = @"{
+  ""created"": ""2024-07-12T06:26:00.78"",
+  ""author"": {
+    ""authorFullName"": ""Frederic Torres""
+  }
+}";
+            var text = Json1;
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(expectedJson1, result);
+        }
+
+        [TestMethod]
+        public void Extract_DateInBracket_tRIPLLEJsonObjectNested()
+        {
+            var Json1 = @"{ ""created"": ""2024-07-12T06:26:00.78"", ""author"": { ""authorFullName"": ""Frederic Torres"", ""O"" : { ""zaza"" : true } } }";
+            var expectedJson1 = @"{
+  ""created"": ""2024-07-12T06:26:00.78"",
+  ""author"": {
+    ""authorFullName"": ""Frederic Torres"",
+    ""O"": {
+      ""zaza"": true
+    }
+  }
+}";
+            var text = Json1;
+            var result = JsonExtractor.Extract(text);
+            Assert.AreEqual(expectedJson1, result);
+        }
     }
 }

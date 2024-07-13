@@ -72,17 +72,17 @@ namespace DynamicSugar
 
         public static string Grab(string text, BracketType bracketType, bool format = false)
         {
-            var startBracket = bracketType == BracketType.Curly ? "{" : "[";
-            var endBracket = bracketType == BracketType.Curly ? "}" : "]";
+            var startBracketChar = bracketType == BracketType.Curly ? "{" : "[";
+            var endBracketChar   = bracketType == BracketType.Curly ? "}" : "]";
             var searchStartIndex = 0;
 
             while (true)
             {
-                var startBracketIndex = text.IndexOf(startBracket, searchStartIndex);
+                var startBracketIndex = text.IndexOf(startBracketChar, searchStartIndex);
                 if(startBracketIndex ==-1)
                     return null;
 
-                var endBracketIndex = text.IndexOf(endBracket, startBracketIndex);
+                var endBracketIndex = text.IndexOf(endBracketChar, startBracketIndex);
 
                 if (endBracketIndex == -1 || startBracketIndex == -1)
                     return null;
@@ -91,6 +91,13 @@ namespace DynamicSugar
                     return null;
 
                 var subText = text.Substring(startBracketIndex, endBracketIndex - startBracketIndex + 1);
+
+                if (!IsValidJson(subText))
+                {
+                    var subText2 = TryGrabNextClosingBracket(text, startBracketIndex, endBracketIndex, endBracketChar);
+                    if(subText2 != null)
+                        subText = subText2;
+                }
 
                 if (IsValidJson(subText))
                 {
@@ -106,6 +113,23 @@ namespace DynamicSugar
                 }
             }
             return null;
+        }
+
+        private static string TryGrabNextClosingBracket(string text, int startBracketIndex, int endBracketIndex, string endBracket, int recursionIndex = 0)
+        {
+            var endBracketIndex0 = text.IndexOf(endBracket, endBracketIndex + 1);
+            if(endBracketIndex0 == -1)
+                return null;
+
+            var subText = text.Substring(startBracketIndex, endBracketIndex0 - startBracketIndex + 1);
+            if (IsValidJson(subText))
+                return subText;
+            else
+            {
+                if(recursionIndex > 6)
+                    return null;
+                return TryGrabNextClosingBracket(text, startBracketIndex, endBracketIndex + 1, endBracket, recursionIndex + 1);
+            }
         }
 
         public static JsonExtractionType DetectJsonType(string text)
