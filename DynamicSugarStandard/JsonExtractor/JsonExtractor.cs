@@ -117,8 +117,9 @@ namespace DynamicSugar
 
         private static string TryGrabNextClosingBracket(string text, int startBracketIndex, int endBracketIndex, string endBracket, int recursionIndex = 0)
         {
-            var endBracketIndex0 = text.IndexOf(endBracket, endBracketIndex + 1);
-            if(endBracketIndex0 == -1)
+            //var endBracketIndex0 = text.IndexOf(endBracket, endBracketIndex + 1);
+            var endBracketIndex0 = text.LastIndexOf(endBracket);
+            if (endBracketIndex0 == -1)
                 return null;
 
             var subText = text.Substring(startBracketIndex, endBracketIndex0 - startBracketIndex + 1);
@@ -126,7 +127,7 @@ namespace DynamicSugar
                 return subText;
             else
             {
-                if(recursionIndex > 6)
+                if(recursionIndex > 10)
                     return null;
                 return TryGrabNextClosingBracket(text, startBracketIndex, endBracketIndex + 1, endBracket, recursionIndex + 1);
             }
@@ -145,6 +146,11 @@ namespace DynamicSugar
 
             if (curlyBraceIndex > -1 && squareBraceIndex > -1) // case we found both [ and {
             {
+                //if(curlyBraceIndex < squareBraceIndex)
+                //    return JsonExtractionType.Object;
+                //else
+                //    return JsonExtractionType.Array;
+
                 var rCurlyJson = Grab(text, BracketType.Curly);
                 var rSquareJson = Grab(text, BracketType.Square);
                 var rCurly = rCurlyJson != null;
@@ -160,7 +166,7 @@ namespace DynamicSugar
 
                 if (rCurly && rSquare)
                 {
-                    if(rSquareJsonIndex < rCurlyJsonIndex) // The '[' was detected before the '{'
+                    if (rSquareJsonIndex < rCurlyJsonIndex) // The '[' was detected before the '{'
                         return JsonExtractionType.Array; // most likely an array containing objects
                     else
                         return JsonExtractionType.Object; // most likely an object containing an array
