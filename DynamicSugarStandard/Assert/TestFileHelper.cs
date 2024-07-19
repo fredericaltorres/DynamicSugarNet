@@ -16,6 +16,12 @@ namespace DynamicSugar
 
         public bool CleanInTheEnd { get; set; } = true;
 
+        public string TrackFile(string fileName)
+        {
+            FileNamesToDelete.Add(fileName);
+            return fileName;
+        }
+
         public bool DeleteFile(string fileName)
         {
             try
