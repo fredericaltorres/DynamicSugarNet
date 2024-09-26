@@ -422,9 +422,12 @@ namespace DynamicSugar {
         private static string Remove_SQL_SingleLineComment(string s)
         {
             var r = RemoveEndOfLineCommentForOnline(s, "--");
-            while(r.EndsWith("-"))
+            if (r != null)
             {
-                r = r.Substring(0, r.Length-1);
+                while (r.EndsWith("-"))
+                {
+                    r = r.Substring(0, r.Length - 1);
+                }
             }
             return r;
         }
