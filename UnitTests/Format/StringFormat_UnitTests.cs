@@ -113,6 +113,22 @@ namespace DynamicSugarSharp_UnitTests{
         }
 
         [TestMethod]
+        public void RemoveComment__SQL_Comment_CornerCaseWithOneExtraDash()
+        {
+            var result = @"print(""Hello World"") --- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
+            var expected = @"print(""Hello World"") ";
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void RemoveComment__SQL_Comment_CornerCaseWithTwoExtraDash()
+        {
+            var result = @"print(""Hello World"") ---- a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.SQL);
+            var expected = @"print(""Hello World"") ";
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
         public void RemoveComment__CPP_Comment()
         {
             var result = @"print(""Hello World"") // a comment".RemoveComment(commentType: ExtensionMethods_Format.StringComment.CPP);

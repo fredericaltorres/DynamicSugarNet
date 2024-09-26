@@ -421,7 +421,12 @@ namespace DynamicSugar {
 
         private static string Remove_SQL_SingleLineComment(string s)
         {
-            return RemoveEndOfLineCommentForOnline(s, "--");
+            var r = RemoveEndOfLineCommentForOnline(s, "--");
+            while(r.EndsWith("-"))
+            {
+                r = r.Substring(0, r.Length-1);
+            }
+            return r;
         }
 
         private static string Remove_Python_SingleLineComment(string s)
