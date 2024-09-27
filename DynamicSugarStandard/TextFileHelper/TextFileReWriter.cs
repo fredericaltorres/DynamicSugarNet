@@ -10,22 +10,25 @@ namespace DynamicSugar.TextFileHelper
     {
         const string LOG_TO_MARK = "#logto:";
 
-        public static string ProcessLogToMacro(string text, string splitString)
+        public static string ProcessLogToMacro(string text, string splitString, Func<string, string> fn)
         {
             var lines = text.Split(DS.List(splitString).ToArray(), StringSplitOptions.None).ToList();
             var newLines = new List<string>();
 
-            foreach (var line0 in lines)
+            foreach (var line1 in lines)
             {
-                var line1 = line0;
-                if (line1.Contains(LOG_TO_MARK))
+                var line = line1;
+                if (line.Contains(LOG_TO_MARK))
                 {
-                    var logToFileName = line1.Substring(line1.IndexOf(LOG_TO_MARK) + LOG_TO_MARK.Length).Trim();
-                    var logToText = line1.Substring(0, line1.IndexOf(LOG_TO_MARK) - 1);
+                    if(fn != null)
+                        line = fn(line); // preprocess the line
+
+                    var logToFileName = line.Substring(line.IndexOf(LOG_TO_MARK) + LOG_TO_MARK.Length).Trim();
+                    var logToText = line.Substring(0, line.IndexOf(LOG_TO_MARK) - 1);
 
                     File.AppendAllText(logToFileName, logToText + Environment.NewLine);
                 }
-                newLines.Add(line1);
+                newLines.Add(line);
             }
             return text;
         }

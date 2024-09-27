@@ -17,7 +17,7 @@ namespace DynamicSugarSharp_UnitTests {
     {
         const string LogToTextSourceSample = @"
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Video Processing Performance: 5 in process at  2024/09/27 04:33:48.087 PM #logto:c:\temp\ProcessLogToMacro.log         
+Video Processing Performance: 5 in process at  2024/09/27 04:33:48.087 PM #logto:c:\temp\ProcessLogToMacro.log  `txt_msg
 Tutu Errors:
 Video Processing Performance: 9 in process at  2024/09/27 05:55:48.087 PM #logto:c:\temp\ProcessLogToMacro.log
 ";
@@ -28,8 +28,13 @@ Video Processing Performance: 9 in process at  2024/09/27 05:55:48.087 PM #logto
             var tfh = new TestFileHelper();
             var logToFileName = @"c:\temp\ProcessLogToMacro.log";
             tfh.DeleteFile(logToFileName);
+
+            var fn = new Func<string, string>((line) =>
+            {
+                return line.Replace("`txt_msg", "");
+            });
             
-            var textResult = TextFileReWriter.ProcessLogToMacro(LogToTextSourceSample, Environment.NewLine);
+            var textResult = TextFileReWriter.ProcessLogToMacro(LogToTextSourceSample, Environment.NewLine, fn);
 
             Assert.IsTrue(File.Exists(logToFileName));
             Assert.IsTrue(File.ReadAllText(logToFileName).Contains("5 in process"));
