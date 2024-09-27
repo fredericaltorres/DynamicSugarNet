@@ -20,7 +20,7 @@ namespace DynamicSugar.TextFileHelper
                 var line1 = line0;
                 if (line1.Contains(LOG_TO_MARK))
                 {
-                    var logToFileName = line1.Substring(line1.IndexOf(LOG_TO_MARK) + LOG_TO_MARK.Length);
+                    var logToFileName = line1.Substring(line1.IndexOf(LOG_TO_MARK) + LOG_TO_MARK.Length).Trim();
                     var logToText = line1.Substring(0, line1.IndexOf(LOG_TO_MARK) - 1);
 
                     File.AppendAllText(logToFileName, logToText + Environment.NewLine);

@@ -17,7 +17,7 @@ namespace DynamicSugarSharp_UnitTests {
     {
         const string LogToTextSourceSample = @"
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Video Processing Performance: 5 in process at  2024/09/27 04:33:48.087 PM #logto:c:\temp\ProcessLogToMacro.log
+Video Processing Performance: 5 in process at  2024/09/27 04:33:48.087 PM #logto:c:\temp\ProcessLogToMacro.log         
 Tutu Errors:
 Video Processing Performance: 9 in process at  2024/09/27 05:55:48.087 PM #logto:c:\temp\ProcessLogToMacro.log
 ";
