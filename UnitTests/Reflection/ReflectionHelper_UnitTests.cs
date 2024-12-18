@@ -471,5 +471,32 @@ namespace DynamicSugarSharp_UnitTests
                 UriValue = new Uri("http://www.flogviewer.com")
         }));
         }
+
+        internal class PatchClass
+        {
+            public string FirstName { get; set; }
+            public int Age { get; set; }
+            public double Height { get; set; }
+            public bool IsAlive { get; set; }
+            public DateTime BirthDate { get; set; }
+        }
+
+        [TestMethod]
+        public void PatchObject()
+        {
+            var pocoInput = new PatchClass { FirstName = "Fred", Age = 16, Height = 4, BirthDate = new DateTime(1964, 12, 11) };
+            var dic = new Dictionary<string, object>();
+            dic.Add("FirstName", "Freddy");
+            dic.Add("Age", 32);
+            dic.Add("Height", 5.9);
+            dic.Add("IsAlive", true);
+            dic.Add("BirthDate", new DateTime(1964, 12, 12));
+            var r = ReflectionHelper.PatchPoco(pocoInput, dic) as PatchClass;
+            Assert.AreEqual("Freddy", r.FirstName);
+            Assert.AreEqual(32, r.Age);
+            Assert.AreEqual(5.9, r.Height);
+            Assert.AreEqual(true, r.IsAlive);
+            Assert.AreEqual(new DateTime(1964, 12, 12), r.BirthDate);
+        }
     }
 }

@@ -374,6 +374,15 @@ namespace DynamicSugar
 
             return dic;
         }
+
+        public static object PatchPoco(object o, Dictionary<string, object> dic)
+        {
+            foreach (var p in dic)
+                if (PropertyExist(o, p.Key))
+                    SetProperty(o, p.Key, p.Value);
+            return o;
+        }
+
         /// <summary>
         /// 
         /// </summary>
