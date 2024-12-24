@@ -147,11 +147,21 @@ namespace DynamicSugar
                 if (expectedMinimumCountMatch != -1)
                     IsTrue(matchCount >= expectedMinimumCountMatch, $"Text:'{text}' expression '{wordExpression}', matchCount:{matchCount}, expectedMinimumCountMatch:{expectedMinimumCountMatch}");
             }
-       
+
+
+            private static string GetNextToken(List<string> expressionTokens, int currentIndex)
+            {
+                if(currentIndex + 1 < expressionTokens.Count)
+                    return expressionTokens[currentIndex+1];
+                return null;
+            }
+
             private static int Words(string text, List<string> expressionTokens, int currentIndex, bool throwException, int expectedMinimumCountMatch)
             {
                 var countMatchMode = expectedMinimumCountMatch != -1;
                 var r = 0;
+
+                var previousEvaluation = false;
                 while (true)
                 {
                     var token = expressionTokens[currentIndex];
@@ -179,7 +189,7 @@ namespace DynamicSugar
                     }
                     else if (token == "|")
                     {
-                        if (!countMatchMode)
+                        if (!countMatchMode && previousEvaluation)
                         {
                             // When we are not in count match mode.
                             // But eval mode. we short-circuit the evaluation
@@ -206,7 +216,12 @@ namespace DynamicSugar
                         else
                         {
                             var exp = text.Contains(token);
-                            if (throwException)
+                            previousEvaluation = exp;
+                            if (exp == false && GetNextToken(expressionTokens, currentIndex) == "|")
+                            {
+                                // Move to the next token hopefully one will match OR expression
+                            }
+                            else if (throwException)
                             {
                                 IsTrue(exp, $"Text:'{text}' contains '{token}'");
                             }

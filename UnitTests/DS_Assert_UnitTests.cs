@@ -121,6 +121,33 @@ namespace DynamicSugarSharp_UnitTests
             DS.Assert.Words("aa bb", "((aa | cc))");
         }
 
+        [TestMethod]
+        public void Word_OrWhereSecondTermMatch()
+        {
+            DS.Assert.Words("bb", "aa | bb");
+        }
+
+        [TestMethod]
+        public void Word_AndNestedWithOrExpressionWhereSecondTermMatch()
+        {
+            DS.Assert.Words("zz bb", "zz & (aa | bb)");
+            DS.Assert.Words("zz bbxx ", "zz & (aa | bb) & xx");
+            DS.Assert.Words("zz bbxx ", "zz & (aa | bb) & xx & (a | aa | aaa | bb) ");
+            DS.Assert.Words("zz bbxx ", "zz & (aa | bb) & xx & (a | aa | aaa | bb) ");
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Word_AndNestedWithOrExpressionWhereNoTermMatch()
+        {
+            DS.Assert.Words("zz bb", "zz & (aa | tt)");
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Word_OrWhereNoTermMatch()
+        {
+            DS.Assert.Words("dd", "aa | bb | cc");
+        }
+
         [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
         public void Words_DoubleParenthesisAndAndSubAndExpression()
         {
