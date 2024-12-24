@@ -137,6 +137,12 @@ namespace DynamicSugarSharp_UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
+        public void Word_AndOrAndExpression__TheLastAndExpressionWillFail()
+        {
+            DS.Assert.Words("zz bb xx", "zz & (aa | bb) & xx & (a | aa | aaa | bb) & tutu");
+        }
+
+        [TestMethod, ExpectedException(typeof(DynamicSugar.AssertFailedException))]
         public void Word_AndNestedWithOrExpressionWhereNoTermMatch()
         {
             DS.Assert.Words("zz bb", "zz & (aa | tt)");
