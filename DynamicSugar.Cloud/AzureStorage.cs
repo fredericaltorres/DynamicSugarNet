@@ -266,7 +266,7 @@ namespace DynamicSugar.Cloud
             }
             else if (destProperties.CopyStatus != Azure.Storage.Blobs.Models.CopyStatus.Success)
             {
-                throw new BlobCopyException($"Could not copy blob {sourceClient.Name} in container {containerName}. Copy status was {destProperties.CopyStatus}.");
+                throw new ApplicationException($"Could not copy blob {sourceClient.Name} in container {containerName}. Copy status was {destProperties.CopyStatus}.");
             }
 
             if (sourceProperties.ContentHash == null || destProperties.ContentHash == null)
@@ -289,7 +289,7 @@ namespace DynamicSugar.Cloud
             return valid;
         }
 
-        public async Task<string> DownloadBlob(string containerName, string blobName)
+        public async Task<string> DownloadBlobAsync(string containerName, string blobName)
         {
             try
             {
@@ -306,7 +306,7 @@ namespace DynamicSugar.Cloud
             }
         }
 
-        public async Task UploadBlob(string containerName, string blobName, string localFileName, string contentType, bool overwrite = true)
+        public async Task UploadBlobAsync(string containerName, string blobName, string localFileName, string contentType, bool overwrite = true)
         {
             try
             {
