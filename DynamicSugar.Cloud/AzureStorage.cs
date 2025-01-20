@@ -113,6 +113,16 @@ namespace DynamicSugar.Cloud
             return r;
         }
 
+        public bool DeleteBlob(string containerName, string blobName)
+        {
+            var blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName);
+            BlobClient blobClient = blobContainerClient.GetBlobClient(blobName);
+            var r = blobClient.ExistsAsync().GetAwaiter().GetResult();
+            if (r)
+                blobClient.DeleteAsync().GetAwaiter().GetResult();
+            return true;
+        }
+
         public Uri GetBlobURI(string containerName, string blobName, bool writeMode = false, bool createMode = false)
         {
             var blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName);

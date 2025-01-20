@@ -7,16 +7,8 @@ namespace DynamicSugar.Cloud.UnitTests
     [TestClass]
     public class AzureStorage_UnitTests
     {
-        public string ContainerName1 = "asset-00a737b0-3bd0-4040-b0c1-e7b47896dc7d";
-
-        [TestMethod]
-        public void ContainerExists()
-        {
-            var az = GetAzureStorage();
-            Assert.IsTrue(az.ContainerExists(ContainerName1));
-            Assert.IsTrue(az.BlobExists(ContainerName1, "a_init.js"));
-            // https://bskamsstorageqauswest.blob.core.windows.net/asset-00a737b0-3bd0-4040-b0c1-e7b47896dc7d/a_init.js
-        }
+        public string TestContainerName = "dynamic-sugar-cloud-unittests";
+        public string TestFileName = "dynamic-sugar-cloud-unittests.txt";
 
         private static AzureStorage GetAzureStorage()
         {
@@ -24,11 +16,45 @@ namespace DynamicSugar.Cloud.UnitTests
         }
 
         [TestMethod]
-        public void DownloadBlob()
+        public void ContainerExists()
         {
             var az = GetAzureStorage();
-            var fileName = az.DownloadBlobAsync(ContainerName1, "a_init.js").GetAwaiter().GetResult();
-            Assert.IsTrue(File.Exists(fileName));
+            Assert.IsTrue(az.ContainerExists(TestContainerName));
+            Assert.IsTrue(az.BlobExists(TestContainerName, TestFileName));
+        }
+
+        [TestMethod]
+        public void DownloadBlob()
+        {
+            using (var tfh = new TestFileHelper())
+            {
+                var az = GetAzureStorage();
+                var fileName = az.DownloadBlobAsync(TestContainerName, TestFileName).GetAwaiter().GetResult();
+                Assert.IsTrue(File.Exists(fileName));
+                tfh.TrackFile(fileName);
+            }
+        }
+
+        [TestMethod]
+        public void UploadBlobTextFile()
+        {
+            using (var tfh = new TestFileHelper())
+            {
+                var testFile = tfh.CreateTempFile("hello world", ".txt");
+                var testFileNameOnly = Path.GetFileName(testFile);
+                var az = GetAzureStorage();
+            
+                az.UploadBlobAsync(TestContainerName, testFileNameOnly, testFile, "plain/text").GetAwaiter().GetResult();
+
+                var fileName = az.DownloadBlobAsync(TestContainerName, testFileNameOnly).GetAwaiter().GetResult();
+                Assert.IsTrue(File.Exists(fileName));
+
+                Assert.IsTrue(az.BlobExists(TestContainerName, testFileNameOnly));
+
+                tfh.TrackFile(fileName);
+
+                az.DeleteBlob(TestContainerName, testFileNameOnly);
+            }
         }
     }
 }
