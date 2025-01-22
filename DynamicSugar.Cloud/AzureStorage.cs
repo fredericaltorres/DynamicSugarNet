@@ -136,10 +136,10 @@ namespace DynamicSugar.Cloud
             return _blobServiceClient.GetBlobContainerClient(containerName);
         }
 
-        public async Task DeleteContainer(string containerName)
+        public void DeleteContainer(string containerName)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
-            await containerClient.DeleteAsync();
+            containerClient.DeleteAsync().GetAwaiter().GetResult();
         }
 
         public int CopyContainer(string sourceName, string destName, string encryptionScope = null)

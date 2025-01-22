@@ -9,10 +9,21 @@ namespace DynamicSugar.Cloud.UnitTests
     {
         public string TestContainerName = "dynamic-sugar-cloud-unittests";
         public string TestFileName = "dynamic-sugar-cloud-unittests.txt";
+        public string TestContainerName2 = "dynamic-sugar-cloud-unittests-2";
 
         private static AzureStorage GetAzureStorage()
         {
             return new AzureStorage(Environment.GetEnvironmentVariable("DynamicSugar.Cloud.UnitTests.Azure"));
+        }
+
+        [TestMethod]
+        public void CreateContainer_ContainerExists_DeleteContainer()
+        {
+            var az = GetAzureStorage();
+            az.CreateContainer(TestContainerName2);
+            Assert.IsTrue(az.ContainerExists(TestContainerName2));
+            az.DeleteContainer(TestContainerName2);
+            Assert.IsFalse(az.ContainerExists(TestContainerName2));
         }
 
         [TestMethod]
