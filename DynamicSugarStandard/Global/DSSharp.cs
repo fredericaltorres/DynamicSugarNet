@@ -189,5 +189,27 @@ namespace DynamicSugar {
             }
             return l;
         }
+
+        public static T IfContext<T, ENUMT>(object poco, ENUMT enumT)
+        {
+            var pocoDic = DS.Dictionary(poco);
+            var typedDic = new Dictionary<ENUMT, T>();
+            foreach (var kvp in pocoDic)
+                typedDic.Add((ENUMT)Enum.Parse(typeof(ENUMT), kvp.Key), (T)kvp.Value);
+
+            return typedDic[enumT];
+        }
+
+        public static T IfContext<T>(object poco, string enumT)
+        {
+            var pocoDic = DS.Dictionary(poco);
+            var typedDic = new Dictionary<string, T>();
+            foreach (var kvp in pocoDic)
+                typedDic.Add(kvp.Key, (T)kvp.Value);
+
+            if(!typedDic.ContainsKey(enumT))
+                throw new DynamicSugarSharpException($"The key '{enumT}' is not present in the poco object {pocoDic.Format()}");
+            return typedDic[enumT];
+        }
     }
 }

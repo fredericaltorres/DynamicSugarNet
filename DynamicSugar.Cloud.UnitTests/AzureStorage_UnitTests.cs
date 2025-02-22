@@ -54,7 +54,8 @@ namespace DynamicSugar.Cloud.UnitTests
                 var testFile = tfh.CreateTempFile("hello world", ".txt");
                 var testFileNameOnly = Path.GetFileName(testFile);
                 var az = GetAzureStorage();
-            
+
+
                 az.UploadBlobAsync(TestContainerName, testFileNameOnly, testFile, "plain/text").GetAwaiter().GetResult();
 
                 var fileName = az.DownloadBlobAsync(TestContainerName, testFileNameOnly).GetAwaiter().GetResult();

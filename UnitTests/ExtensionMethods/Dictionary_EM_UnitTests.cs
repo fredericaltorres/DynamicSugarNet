@@ -165,7 +165,7 @@ namespace DynamicSugarSharp_UnitTests {
         {
             Dictionary<string, int> dic = DS.Dictionary<int>(new { a = "1", b = "2", c = "3", d = "4" } );
             var fileName = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), @"DSSharpLibrary_UnitTests.txt");
-            List_EM_UnitTests.DeleteFile(fileName);
+            DS_Methods_UnitTests.DeleteFile(fileName);
             dic.ToFile(fileName, create: true);
 
             Dictionary<string, int> dic2 = new Dictionary<string, int>();
@@ -191,7 +191,7 @@ namespace DynamicSugarSharp_UnitTests {
         {
             Dictionary<string, object> dic = DS.Dictionary(new { a = "1\r\n1", b = "2\r", c = "3\n", d = $"4{Environment.NewLine}4" });
             var fileName = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), @"DSSharpLibrary_UnitTests.txt");
-            List_EM_UnitTests.DeleteFile(fileName);
+            DS_Methods_UnitTests.DeleteFile(fileName);
             dic.ToFile(fileName, create: true);
 
             Dictionary<string, object> dic2 = new Dictionary<string, object>();

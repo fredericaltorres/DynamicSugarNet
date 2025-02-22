@@ -10,16 +10,12 @@ using System.IO;
 namespace DynamicSugarSharp_UnitTests
 {
 
-    //TODO:Try extension method to List<T>
-
     [TestClass]
-    public class List_EM_UnitTests
+    public class DS_Methods_UnitTests
     {
-
         [TestMethod]
         public void ProjectEuler_Problem1()
         {
-
             var r = DS.Range(10)
                 .Filter(x => ((x % 3 == 0) || (x % 5 == 0)))
                     .Inject((x, v) => v += x);
@@ -591,6 +587,30 @@ namespace DynamicSugarSharp_UnitTests
             Assert.IsFalse(i.In(l));
             Assert.IsFalse(i.In(1, 2, 3, 4, 5));
         }
+
+        public enum TestEnvironment
+        {
+            QA,
+            UAT,
+            PROD
+        }
+
+        [TestMethod]
+        public void IfContext_Enum()
+        {
+            Assert.AreEqual(1, DS.IfContext<int, TestEnvironment>(new { QA = 1, UAT = 2, PROD = 3 }, TestEnvironment.QA));
+            Assert.AreEqual(2, DS.IfContext<int, TestEnvironment>(new { QA = 1, UAT = 2, PROD = 3 }, TestEnvironment.UAT));
+            Assert.AreEqual(3, DS.IfContext<int, TestEnvironment>(new { QA = 1, UAT = 2, PROD = 3 }, TestEnvironment.PROD));
+        }
+
+        [TestMethod]
+        public void IfContext_String()
+        {
+            Assert.AreEqual(1, DS.IfContext<int>(new { QA = 1, UAT = 2, PROD = 3 }, "QA"));
+            Assert.AreEqual(2, DS.IfContext<int>(new { QA = 1, UAT = 2, PROD = 3 }, "UAT"));
+            Assert.AreEqual(3, DS.IfContext<int>(new { QA = 1, UAT = 2, PROD = 3 }, "PROD"));
+        }
+
         //[TestMethod]
         public void expando()
         {
@@ -601,6 +621,7 @@ namespace DynamicSugarSharp_UnitTests
             var i = o.a;
             var s = o.LastName;
         }
+
         [TestMethod]
         public void ToFile_FromFile()
         {

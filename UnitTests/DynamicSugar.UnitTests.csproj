@@ -120,7 +120,7 @@
     <Compile Include="DataClasses\TestDataInstanceManager.cs" />
     <Compile Include="Format\FormatWithDictionary_UnitTests.cs" />
     <Compile Include="ExtensionMethods\ExtendedFormat_UnitTests.cs" />
-    <Compile Include="ExtensionMethods\List_EM_UnitTests.cs" />
+    <Compile Include="ExtensionMethods\DS_Methods_UnitTests.cs" />
     <Compile Include="DataClasses\Person.cs" />
     <Compile Include="DataClasses\PersonExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
