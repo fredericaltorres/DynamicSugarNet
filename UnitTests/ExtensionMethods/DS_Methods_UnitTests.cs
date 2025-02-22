@@ -9,7 +9,6 @@ using System.IO;
 
 namespace DynamicSugarSharp_UnitTests
 {
-
     [TestClass]
     public class DS_Methods_UnitTests
     {
@@ -31,6 +30,7 @@ namespace DynamicSugarSharp_UnitTests
                       select xx).Aggregate((x, v) => x + v);
             Assert.AreEqual(23, r3);
         }
+
         [TestMethod]
         public void Range_3()
         {
@@ -42,6 +42,7 @@ namespace DynamicSugarSharp_UnitTests
                 i++;
             }
         }
+
         [TestMethod]
         public void Range_103()
         {
@@ -53,6 +54,7 @@ namespace DynamicSugarSharp_UnitTests
                 i++;
             }
         }
+
         [TestMethod]
         public void Range_100_Step2()
         {
@@ -64,6 +66,7 @@ namespace DynamicSugarSharp_UnitTests
                 i += 2;
             }
         }
+
         [TestMethod]
         public void Range_100_Start10_Step10()
         {
@@ -73,7 +76,6 @@ namespace DynamicSugarSharp_UnitTests
                 DS.Range(10, 100, 10)
             );
         }
-
 
         [TestMethod]
         public void List_OfDifferentTypes()
@@ -89,10 +91,10 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void IsEmpty()
         {
-
             //Assert.IsTrue(DS.List<int>().IsEmpty());            
             Assert.IsFalse(DS.List(1, 2, 3).IsEmpty());
         }
+
         [TestMethod]
         public void IsNullOrEmpty()
         {
@@ -103,7 +105,6 @@ namespace DynamicSugarSharp_UnitTests
             Assert.IsFalse(DS.List(1, 2, 3).IsNullOrEmpty());
         }
 
-
         [TestMethod]
         public void Array_Integer()
         {
@@ -113,7 +114,6 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(2, l[1]);
             Assert.AreEqual(3, l[2]);
         }
-
 
         [TestMethod]
         public void Queue_Integer()
@@ -144,15 +144,16 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(2, l[1]);
             Assert.AreEqual(3, l[2]);
         }
+
         [TestMethod]
         public void List_String()
         {
-
             var l = DS.List("1", "2", "3");
             Assert.AreEqual("1", l[0]);
             Assert.AreEqual("2", l[1]);
             Assert.AreEqual("3", l[2]);
         }
+
         [TestMethod]
         public void Identical_String()
         {
@@ -166,6 +167,7 @@ namespace DynamicSugarSharp_UnitTests
 
             Assert.IsTrue(DS.List("1", "2", "3").Identical(DS.List("1", "2", "3")));
         }
+
         [TestMethod]
         public void Identical_Double()
         {
@@ -174,6 +176,7 @@ namespace DynamicSugarSharp_UnitTests
             Assert.IsFalse(DS.ListHelper.Identical(DS.List(1.1, 2.2, 3.3), DS.List(1.1, 2.2, 3.4)));
             Assert.IsTrue(DS.List(1.1, 2.2, 3.3).Identical(DS.List(1.1, 2.2, 3.3)));
         }
+
         [TestMethod]
         public void Map_WithLambdaExpression()
         {
@@ -183,6 +186,7 @@ namespace DynamicSugarSharp_UnitTests
                 DS.List(1, 2, 3).Map(e => e * e)
             );
         }
+
         [TestMethod]
         public void Map_WithLambdaExpression_WithLocalVariable()
         {
@@ -193,6 +197,7 @@ namespace DynamicSugarSharp_UnitTests
                 DS.List(1, 2, 3).Map(e => e * MyConst)
             );
         }
+
         [TestMethod]
         public void Map_WithBlockStatment()
         {
@@ -202,6 +207,7 @@ namespace DynamicSugarSharp_UnitTests
                 DS.List(1, 2, 3).Map(e => { return e * 2; })
             );
         }
+
         [TestMethod]
         public void Map_WithLambdaExpression_String()
         {
@@ -212,6 +218,7 @@ namespace DynamicSugarSharp_UnitTests
                 DS.List("fred", "joe", "diane").Map(e => MyConst + e)
             );
         }
+
         [TestMethod]
         public void Format_Integer()
         {
@@ -224,12 +231,14 @@ namespace DynamicSugarSharp_UnitTests
         {
             Assert.AreEqual(@"[1]:[2]:[3]", DS.List(1, 2, 3).Format("[{0}]", ":"));
         }
+
         [TestMethod]
         public void Format_Boolean()
         {
 
             Assert.AreEqual("True, False, True", DS.ListHelper.Format(DS.List(true, false, true)));
         }
+
         [TestMethod]
         public void Filter()
         {
@@ -239,6 +248,7 @@ namespace DynamicSugarSharp_UnitTests
                 DS.List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9).Filter(e => e % 2 == 0)
             );
         }
+
         [TestMethod]
         public void Reject()
         {
@@ -248,6 +258,7 @@ namespace DynamicSugarSharp_UnitTests
                 DS.Range(10).Reject(e => e % 2 == 0)
             );
         }
+
         [TestMethod]
         public void Select_StandardNET()
         {
@@ -256,6 +267,7 @@ namespace DynamicSugarSharp_UnitTests
             var r = DS.List(true, false, true, false, true, false, true, false, true, false);
             DS.Assert.AreEqual(r, l);
         }
+
         [TestMethod]
         public void Filter_Decimal()
         {
@@ -265,6 +277,7 @@ namespace DynamicSugarSharp_UnitTests
                 DS.List(0M, 1M, 2M, 3M, 4M, 5M, 6M, 7M, 8M, 9M).Filter(e => e % 2 == 0)
             );
         }
+
         [TestMethod]
         public void Inject()
         {
@@ -279,12 +292,13 @@ namespace DynamicSugarSharp_UnitTests
                 );
             Assert.AreEqual("1234", s);
         }
+
         [TestMethod]
         public void Reduce()
         {
-
             Assert.AreEqual(10, DS.List(1, 2, 3, 4).Reduce((v, e) => v += e));
         }
+
         [TestMethod]
         public void ForEach_StandardNet()
         {
@@ -296,6 +310,7 @@ namespace DynamicSugarSharp_UnitTests
             );
             Assert.AreEqual(6, z);
         }
+
         [TestMethod]
         public void Clone_EmptyList()
         {
@@ -303,6 +318,7 @@ namespace DynamicSugarSharp_UnitTests
             var l = new List<int>();
             DS.Assert.AreEqual(l, DS.ListHelper.Clone(l));
         }
+
         [TestMethod]
         public void Clone()
         {
@@ -310,18 +326,17 @@ namespace DynamicSugarSharp_UnitTests
             var refList = DS.List(1, 2, 3, 4);
             DS.Assert.AreEqual(refList, refList.Clone());
         }
+
         [TestMethod]
         public void Intersection()
         {
-
             var l1 = DS.List(1, 2, 3, 4);
             var l2 = DS.List(3, 4, 5, 6);
             var inter = DS.List(3, 4);
             DS.Assert.AreEqual(inter, l1.Intersection(l2));
             DS.Assert.AreEqual(inter, l1.Intersect(l2).ToList());
-
-
         }
+
         [TestMethod]
         public void Add()
         {
@@ -332,6 +347,7 @@ namespace DynamicSugarSharp_UnitTests
             DS.Assert.AreEqual(sum, DS.ListHelper.Add(l1, l2));
 
         }
+
         [TestMethod]
         public void Add_EmptyList()
         {
@@ -341,6 +357,7 @@ namespace DynamicSugarSharp_UnitTests
             var sum = DS.List(1, 2, 3);
             DS.Assert.AreEqual(sum, DS.ListHelper.Add(l1, l2));
         }
+
         [TestMethod]
         public void Add_2EmptyList()
         {
@@ -350,6 +367,7 @@ namespace DynamicSugarSharp_UnitTests
             var sum = new List<int>();
             DS.Assert.AreEqual(sum, DS.ListHelper.Add(l1, l2));
         }
+
         [TestMethod]
         public void Substract()
         {
@@ -360,6 +378,7 @@ namespace DynamicSugarSharp_UnitTests
             DS.Assert.AreEqual(sum, DS.ListHelper.Substract(l1, l2));
             DS.Assert.AreEqual(sum, l1.Substract(l2));
         }
+
         [TestMethod]
         public void Substract_String()
         {
@@ -371,10 +390,10 @@ namespace DynamicSugarSharp_UnitTests
             DS.Assert.AreEqual(sum, DS.ListHelper.Substract(l1, l2));
             DS.Assert.AreEqual(sum, l1.Substract(l2));
         }
+
         [TestMethod]
         public void Merge_Int()
         {
-
             DS.Assert.AreEqual(
                 DS.List(1, 2, 3, 4, 5),
                 DS.ListHelper.Merge(
