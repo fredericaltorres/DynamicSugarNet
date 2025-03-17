@@ -437,11 +437,16 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(0, ((Dictionary<String, String>)dicValue["DictionaryOfString1"]).Count);
             Assert.AreEqual(0, ((Dictionary<String, String>)dicValue["DictionaryOfString2"]).Count);
         }
+
         [TestMethod]
         public void AssertPoco()
         {
             var testInstance = TestDataInstanceManager.TestPersonInstance;
-            Assert.IsTrue(ReflectionHelper.AssertPoco(testInstance, new { LastName = "TORRES", Age = 45, FirstName = new Regex("F.*c") }));
+            Assert.IsTrue(ReflectionHelper.AssertPoco(testInstance, new { 
+                LastName = "TORRES", 
+                Age = 45, 
+                FirstName = new Regex("F.*c") 
+            }));
         }
 
         [TestMethod]
@@ -465,11 +470,11 @@ namespace DynamicSugarSharp_UnitTests
                 ULongValue = (ulong)123,
                 UShortValue = (ushort)123,
                 SByteValue = (sbyte)123,
-                 GuidValue = Guid.Parse("A4E7E546-D75C-4B4C-B717-EC0D66085CA0"),
+                GuidValue = Guid.Parse("A4E7E546-D75C-4B4C-B717-EC0D66085CA0"),
                 TimeSpanValue = TimeSpan.FromDays(1),
-                //DateTimeOffsetValue = new DateTimeOffset(1234567, new TimeSpan(0, 0, 1)),
+                DateTimeOffsetValue  = new DateTimeOffset(new DateTime(1964, 12, 11, 0, 0, 0), new TimeSpan(0, 1, 0)),
                 UriValue = new Uri("http://www.flogviewer.com")
-        }));
+            }));
         }
 
         internal class PatchClass
@@ -482,15 +487,18 @@ namespace DynamicSugarSharp_UnitTests
         }
 
         [TestMethod]
-        public void PatchObject()
+        public void PatchPoco()
         {
             var pocoInput = new PatchClass { FirstName = "Fred", Age = 16, Height = 4, BirthDate = new DateTime(1964, 12, 11) };
-            var dic = new Dictionary<string, object>();
-            dic.Add("FirstName", "Freddy");
-            dic.Add("Age", 32);
-            dic.Add("Height", 5.9);
-            dic.Add("IsAlive", true);
-            dic.Add("BirthDate", new DateTime(1964, 12, 12));
+
+            var dic = new Dictionary<string, object>() {
+                ["FirstName"] = "Freddy",
+                ["Age"] = 32,
+                ["Height"] = 5.9,
+                ["IsAlive"] = true,
+                ["BirthDate"] = new DateTime(1964, 12, 12)
+            };
+
             var r = ReflectionHelper.PatchPoco(pocoInput, dic) as PatchClass;
             Assert.AreEqual("Freddy", r.FirstName);
             Assert.AreEqual(32, r.Age);

@@ -44,10 +44,8 @@ namespace DynamicSugarSharp_UnitTests {
         public sbyte SByteValue { get; set; } = 123;
         public Guid GuidValue { get; set; } = Guid.Parse("A4E7E546-D75C-4B4C-B717-EC0D66085CA0");
         public TimeSpan TimeSpanValue { get; set; } = TimeSpan.FromDays(1);
-        //public DateTimeOffset DateTimeOffsetValue { get; set; } = new DateTimeOffset(1234567, new TimeSpan(0,0,1));
+        public DateTimeOffset DateTimeOffsetValue { get; set; } = new DateTimeOffset(new DateTime(1964, 12, 11, 0, 0, 0), new TimeSpan(0, 1, 0));
         public Uri UriValue { get; set; } = new Uri("http://www.flogviewer.com");
-        
-
     }
 
     public class Address {
