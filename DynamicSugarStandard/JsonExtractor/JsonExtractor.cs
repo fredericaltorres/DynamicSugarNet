@@ -94,7 +94,7 @@ namespace DynamicSugar
 
                 if (!IsValidJson(subText))
                 {
-                    var subText2 = TryGrabNextClosingBracket(text, startBracketIndex, endBracketIndex, endBracketChar);
+                    var subText2 = TryGrabNextClosingBracket(text, startBracketIndex, endBracketIndex, endBracketChar, newStrategy: true);
                     if(subText2 != null)
                         subText = subText2;
                 }
@@ -115,11 +115,15 @@ namespace DynamicSugar
             return null;
         }
 
-        private static string TryGrabNextClosingBracket(string text, int startBracketIndex, int endBracketIndex, string endBracket, int recursionIndex = 0)
+        private static string TryGrabNextClosingBracket(string text, int startBracketIndex, int endBracketIndex, string endBracket, bool newStrategy = false, int recursionIndex = 0)
         {
+            var startBracket = endBracket == "]" ? "[" : "{";
             //var endBracketIndex0 = text.IndexOf(endBracket, endBracketIndex + 1);
             var endBracketIndex0 = text.LastIndexOf(endBracket);
             if (endBracketIndex0 == -1)
+                return null;
+
+            if(startBracketIndex < 0)
                 return null;
 
             var subText = text.Substring(startBracketIndex, endBracketIndex0 - startBracketIndex + 1);
@@ -129,7 +133,17 @@ namespace DynamicSugar
             {
                 if(recursionIndex > 10)
                     return null;
-                return TryGrabNextClosingBracket(text, startBracketIndex, endBracketIndex + 1, endBracket, recursionIndex + 1);
+
+                var nextStartBracketIndex = startBracketIndex;
+
+                if (newStrategy)
+                {
+                    nextStartBracketIndex = text.IndexOf(startBracket, startBracketIndex + 1);
+                    if (nextStartBracketIndex == -1)
+                        return null;
+                }
+
+                return TryGrabNextClosingBracket(text, nextStartBracketIndex, endBracketIndex + 1, endBracket, recursionIndex: recursionIndex + 1);
             }
         }
 
@@ -189,10 +203,5 @@ namespace DynamicSugar
                     return null;
             }
         }
-
-
-
-
-
     }
 }
