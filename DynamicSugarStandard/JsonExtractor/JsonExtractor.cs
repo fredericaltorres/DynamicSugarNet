@@ -190,9 +190,11 @@ namespace DynamicSugar
             return JsonExtractionType.Unknown;
         }
 
-        public static string Extract(string text)
+        public static string Extract(string text, JsonExtractionType JsonType = JsonExtractionType.Unknown)
         {
-            var JsonType = DetectJsonType(text);
+            if (JsonType == JsonExtractionType.Unknown) // Detect if we have a {} or [], note there issue detecting the wrong type
+                JsonType = DetectJsonType(text);
+
             switch (JsonType)
             {
                 case JsonExtractionType.Object:
