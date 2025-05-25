@@ -29,11 +29,16 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
             Assert.AreEqual("A", tokens[x++].Value);
 
+            // [B=2]
             Assert.AreEqual(Tokenizer.TokenType.ArrayOfTokens, tokens[x].Type);
-            Assert.AreEqual(null, tokens[x++].Value); // TO DO
+            Assert.AreEqual(1, tokens[x].ArrayValues.Count);
+            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].ArrayValues[0].Type);
+            Assert.AreEqual("B", tokens[x].ArrayValues[0].Name);
+            Assert.AreEqual("2", tokens[x].ArrayValues[0].Value);
+            x++;
 
             Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
-            Assert.AreEqual("mode", tokens[x].Value);
+            Assert.AreEqual("mode", tokens[x].Name);
             Assert.AreEqual("execute", tokens[x++].Value);
         }
     }
