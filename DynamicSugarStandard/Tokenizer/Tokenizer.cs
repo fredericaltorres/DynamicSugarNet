@@ -98,6 +98,7 @@ namespace DynamicSugar
             public bool IsIdentifier => Type == TokenType.Identifier;
             public bool IsNumber => Type == TokenType.Number;
             public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
+            public bool IsDelimiter(List<string> values ) =>  (Type == TokenType.Delimiter && values.Contains(this.Value));
             public bool IsAnyValue => !(Type == TokenType.UndefinedToken || Type == TokenType.ArrayOfTokens || Type == TokenType.NameValuePair);
 
             public string Name { get; set; } // Only used when the token is a NameValuePair
@@ -201,7 +202,7 @@ namespace DynamicSugar
 
             while (x < tokens.Count)
             {
-                if (GetToken(tokens, x).IsIdentifier && GetToken(tokens, x, 1).IsDelimiter(":") && GetToken(tokens, x, 2).IsAnyValue)
+                if (GetToken(tokens, x).IsIdentifier && GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
                 {
                     var name = GetToken(tokens, x).Value;
                     var val = GetToken(tokens, x, 2).Value;
@@ -228,6 +229,10 @@ namespace DynamicSugar
                     x++;
                 }
             }
+
+            foreach (var token in r)
+                if(token.Type == TokenType.ArrayOfTokens)
+                    token.ArrayValues = CombineTokens(token.ArrayValues);
 
             return r;
         }
