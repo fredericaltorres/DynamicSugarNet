@@ -13,7 +13,7 @@ namespace DynamicSugarSharp_UnitTests {
     [TestClass]
     public class Tokenizer_UnitTests
     {
-        const string TestLogString1 = @"2025-05-24 A[B=2]";
+        const string TestLogString1 = @"2025-05-24 A[B=2] mode: execute";
         const string TestLogString2 = @"2025-05-24 13:16:52.859,Info,Export,[id: 709046703, mode: Export][ExecuteConversion()]Slide 10755223, type: IMAGE, index: 0001";
 
         [TestMethod]
