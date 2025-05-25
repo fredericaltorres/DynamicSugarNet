@@ -1,4 +1,5 @@
 ﻿using DynamicSugar;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -58,12 +59,21 @@ namespace DynamicSugar
             UndefinedToken,
             DateToken,
             DateTimeToken,
+            ArrayOfTokens,
         }
 
         public class Token {
 
             public string Value { get; set; }
             public TokenType Type { get; set; }
+
+            public List<Token> ArrayValues { get; set; }
+
+            public Token(List<Token> tokens)
+            {
+                ArrayValues = tokens;
+                Type = TokenType.ArrayOfTokens;
+            }
 
             public Token(string value, TokenType type)
             {
@@ -75,11 +85,22 @@ namespace DynamicSugar
             {
                 return new Token(null, TokenType.UndefinedToken);
             }
-            
 
             public bool IsIdentifier => Type == TokenType.Identifier;
             public bool IsNumber => Type == TokenType.Number;
-            public bool IsDelimiter => Type == TokenType.Delimiter;
+            public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
+
+
+            public override string ToString()
+            {
+                if(this.Type == TokenType.ArrayOfTokens)
+                {
+                    var arrayValuesString = string.Join(", ", ArrayValues);
+                    return $"[{this.Type}]:[{arrayValuesString}]";
+                }
+
+                return $"[{this.Type}]:{this.Value}";
+            }
         }
 
         public List<Token> Tokenize(string input)
@@ -169,11 +190,19 @@ namespace DynamicSugar
 
             while (x < tokens.Count)
             {
-                if(GetToken(tokens, x).IsNumber && 
-                   GetToken(tokens, x, 1).IsDelimiter &&
-                   GetToken(tokens, x, 2).IsNumber && 
-                   GetToken(tokens, x, 3).IsDelimiter &&
-                   GetToken(tokens, x, 4).IsNumber
+                if (GetToken(tokens, x).IsDelimiter("["))
+                {
+                    var subTokens = ReadTokenUpTo(tokens, x + 1, "]");
+                    r.Add(new Token(subTokens));
+                    x += subTokens.Count + 2; // Skip the closing bracket
+                }
+                else
+                if (
+                       GetToken(tokens, x).IsNumber && 
+                       GetToken(tokens, x, 1).IsDelimiter() &&
+                       GetToken(tokens, x, 2).IsNumber && 
+                       GetToken(tokens, x, 3).IsDelimiter() &&
+                       GetToken(tokens, x, 4).IsNumber
                    )
                 {
                     var dateStr = ConcatTokens(tokens, x, 5);
@@ -187,6 +216,18 @@ namespace DynamicSugar
                 }
             }
 
+            return r;
+        }
+
+        public List<Token> ReadTokenUpTo(List<Token> tokens, int start, string delimiter)
+        {
+            var r= new List<Token>();
+            for (int i = start; i < tokens.Count; i++)
+            {
+                if (tokens[i].IsDelimiter(delimiter))
+                    break;
+                r.Add(tokens[i]);
+            }
             return r;
         }
 
