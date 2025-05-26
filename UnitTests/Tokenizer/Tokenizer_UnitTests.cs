@@ -44,17 +44,13 @@ namespace DynamicSugarSharp_UnitTests {
         public void TokenizerTest_DateTime_WithSlashSeparator_AndMoreIdentifierAfter()
         {
             var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(TestLogString222);
+            var tokens = tokenizer.Tokenize(TestLogString222).RemoveDelimiters();
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
             Assert.AreEqual(TestLogString22, tokens[x++].Value);
 
-            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x++].Type);
-
             Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
             Assert.AreEqual("Info", tokens[x++].Value);
-
-            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x++].Type);
 
             Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
             Assert.AreEqual("Export", tokens[x++].Value);
