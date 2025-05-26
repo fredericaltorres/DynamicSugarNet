@@ -18,9 +18,9 @@ namespace DynamicSugarSharp_UnitTests {
         {
             var tokens = new Tokenizer.Tokens();
             tokens.Add(new Tokenizer.Token("1", Tokenizer.TokenType.Number));
-            tokens.Add(new Tokenizer.Token(",", Tokenizer.TokenType.Identifier));
+            tokens.Add(new Tokenizer.Token(",", Tokenizer.TokenType.Delimiter));
             tokens.Add(new Tokenizer.Token("1", Tokenizer.TokenType.Number));
-            tokens.Add(new Tokenizer.Token(",", Tokenizer.TokenType.Identifier));
+            tokens.Add(new Tokenizer.Token(",", Tokenizer.TokenType.Delimiter));
 
             var clonedTokens = tokens.RemoveDelimiters();
             Assert.AreEqual(tokens.Count-2, clonedTokens.Count);

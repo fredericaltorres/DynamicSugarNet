@@ -176,17 +176,13 @@ namespace DynamicSugar
                         GetToken(tokens, x, 9).IsNumber /* << seconds */
                     )
                     { // Date + time
-
-                        var hasMilliseconds = false;
                         var extraTokenCount = 5;
-                        if (GetToken(tokens, x, 9).IsFloat) /* : 52.123 */
+                        if (GetToken(tokens, x, 9).IsFloat)
                         {
-                            var parts = GetToken(tokens, x, 9).Value.Split('.');
-                            hasMilliseconds = true;
-                            extraTokenCount = 8; // Include milliseconds
+                            // The second and milliseconds are combined are parsed as a float and one token
+                            /* : 52.123 */
                         }
-
-                        var dateStr2 = ConcatTokens(tokens, x, 5) + " " + ConcatTokens(tokens, x + 5 , extraTokenCount);
+                        var dateStr2 = ConcatTokens(tokens, x, 5) + " " + ConcatTokens(tokens, x + 5, extraTokenCount);
                         x += 5 + extraTokenCount;
                         r.Add(new Token(dateStr2, TokenType.DateTimeToken));
                     }

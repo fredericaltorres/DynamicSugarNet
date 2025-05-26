@@ -91,5 +91,39 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.AreEqual("mode", tokens[x].Name);
             Assert.AreEqual("execute", tokens[x++].Value);
         }
+
+        // const string TestLogString4 = @"2025-05-24 13:16:52.859,Info,Export,[id: 709046703, mode: Export][ExecuteConversion()]Slide 10755223, type: IMAGE, index: 0001";
+
+        [TestMethod]
+        public void Tokenizer_LogString_LongComplexLine()
+        {
+            var tokenizer = new Tokenizer();
+            var tokens = tokenizer.Tokenize(TestLogString4).RemoveDelimiters();
+
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
+            Assert.AreEqual("2025-05-24 13:16:52.859", tokens[x++].Value);
+
+            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
+            Assert.AreEqual("Info", tokens[x++].Value);
+
+            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
+            Assert.AreEqual("Export", tokens[x++].Value);
+
+            // [B=2]
+            Assert.AreEqual(Tokenizer.TokenType.ArrayOfTokens, tokens[x].Type);
+            tokens[x].ArrayValues = tokens[x].ArrayValues.RemoveDelimiters();
+
+            Assert.AreEqual(2, tokens[x].ArrayValues.Count);
+            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].ArrayValues[0].Type);
+            Assert.AreEqual("id", tokens[x].ArrayValues[0].Name);
+            Assert.AreEqual("709046703", tokens[x].ArrayValues[0].Value);
+
+            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].ArrayValues[1].Type);
+            Assert.AreEqual("mode", tokens[x].ArrayValues[1].Name);
+            Assert.AreEqual("Export", tokens[x].ArrayValues[1].Value);
+            x++;
+            
+        }
     }
 }
