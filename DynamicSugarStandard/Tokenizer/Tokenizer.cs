@@ -233,7 +233,7 @@ namespace DynamicSugar
                     { // Date + time
 
                         var hasMilliseconds = false;
-                        var extraTokenCount = 6;
+                        var extraTokenCount = 5;
                         if (GetToken(tokens, x, 9).IsFloat) /* : 52.123 */
                         {
                             var parts = GetToken(tokens, x, 9).Value.Split('.');

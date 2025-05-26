@@ -15,7 +15,8 @@ namespace DynamicSugarSharp_UnitTests {
     {
         const string TestLogString1 = @"2025-05-24 A[B=2] mode: execute";
         const string TestLogString2 = @"2025-05-24 13:16:52";
-        const string TestLogString22 = @"2025/05/24 13-16-52";
+        const string TestLogString22 =  @"2025/05/24 13-16-52";
+        const string TestLogString222 = @"2025/05/24 13-16-52,Info,Export";
         const string TestLogString3 = @"2025-05-24 13:16:52.123";
         const string TestLogString4 = @"2025-05-24 13:16:52.859,Info,Export,[id: 709046703, mode: Export][ExecuteConversion()]Slide 10755223, type: IMAGE, index: 0001";
 
@@ -30,13 +31,33 @@ namespace DynamicSugarSharp_UnitTests {
         }
 
         [TestMethod]
-        public void TokenizerTest_DateTime_2()
+        public void TokenizerTest_DateTime_22()
         {
             var tokenizer = new Tokenizer();
             var tokens = tokenizer.Tokenize(TestLogString22);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
             Assert.AreEqual(TestLogString22, tokens[x++].Value);
+        }
+
+        [TestMethod]
+        public void TokenizerTest_DateTime_WithSlashSeparator_AndMoreIdentifierAfter()
+        {
+            var tokenizer = new Tokenizer();
+            var tokens = tokenizer.Tokenize(TestLogString222);
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
+            Assert.AreEqual(TestLogString22, tokens[x++].Value);
+
+            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x++].Type);
+
+            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
+            Assert.AreEqual("Info", tokens[x++].Value);
+
+            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x++].Type);
+
+            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
+            Assert.AreEqual("Export", tokens[x++].Value);
         }
 
         [TestMethod]
@@ -50,7 +71,7 @@ namespace DynamicSugarSharp_UnitTests {
         }
 
         [TestMethod]
-        public void TokenizerTest1()
+        public void Tokenizer_LogString1()
         {
             var tokenizer = new Tokenizer();
             var tokens = tokenizer.Tokenize(TestLogString1);
