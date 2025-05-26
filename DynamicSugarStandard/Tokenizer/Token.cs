@@ -64,6 +64,12 @@ namespace DynamicSugar
 
                 return $"{this.Type} {this.Value}";
             }
+
+
+            public bool IsNameValue(string name, string value)  => 
+                Type == TokenType.NameValuePair && 
+                Name == name && 
+                Value == value;
         }
     }
 }

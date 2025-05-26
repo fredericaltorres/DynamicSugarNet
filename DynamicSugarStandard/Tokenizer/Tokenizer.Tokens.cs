@@ -10,6 +10,11 @@ namespace DynamicSugar
             {
                 var c = Clone();
                 c.RemoveAll(token => token.IsDelimiter());
+
+                foreach (var token in c)
+                    if (token.Type == TokenType.ArrayOfTokens)
+                        token.ArrayValues = token.ArrayValues.RemoveDelimiters();
+
                 return c;
             }
 
