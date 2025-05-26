@@ -63,15 +63,19 @@ namespace DynamicSugar
             NameValuePair,
         }
 
-        public class Token {
+        public class Tokens : List<Token>
+        {
 
+        }
+
+        public class Token {
             
             public string Value { get; set; }
             public TokenType Type { get; set; }
 
-            public List<Token> ArrayValues { get; set; }
+            public Tokens ArrayValues { get; set; }
 
-            public Token(List<Token> tokens)
+            public Token(Tokens tokens)
             {
                 ArrayValues = tokens;
                 Type = TokenType.ArrayOfTokens;
@@ -117,9 +121,9 @@ namespace DynamicSugar
             }
         }
 
-        public List<Token> Tokenize(string input)
+        public Tokens Tokenize(string input)
         {
-            var tokens = new List<Token>();
+            var tokens = new Tokens();
 
             int i = 0;
             while (i < input.Length)
@@ -183,24 +187,24 @@ namespace DynamicSugar
             return CombineTokens(tokens);
         }
 
-        public Token GetToken(List<Token> tokens, int x, int inc = 0)
+        public Token GetToken(Tokens tokens, int x, int inc = 0)
         {
             if( x + inc < 0 || x + inc >= tokens.Count)
                 return Token.GetUndefinedToken();
             return tokens[x + inc];
         }
 
-        public Token GetPreviousToken(List<Token> tokens, int x, int dec)
+        public Token GetPreviousToken(Tokens tokens, int x, int dec)
         {
             if (x-dec < 0 || x-dec >= tokens.Count)
                 return Token.GetUndefinedToken();
             return tokens[x - dec];
         }
 
-        public List<Token> CombineTokens(List<Token> tokens)
+        public Tokens CombineTokens(Tokens tokens)
         {
             var x = 0;
-            var r = new List<Token>();
+            var r = new Tokens();
 
             while (x < tokens.Count)
             {
@@ -266,9 +270,9 @@ namespace DynamicSugar
             return r;
         }
 
-        public List<Token> ReadTokenUpTo(List<Token> tokens, int start, string delimiter)
+        public Tokens ReadTokenUpTo(Tokens tokens, int start, string delimiter)
         {
-            var r= new List<Token>();
+            var r = new Tokens();
             for (int i = start; i < tokens.Count; i++)
             {
                 if (tokens[i].IsDelimiter(delimiter))
@@ -278,7 +282,7 @@ namespace DynamicSugar
             return r;
         }
 
-        public string ConcatTokens(List<Token> tokens, int start, int count)
+        public string ConcatTokens(Tokens tokens, int start, int count)
         {
             var sb = new StringBuilder();
             for (int i = start; i < start + count && i < tokens.Count; i++)
