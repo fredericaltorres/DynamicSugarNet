@@ -97,6 +97,8 @@ namespace DynamicSugar
 
             public bool IsIdentifier => Type == TokenType.Identifier;
             public bool IsNumber => Type == TokenType.Number;
+            public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
+            public bool IsFloat => Type == TokenType.Number && Value.Contains(".");
             public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
             public bool IsDelimiter(List<string> values ) =>  (Type == TokenType.Delimiter && values.Contains(this.Value));
             public bool IsAnyValue => !(Type == TokenType.UndefinedToken || Type == TokenType.ArrayOfTokens || Type == TokenType.NameValuePair);
@@ -108,10 +110,10 @@ namespace DynamicSugar
                 if(this.Type == TokenType.ArrayOfTokens)
                 {
                     var arrayValuesString = string.Join(", ", ArrayValues);
-                    return $"[{this.Type}]:[{arrayValuesString}]";
+                    return $"{this.Type} [{arrayValuesString}]";
                 }
 
-                return $"[{this.Type}]:{this.Value}";
+                return $"{this.Type} {this.Value}";
             }
         }
 
@@ -202,6 +204,7 @@ namespace DynamicSugar
 
             while (x < tokens.Count)
             {
+                var tok = GetToken(tokens, x);
                 if (GetToken(tokens, x).IsIdentifier && GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
                 {
                     var name = GetToken(tokens, x).Value;
@@ -216,12 +219,38 @@ namespace DynamicSugar
                     r.Add(new Token(subTokens));
                     x += subTokens.Count + 2; // Skip the closing bracket
                 }
+
+                // @"2025-05-24 13:16:52.859";
+
                 // Date YYYY:MM:DD
                 else if (GetToken(tokens, x).IsNumber &&  GetToken(tokens, x, 1).IsDelimiter() && GetToken(tokens, x, 2).IsNumber &&  GetToken(tokens, x, 3).IsDelimiter() && GetToken(tokens, x, 4).IsNumber)
                 {
-                    var dateStr = ConcatTokens(tokens, x, 5);
-                    x += 5;
-                    r.Add(new Token(dateStr, TokenType.DateToken));
+                    if (
+                        GetToken(tokens, x, 5).IsNumber /* << hours */&& GetToken(tokens, x, 6).IsDelimiter() &&
+                        GetToken(tokens, x, 7).IsNumber /* << minutes */ && GetToken(tokens, x, 8).IsDelimiter() &&
+                        GetToken(tokens, x, 9).IsNumber /* << seconds */
+                    )
+                    { // Date + time
+
+                        var hasMilliseconds = false;
+                        var extraTokenCount = 6;
+                        if (GetToken(tokens, x, 9).IsFloat) /* : 52.123 */
+                        {
+                            var parts = GetToken(tokens, x, 9).Value.Split('.');
+                            hasMilliseconds = true;
+                            extraTokenCount = 8; // Include milliseconds
+                        }
+
+                        var dateStr2 = ConcatTokens(tokens, x, 5) + " " + ConcatTokens(tokens, x + 5 , extraTokenCount);
+                        x += 5 + extraTokenCount;
+                        r.Add(new Token(dateStr2, TokenType.DateTimeToken));
+                    }
+                    else
+                    {   // Date time no time
+                        var dateStr = ConcatTokens(tokens, x, 5);
+                        x += 5;
+                        r.Add(new Token(dateStr, TokenType.DateToken));
+                    }
                 }
                 else
                 {
@@ -260,11 +289,12 @@ namespace DynamicSugar
 
         private bool IsDelimiter(char c)
         {
-            return c == ' ' || c == ',' || c == '.' || c == ';' ||
+            return c == ',' || c == '.' || c == ';' ||
                    c == '(' || c == ')' || c == '[' || c == ']' ||
                    c == '{' || c == '}' || c == '=' || c == '!' ||
-                   c == '-' || c == ':' ||
+                   c == '-' || c == ':' || c == '/' || c == '\\' ||
                    c == '>' || c == '<' || c == '&' || c == '|' ;
+            // c == ' ' Space is not a delimiter here, 
         }
     }
 }
