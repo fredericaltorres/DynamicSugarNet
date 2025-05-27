@@ -150,7 +150,7 @@ namespace DynamicSugar
             while (x < tokens.Count)
             {
                 var tok = GetToken(tokens, x);
-                if (GetToken(tokens, x).IsIdentifier && GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
+                if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
                 {
                     var name = GetToken(tokens, x).Value;
                     var val = GetToken(tokens, x, 2).Value;
@@ -164,11 +164,24 @@ namespace DynamicSugar
                     r.Add(new Token(subTokens));
                     x += subTokens.Count + 2; // Skip the closing bracket
                 }
-
+                //  2025-05-26T22:06:11.513Z
+                else if (
+                        GetToken(tokens, x).IsNumber && GetToken(tokens, x, 1).IsDelimiter() && GetToken(tokens, x, 2).IsNumber && GetToken(tokens, x, 3).IsDelimiter() && GetToken(tokens, x, 4).IsNumber && 
+                        GetToken(tokens, x, 5).IsIdentifier(/*Thours*/) &&
+                        GetToken(tokens, x, 6).IsDelimiter() &&
+                        GetToken(tokens, x, 7).IsNumber /* << minutes */ && 
+                        GetToken(tokens, x, 8).IsDelimiter() &&
+                        GetToken(tokens, x, 9).IsNumber && /* << seconds */
+                        GetToken(tokens, x, 10).IsIdentifier(/*Z*/)
+                    )
+                {
+                    var (dateStr2, countTokenConcatenated) = ConcatTokens(tokens, x, new Token("Z", Tokenizer.TokenType.Identifier));
+                    r.Add(new Token(dateStr2, TokenType.DateTimeToken));
+                    x += countTokenConcatenated;
+                }
                 // @"2025-05-24 13:16:52.859";
-
                 // Date YYYY:MM:DD
-                else if (GetToken(tokens, x).IsNumber &&  GetToken(tokens, x, 1).IsDelimiter() && GetToken(tokens, x, 2).IsNumber &&  GetToken(tokens, x, 3).IsDelimiter() && GetToken(tokens, x, 4).IsNumber)
+                else if (GetToken(tokens, x).IsNumber && GetToken(tokens, x, 1).IsDelimiter() && GetToken(tokens, x, 2).IsNumber && GetToken(tokens, x, 3).IsDelimiter() && GetToken(tokens, x, 4).IsNumber)
                 {
                     if (
                         GetToken(tokens, x, 5).IsNumber /* << hours */&& GetToken(tokens, x, 6).IsDelimiter() &&
@@ -217,6 +230,22 @@ namespace DynamicSugar
                 r.Add(tokens[i]);
             }
             return r;
+        }
+
+        public (string str, int count) ConcatTokens(Tokens tokens, int start, Token token)
+        {
+            var sb = new StringBuilder();
+            var i = start;
+            var count = 0;
+            while (i < tokens.Count && !tokens[i].Is(token))
+            {
+                sb.Append(tokens[i].Value);
+                count++;
+                i++;
+            }
+            sb.Append(tokens[i].Value);
+            count++;
+            return (sb.ToString(), count);
         }
 
         public string ConcatTokens(Tokens tokens, int start, int count)

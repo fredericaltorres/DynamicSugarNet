@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DynamicSugar
 {
@@ -44,7 +45,7 @@ namespace DynamicSugar
                 return new Token(null, TokenType.UndefinedToken);
             }
 
-            public bool IsIdentifier => Type == TokenType.Identifier;
+            public bool IsIdentifier(string name = null) => name == null ? Type == TokenType.Identifier : Type == TokenType.Identifier && this.Value == name;
             public bool IsNumber => Type == TokenType.Number;
             public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
             public bool IsFloat => Type == TokenType.Number && Value.Contains(".");
@@ -70,6 +71,15 @@ namespace DynamicSugar
                 Type == TokenType.NameValuePair && 
                 Name == name && 
                 Value == value;
+
+            internal bool Is(Token token)
+            {
+                return this.Type == token.Type && 
+                       this.Value == token.Value && 
+                       this.Name == token.Name &&
+                       (this.ArrayValues == null && token.ArrayValues == null || 
+                                              this.ArrayValues?.Count == token.ArrayValues?.Count);
+            }
         }
     }
 }
