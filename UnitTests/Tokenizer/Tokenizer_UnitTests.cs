@@ -22,11 +22,50 @@ namespace DynamicSugarSharp_UnitTests {
 
         const string TestLongLogLine = @"2025-05-24 13:16:52.859,Info,Export,[id: 709046703, mode: Export][ExecuteConversion()]Slide: 10755223, type: IMAGE, index: 0001";
 
+        const string TestString1 = @" ""ok"" 'ko' ";
+
+        [TestMethod]
+        public void TokenizerTest_Strings()
+        {
+            var tokens = new Tokenizer().Tokenize(TestString1);
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote, tokens[x].Type);
+            Assert.AreEqual(@"ok", tokens[x++].Value);
+
+            Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote, tokens[x].Type);
+            Assert.AreEqual(@"ko", tokens[x++].Value);
+        }
+
+        [TestMethod]
+        public void TokenizerTest_StringsInArray()
+        {
+            var tokens = new Tokenizer().Tokenize($"[ {TestString1} ]");
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.ArrayOfTokens, tokens[x].Type);
+
+            var arrayTokens = tokens[x++].ArrayValues;
+            var xx = 0;
+            Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote, arrayTokens[xx].Type);
+            Assert.AreEqual(@"ok", arrayTokens[xx++].Value);
+
+            Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote, arrayTokens[xx].Type);
+            Assert.AreEqual(@"ko", arrayTokens[xx++].Value);
+        }
+
+        [TestMethod]
+        public void TokenizerTest_StringsInNameValue()
+        {
+            var tokens = new Tokenizer().Tokenize("name:'value' ");
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
+            Assert.AreEqual("name", tokens[x].Name);
+            Assert.AreEqual("value", tokens[x].Value);
+        }
+
         [TestMethod]
         public void TokenizerTest_DateTime()
         {
-            var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(DateTime1);
+            var tokens = new Tokenizer().Tokenize(DateTime1);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
             Assert.AreEqual(DateTime1, tokens[x++].Value);
@@ -35,8 +74,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void TokenizerTest_TestDateTimeTZ()
         {
-            var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(TestDateTimeTZ);
+            var tokens = new Tokenizer().Tokenize(TestDateTimeTZ);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
             Assert.AreEqual(TestDateTimeTZ, tokens[x++].Value);
@@ -45,8 +83,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void TokenizerTest_DateTime_22()
         {
-            var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(DateTime2);
+            var tokens = new Tokenizer().Tokenize(DateTime2);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
             Assert.AreEqual(DateTime2, tokens[x++].Value);
@@ -55,8 +92,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void TokenizerTest_DateTime_WithSlashSeparator_AndMoreIdentifierAfter()
         {
-            var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(DateTimePlusIdentofiers).RemoveDelimiters();
+            var tokens = new Tokenizer().Tokenize(DateTimePlusIdentofiers).RemoveDelimiters();
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
             Assert.AreEqual(DateTime2, tokens[x++].Value);
@@ -71,8 +107,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void TokenizerTest_DateTimeWithMilliSecond()
         {
-            var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(DateTimeWithMS);
+            var tokens = new Tokenizer().Tokenize(DateTimeWithMS);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
             Assert.AreEqual(DateTimeWithMS, tokens[x++].Value);
@@ -81,9 +116,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Tokenizer_LogString1()
         {
-            var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(TestLogString1);
-
+            var tokens = new Tokenizer().Tokenize(TestLogString1);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateToken, tokens[x].Type);
             Assert.AreEqual("2025-05-24", tokens[x++].Value);
@@ -109,9 +142,7 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Tokenizer_LogString_LongComplexLine()
         {
-            var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(TestLongLogLine).RemoveDelimiters();
-
+            var tokens = new Tokenizer().Tokenize(TestLongLogLine).RemoveDelimiters();
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
             Assert.AreEqual("2025-05-24 13:16:52.859", tokens[x++].Value);

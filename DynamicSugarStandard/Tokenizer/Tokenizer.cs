@@ -47,7 +47,8 @@ namespace DynamicSugar
         public enum TokenType
         {
             Identifier,
-            StringLiteral,
+            StringLiteralDQuote,
+            StringLiteralSQuote,
             Number,
             Operator,
             Delimiter,
@@ -76,7 +77,7 @@ namespace DynamicSugar
                     continue;
                 }
 
-                // Handle string literals
+                // Handle string literals Double quotes
                 if (input[i] == '"')
                 {
                     var stringBuilder = new StringBuilder();
@@ -87,7 +88,22 @@ namespace DynamicSugar
                         i++;
                     }
                     if (i < input.Length) i++; // Skip closing quote
-                    tokens.Add(new Token(stringBuilder.ToString(), TokenType.StringLiteral));
+                    tokens.Add(new Token(stringBuilder.ToString(), TokenType.StringLiteralDQuote));
+                    continue;
+                }
+
+                // Handle string literals Single quotes
+                if (input[i] == '\'')
+                {
+                    var stringBuilder = new StringBuilder();
+                    i++; // Skip opening quote
+                    while (i < input.Length && input[i] != '\'')
+                    {
+                        stringBuilder.Append(input[i]);
+                        i++;
+                    }
+                    if (i < input.Length) i++; // Skip closing quote
+                    tokens.Add(new Token(stringBuilder.ToString(), TokenType.StringLiteralSQuote));
                     continue;
                 }
 
