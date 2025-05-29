@@ -162,11 +162,22 @@ namespace DynamicSugar
         {
             var x = 0;
             var r = new Tokens();
+            var requireRerun = false;
 
             while (x < tokens.Count)
             {
                 var tok = GetToken(tokens, x);
-                if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
+
+                // Identifier . Identifier become one Identifier ""
+                if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(".") && GetToken(tokens, x, 2).IsIdentifier())
+                {
+                    var t1 = GetToken(tokens, x);
+                    var t2 = GetToken(tokens, x, 2);
+                    r.Add(new Token($"{t1.Value}.{t2.Value}", Tokenizer.TokenType.Identifier));
+                    x += 3; // Skip the name, delimiter, and value
+                    requireRerun = true;
+                }
+                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
                 {
                     var name = GetToken(tokens, x).Value;
                     var val = GetToken(tokens, x, 2).Value;
@@ -233,7 +244,10 @@ namespace DynamicSugar
                 if(token.Type == TokenType.ArrayOfTokens)
                     token.ArrayValues = CombineTokens(token.ArrayValues);
 
-            return r;
+            if (requireRerun)
+                return CombineTokens(r); // Re-Run another pass of combining tokens
+            else 
+                return r;
         }
 
         public Tokens ReadTokenUpTo(Tokens tokens, int start, string delimiter)

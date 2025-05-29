@@ -184,5 +184,14 @@ namespace DynamicSugarSharp_UnitTests {
             Assert.IsTrue(tokens[x].IsNameValue("index", "0001"));
             x++;
         }
+
+        [TestMethod]
+        public void Tokenizer_NameSpaceClassFunction()
+        {
+            var tokens = new Tokenizer().Tokenize("Global.ExecutorManager.RunTask()").RemoveDelimiters();
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
+            Assert.AreEqual("Global.ExecutorManager.RunTask", tokens[x++].Value);
+        }
     }
 }
