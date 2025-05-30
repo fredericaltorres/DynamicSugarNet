@@ -45,7 +45,16 @@ namespace DynamicSugar
                 return new Token(null, TokenType.UndefinedToken);
             }
 
-            public bool IsIdentifier(string name = null) => name == null ? Type == TokenType.Identifier : Type == TokenType.Identifier && this.Value == name;
+            public bool IsEqualValue(string value, bool ignoreCase) 
+            {
+                if(ignoreCase && value != null)
+                    return string.Equals(this.Value, value, StringComparison.OrdinalIgnoreCase);
+                return this.Value == value; 
+            }
+
+            public bool IsIdentifier(string value = null, bool ignoreCase = true) => value == null ? Type == TokenType.Identifier : 
+                                                                           Type == TokenType.Identifier && IsEqualValue(value, ignoreCase);
+
             public bool IsNumber => Type == TokenType.Number;
             public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
             public bool IsFloat => Type == TokenType.Number && Value.Contains(".");
@@ -61,6 +70,10 @@ namespace DynamicSugar
                 {
                     var arrayValuesString = string.Join(", ", ArrayValues);
                     return $"{this.Type} [{arrayValuesString}]";
+                }
+                else if (this.Type == TokenType.NameValuePair)
+                {
+                    return $"{this.Type} {this.Name}: {this.Value}";
                 }
 
                 return $"{this.Type} {this.Value}";
