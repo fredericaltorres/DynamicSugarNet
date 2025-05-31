@@ -197,14 +197,19 @@ namespace DynamicSugarSharp_UnitTests {
         [TestMethod]
         public void Tokenizer_LongOne()
         {
-            var testLine = @"2025-05-29 20:52:48.769|SAS|Platform|1.0|INFO|QA_BACK_END_SERVICES_01|F:0||||||Info|msg=64b,Information,TSUploader,[systemId: 674, machineName: QA_BACK_END_SERVICES_01][TSUploader.Trace()][INFO][TSExecutor.Execute(), TaskId: 14895851, objectId:804410389, Provider: Nicrosoft]Start";
+            var testLine = @"2025-05-29 20:52:48.769|SAS|Platform|1.0|INFO|QA_BACK_END_SERVICES_01|F:0||||||Info|msg1=64b,msg2=""64b"",msg3='64b',Information,TSUploader,[systemId: 674, machineName: QA_BACK_END_SERVICES_01][TSUploader.Trace()][INFO][TSExecutor.Execute(), TaskId: 14895851, objectId:804410389, Provider: Nicrosoft]Start";
             var tokens = new Tokenizer().Tokenize(testLine).RemoveDelimiters();
 
+            var variables = tokens.GetVariables();
+
             Assert.AreEqual("0", tokens.GetVariableValue("F"));
+            Assert.AreEqual("64", tokens.GetVariableValue("msg1"));
+            Assert.AreEqual("64b", tokens.GetVariableValue("msg2"));
+            Assert.AreEqual("64b", tokens.GetVariableValue("msg3"));
             Assert.AreEqual("674", tokens.GetVariableValue("systemId"));
             Assert.IsTrue(tokens.IdentifierExists("Information"));
 
-            Assert.IsTrue(tokens.IdentifierExists(DS.List("Information", "TSUploader", "INFO", "TSExecutor.Execute")));
+            Assert.IsTrue(tokens.IdentifierExists(DS.List("SAS", "Platform", "QA_BACK_END_SERVICES_01", "Information", "TSUploader", "INFO", "TSExecutor.Execute", "Start")));
 
             var x = 0;
             //Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);

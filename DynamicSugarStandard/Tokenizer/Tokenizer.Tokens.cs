@@ -29,6 +29,30 @@ namespace DynamicSugar
                 return clonedTokens;
             }
 
+            public  Dictionary<string, string> GetVariables()
+            {
+                var variables = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var token in this)
+                {
+                    if (token.Type == TokenType.NameValuePair)
+                    {
+                        if (!variables.ContainsKey(token.Name))
+                            variables.Add(token.Name, token.Value);
+                    }
+                    else if (token.Type == TokenType.ArrayOfTokens)
+                    {
+                        var arrayVariables = token.ArrayValues.GetVariables();
+                        foreach (var kvp in arrayVariables)
+                        {
+                            if (!variables.ContainsKey(kvp.Key))
+                                variables.Add(kvp.Key, kvp.Value);
+                        }
+                    }
+                }
+
+                return variables;
+            }
+            
             public string GetVariableValue(string name, bool ignoreCase = true)
             {
                 foreach (var token in this)
