@@ -63,6 +63,7 @@ namespace DynamicSugar
             DateTime,
             ArrayOfTokens,
             NameValuePair,
+            Url,
         }
 
         public Tokens Tokenize(string input, bool combineArray = true)
@@ -183,12 +184,22 @@ namespace DynamicSugar
                     x += 3; // Skip the name, delimiter, and value
                     requireRerun = true;
                 }
-                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
+                // name := value
+                else if (GetToken(tokens, x).IsIdentifier() && !GetToken(tokens, x).Value.ToLower().StartsWith("http") && 
+                         GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
                 {
                     var name = GetToken(tokens, x).Value;
                     var val = GetToken(tokens, x, 2).Value;
                     r.Add(new Token(name, val));
                     x += 3; // Skip the name, delimiter, and value
+                }
+                // http/https:// xxxx
+                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.ToLower().StartsWith("http"))
+                {
+                    var subTokens = ReadAllTokenAcceptedForUrl(tokens, x + 1);
+                    var text = GetToken(tokens, x).Value + subTokens.GetAsText();
+                    r.Add(new Token(text, TokenType.Url));
+                    x += subTokens.Count + 2; // Skip the closing bracket
                 }
                 // Array/List
                 else if (combineArray && GetToken(tokens, x).IsDelimiter("["))
@@ -268,6 +279,21 @@ namespace DynamicSugar
                 return r;
         }
 
+        public Tokens ReadAllTokenAcceptedForUrl(Tokens tokens, int start)
+        {
+            var delimiters = DS.List("+", "-", "/", ":", "&", ".");
+            var r = new Tokens();
+            for (int i = start; i < tokens.Count; i++)
+            {
+                if (tokens[i].IsDelimiter(delimiters) || tokens[i].IsIdentifier() || tokens[i].IsNumber)
+                {
+                    r.Add(tokens[i]);
+                }
+                else break;
+            }
+            return r;
+        }
+
         public Tokens ReadTokenUpTo(Tokens tokens, int start, string delimiter)
         {
             var r = new Tokens();
@@ -310,8 +336,8 @@ namespace DynamicSugar
             return c == ',' || c == '.' || c == ';' ||
                    c == '(' || c == ')' || c == '[' || c == ']' ||
                    c == '{' || c == '}' || c == '=' || c == '!' ||
-                   c == '-' || c == ':' || c == '/' || c == '\\' ||
-                   c == '>' || c == '<' || c == '&' || c == '|' ;
+                   c == '-' || c == ':' || c == '/' || c == '\\' || c == '*' || c == '+' ||
+                   c == '>' || c == '<' || c == '&' || c == '|' || c == '%';
             // c == ' ' Space is not a delimiter here, 
         }
     }

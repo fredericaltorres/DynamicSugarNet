@@ -59,7 +59,9 @@ namespace DynamicSugar
             public bool IsNumber => Type == TokenType.Number;
             public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
             public bool IsFloat => Type == TokenType.Number && Value.Contains(".");
+
             public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
+
             public bool IsDelimiter(List<string> values ) =>  (Type == TokenType.Delimiter && values.Contains(this.Value));
             public bool IsAnyValue => !(Type == TokenType.UndefinedToken || Type == TokenType.ArrayOfTokens || Type == TokenType.NameValuePair);
 

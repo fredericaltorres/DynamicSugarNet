@@ -226,5 +226,24 @@ namespace DynamicSugarSharp_UnitTests
             var testLine = @"   3 | 2025/06/12 11:11:18.329 AM | 2025/06/12 11:11:20.380 AM | bos3bkndsvc01 | prod/backendsvc/app_logs | 2025-06-12 11:11:18.329|Brainshark|Core|1.0.1.0|INFO|bos3bkndsvc01|CEF:0|Brainshark|Core|0|Message|Message|Info|msg=BrainsharkMonitorService64 on BOS3BKNDSVC01,Informational,TTSConverter2,[monitorId: 1934, machineName: BOS3BKNDSVC01][TTSMonitor.Trace()][INFO][TextToSpeechExecutor.ExecuteOnSlide(), JobId:485916067, pid:252369326, Provider: MicrosoftCognitiveServices, slideId:360959416][SUCCEEDED], Duration:2.6s, TextLength:662, Mp3Duration:46s, Mp3Size: 0.3 Mb rt=Jun 12 2025 11:11:18 start=Jun 12 2025 11:11:18 end=Jun 12 2025 11:11:18 dvchost=bos3bkndsvc01|   |";
             var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
         }
+
+        [TestMethod]
+        public void Tokenizer_ForColorCoding_Url()
+        {
+            var testLine = @"Start (https://big.atlassian.net/wiki/spaces/8980398205/Export+ReImport+PowerPoint+feature+-+Design+documentation) End";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
+            Assert.AreEqual("Start", tokens[x++].Value);
+            x += 1;
+
+            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x].Type);
+            Assert.AreEqual("(", tokens[x++].Value);
+            x += 1;
+
+            Assert.AreEqual(Tokenizer.TokenType.Url, tokens[x].Type);
+            Assert.AreEqual("https://big.atlassian.net/wiki/spaces/8980398205/Export+ReImport+PowerPoint+feature+-+Design+documentation", tokens[x++].Value);
+        }
     }
 }
