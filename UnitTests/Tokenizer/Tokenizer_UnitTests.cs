@@ -8,7 +8,8 @@ using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
 
-namespace DynamicSugarSharp_UnitTests {
+namespace DynamicSugarSharp_UnitTests 
+{
 
     [TestClass]
     public class Tokenizer_UnitTests
@@ -16,7 +17,7 @@ namespace DynamicSugarSharp_UnitTests {
         const string TestLogString1     = @"2025-05-24 A[B=2] mode: execute";
         const string DateTime1     = @"2025-05-24 13:16:52";
         const string DateTime2    =  @"2025/05/24 13-16-52";
-        const string DateTimePlusIdentofiers   = @"2025/05/24 13-16-52,Info,Export";
+        const string DateTimePlusIdentifiers   = @"2025/05/24 13-16-52,Info,Export";
         const string DateTimeWithMS     = @"2025-05-24 13:16:52.123";
         const string TestDateTimeTZ= @"2025-05-26T22:06:11.513Z";
 
@@ -67,7 +68,7 @@ namespace DynamicSugarSharp_UnitTests {
         {
             var tokens = new Tokenizer().Tokenize(DateTime1);
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.DateTime, tokens[x].Type);
             Assert.AreEqual(DateTime1, tokens[x++].Value);
         }
 
@@ -76,7 +77,7 @@ namespace DynamicSugarSharp_UnitTests {
         {
             var tokens = new Tokenizer().Tokenize(TestDateTimeTZ);
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.DateTime, tokens[x].Type);
             Assert.AreEqual(TestDateTimeTZ, tokens[x++].Value);
         }
 
@@ -85,16 +86,16 @@ namespace DynamicSugarSharp_UnitTests {
         {
             var tokens = new Tokenizer().Tokenize(DateTime2);
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.DateTime, tokens[x].Type);
             Assert.AreEqual(DateTime2, tokens[x++].Value);
         }
 
         [TestMethod]
         public void TokenizerTest_DateTime_WithSlashSeparator_AndMoreIdentifierAfter()
         {
-            var tokens = new Tokenizer().Tokenize(DateTimePlusIdentofiers).RemoveDelimiters();
+            var tokens = new Tokenizer().Tokenize(DateTimePlusIdentifiers).RemoveDelimiters();
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.DateTime, tokens[x].Type);
             Assert.AreEqual(DateTime2, tokens[x++].Value);
 
             Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
@@ -109,7 +110,7 @@ namespace DynamicSugarSharp_UnitTests {
         {
             var tokens = new Tokenizer().Tokenize(DateTimeWithMS);
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.DateTime, tokens[x].Type);
             Assert.AreEqual(DateTimeWithMS, tokens[x++].Value);
         }
 
@@ -118,7 +119,7 @@ namespace DynamicSugarSharp_UnitTests {
         {
             var tokens = new Tokenizer().Tokenize(TestLogString1);
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.DateToken, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.Date, tokens[x].Type);
             Assert.AreEqual("2025-05-24", tokens[x++].Value);
 
             Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
@@ -144,7 +145,7 @@ namespace DynamicSugarSharp_UnitTests {
         {
             var tokens = new Tokenizer().Tokenize(TestLongLogLine).RemoveDelimiters();
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.DateTimeToken, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.DateTime, tokens[x].Type);
             Assert.AreEqual("2025-05-24 13:16:52.859", tokens[x++].Value);
 
             Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
@@ -211,9 +212,19 @@ namespace DynamicSugarSharp_UnitTests {
 
             Assert.IsTrue(tokens.IdentifierExists(DS.List("SAS", "Platform", "QA_BACK_END_SERVICES_01", "Information", "TSUploader", "INFO", "TSExecutor.Execute", "Start")));
 
+            var scriptWithType = tokens.GetTokenScript(true);
+            var scriptWithNoType = tokens.GetTokenScript(false);
+
             var x = 0;
             //Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
             //Assert.AreEqual("Global.ExecutorManager.RunTask", tokens[x++].Value);
+        }
+
+        [TestMethod]
+        public void Tokenizer_ForColorCoding()
+        {
+            var testLine = @"   3 | 2025/06/12 11:11:18.329 AM | 2025/06/12 11:11:20.380 AM | bos3bkndsvc01 | prod/backendsvc/app_logs | 2025-06-12 11:11:18.329|Brainshark|Core|1.0.1.0|INFO|bos3bkndsvc01|CEF:0|Brainshark|Core|0|Message|Message|Info|msg=BrainsharkMonitorService64 on BOS3BKNDSVC01,Informational,TTSConverter2,[monitorId: 1934, machineName: BOS3BKNDSVC01][TTSMonitor.Trace()][INFO][TextToSpeechExecutor.ExecuteOnSlide(), JobId:485916067, pid:252369326, Provider: MicrosoftCognitiveServices, slideId:360959416][SUCCEEDED], Duration:2.6s, TextLength:662, Mp3Duration:46s, Mp3Size: 0.3 Mb rt=Jun 12 2025 11:11:18 start=Jun 12 2025 11:11:18 end=Jun 12 2025 11:11:18 dvchost=bos3bkndsvc01|   |";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
         }
     }
 }

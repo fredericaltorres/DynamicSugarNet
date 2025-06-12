@@ -16,6 +16,11 @@ namespace DynamicSugar
             JsonObjectStaticHelper.SaveToFile(this, f);
         }
 
+        public string ToJSON()
+        {
+            return JsonObjectStaticHelper.Serialize(this);
+        }
+
         private static void SetJsonFileNameProperty(object This, string f)
         {
             if (ReflectionHelper.PropertyExist(This, JsonFileNameproperty))

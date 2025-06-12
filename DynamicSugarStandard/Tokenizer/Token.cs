@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DynamicSugar
 {
@@ -66,7 +67,19 @@ namespace DynamicSugar
 
             public override string ToString()
             {
-                if(this.Type == TokenType.ArrayOfTokens)
+                return ToStringWithType();
+            }
+
+            public string ToString(bool addType)
+            {
+                if (addType)
+                    return ToStringWithType();
+                return ToStringWithNoType();
+            }
+
+            public string ToStringWithType()
+            {
+                if (this.Type == TokenType.ArrayOfTokens)
                 {
                     var arrayValuesString = string.Join(", ", ArrayValues);
                     return $"{this.Type} [{arrayValuesString}]";
@@ -77,6 +90,21 @@ namespace DynamicSugar
                 }
 
                 return $"{this.Type} {this.Value}";
+            }
+
+            public string ToStringWithNoType()
+            {
+                if (this.Type == TokenType.ArrayOfTokens)
+                {
+                    var arrayValuesString = string.Join(", ", ArrayValues);
+                    return $"[{arrayValuesString}]";
+                }
+                else if (this.Type == TokenType.NameValuePair)
+                {
+                    return $"{this.Name}: {this.Value}";
+                }
+
+                return $"{this.Value}";
             }
 
 

@@ -29,6 +29,27 @@ namespace DynamicSugar
                 return clonedTokens;
             }
 
+
+            public string GetTokenScript(bool addType = true)
+            {
+                var sb = new System.Text.StringBuilder();
+                foreach (var token in this)
+                {
+                    if (token.Type == TokenType.ArrayOfTokens)
+                    {
+                        sb.Append("List [");
+                        sb.Append(token.ArrayValues.GetTokenScript(addType));
+                        sb.Append("]");
+                    }
+                    else
+                    {
+                        sb.Append(token.ToString(addType));
+                    }
+                    sb.Append("; ");
+                }
+                return sb.ToString();
+            }
+
             public  Dictionary<string, string> GetVariables()
             {
                 var variables = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
