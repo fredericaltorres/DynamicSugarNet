@@ -12,17 +12,34 @@ namespace DynamicSugar
             public TokenType Type { get; set; }
             public string PreSpaces { get; set; }
             public string Name { get; set; } // Only used when the token is a NameValuePair
-
             public Tokens ArrayValues { get; set; } // nested []
             public Tokens __internalTokens { get; set; } // Original token
 
-            public void Assert(TokenType type, string value, string name = null)
+            public string GetRawText()
+            {
+                var sb = new    System.Text.StringBuilder();
+                if(__internalTokens != null && __internalTokens.Count > 0)
+                {
+                    foreach(var token in __internalTokens)
+                        sb.Append(token.GetRawText());
+                }
+                else
+                {
+                    if(!string.IsNullOrEmpty(PreSpaces))
+                        sb.Append(PreSpaces);
+                    sb.Append(Value);
+                }
+                return sb.ToString();
+            }
+
+            public void Assert(TokenType type, string value, string name = null, string preSpaces = null)
             {
                 if(Type != type ||  
                    (value != null && !IsEqualValue(value, true)) || 
-                   (name != null && Name != name))
+                   (name != null && Name != name) ||
+                   (preSpaces != null && PreSpaces != preSpaces))
                 {
-                    throw new InvalidEnumArgumentException($"Token assertion failed: Expected Type={type}, Value={value}, Name={name}, but got Type={Type}, Value={Value}, Name={Name}.");
+                    throw new InvalidEnumArgumentException($"Token assertion failed: Expected Type={type}, Value={value}, Name={name}, PreSpaces='{PreSpaces}', but got Type={Type}, Value={Value}, Name={Name}, PreSpaces='{preSpaces}'.");
                 }
             }
 
@@ -78,18 +95,19 @@ namespace DynamicSugar
                 PreSpaces = "";
             }
 
-            public Token(string value, TokenType type, string preSpaces )
+            public Token(string value, TokenType type) : this(value , type, "")
+            {
+            }
+
+            public Token(string value, TokenType type, string preSpaces)
             {
                 Value = value;
                 Type = type;
                 PreSpaces = preSpaces;
             }
 
-            public Token(string value, TokenType type, string preSpaces, Tokens internalTokens)
+            public Token(string value, TokenType type, string preSpaces, Tokens internalTokens) : this(value , type, preSpaces)
             {
-                Value = value;
-                Type = type;
-                PreSpaces = preSpaces;
                 __internalTokens = internalTokens;
             }
 
@@ -121,8 +139,6 @@ namespace DynamicSugar
             public bool IsAnyValue => !(Type == TokenType.UndefinedToken || Type == TokenType.ArrayOfTokens || Type == TokenType.NameValuePair);
             public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
             public bool IsDelimiter(List<string> values ) =>  (Type == TokenType.Delimiter && values.Contains(this.Value));
-
-            
 
             public override string ToString()
             {
@@ -165,7 +181,6 @@ namespace DynamicSugar
 
                 return $"{this.Value}";
             }
-
 
             public bool IsNameValue(string name, string value)  => 
                 Type == TokenType.NameValuePair && 

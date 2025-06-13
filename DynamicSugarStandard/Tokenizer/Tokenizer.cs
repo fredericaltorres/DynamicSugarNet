@@ -276,23 +276,27 @@ namespace DynamicSugar
                             // The second and milliseconds are combined are parsed as a float and one token
                             /* : 52.123 */
                         }
-                        var dateStr2 = ConcatTokens(tokens, x, 5) + " " + ConcatTokens(tokens, x + 5, extraTokenCount);
+                        var (subStr1, subTokens1) = ConcatTokens(tokens, x, 5);
+                        var (subStr2, subToken2) = ConcatTokens(tokens, x + 5, extraTokenCount);
+                        subToken2.AddRange(subTokens1);
+                        var dateStr2 = subStr1 + " " + subStr2; 
 
                         if(GetToken(tokens, x, 10).IsIdentifier("AM") || GetToken(tokens, x, 10).IsIdentifier("PM"))
                         {
+                            var ampmToken = GetToken(tokens, x, 10);
                             dateStr2 += $" {GetToken(tokens, x, 10).Value}"; // Add AM/PM if present
                             extraTokenCount++; // Include AM/PM in the count
+                            subToken2.Add(ampmToken);
                         }
 
-
                         x += 5 + extraTokenCount;
-                        r.Add(new Token(dateStr2, TokenType.DateTime));
+                        r.Add(new Token(dateStr2, TokenType.DateTime, "", subToken2));
                     }
                     else
                     {   // Date time no time
-                        var dateStr = ConcatTokens(tokens, x, 5);
-                        x += 5;
-                        r.Add(new Token(dateStr, TokenType.Date));
+                        var (subStr, subToken) = ConcatTokens(tokens, x, 5);
+                        x += subToken.Count;
+                        r.Add(new Token(subStr, TokenType.Date, "", subToken));
                     }
                 }
                 else
@@ -370,12 +374,17 @@ namespace DynamicSugar
             return (sb.ToString(), subTokens);
         }
 
-        public string ConcatTokens(Tokens tokens, int start, int count)
+        public (string str, Tokens subTokens) ConcatTokens(Tokens tokens, int start, int count)
         {
+            var subTokens = new Tokens();
             var sb = new StringBuilder();
             for (int i = start; i < start + count && i < tokens.Count; i++)
+            {
                 sb.Append(tokens[i].Value);
-            return sb.ToString();
+                subTokens.Add(tokens[i]);
+            }
+
+            return (sb.ToString(), subTokens);
         }
         
 

@@ -344,14 +344,15 @@ namespace DynamicSugarSharp_UnitTests
         }
 
         [TestMethod]
-        public void Tokenizer_RespectOfSpace()
+        public void Tokenizer_RawText_1()
         {
             var testLine = @"  | _messagetime               | _receipttime               | _collector                     ";
             var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             var x = 0;
-            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_messagetime");
-            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
+            
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|", preSpaces:  "  ");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_messagetime", preSpaces: " ");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|", preSpaces: "               ");
             tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_receipttime");
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
             tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_collector");
