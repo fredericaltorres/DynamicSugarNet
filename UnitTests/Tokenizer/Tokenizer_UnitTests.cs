@@ -19,7 +19,8 @@ namespace DynamicSugarSharp_UnitTests
         const string DateTime2    =  @"2025/05/24 13-16-52";
         const string DateTimePlusIdentifiers   = @"2025/05/24 13-16-52,Info,Export";
         const string DateTimeWithMS     = @"2025-05-24 13:16:52.123";
-        const string TestDateTimeTZ= @"2025-05-26T22:06:11.513Z";
+        const string TestDateTimeTZWithMs= @"2025-05-26T22:06:11.513Z";
+        const string TestDateTimeTZNoMs = @"2025-05-26T22:06:11Z";
 
         const string TestLongLogLine = @"2025-05-24 13:16:52.859,Info,Export,[id: 709046703, mode: Export][ExecuteConversion()]Slide: 10755223, type: IMAGE, index: 0001";
 
@@ -74,12 +75,20 @@ namespace DynamicSugarSharp_UnitTests
         }
 
         [TestMethod]
-        public void TokenizerTest_TestDateTimeTZ()
+        public void TokenizerTest_TestDateTimeTZWithMs()
         {
-            var tokens = new Tokenizer().Tokenize(TestDateTimeTZ);
+            var tokens = new Tokenizer().Tokenize(TestDateTimeTZWithMs);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.DateTime, tokens[x].Type);
-            Assert.AreEqual(TestDateTimeTZ, tokens[x++].Value);
+            Assert.AreEqual(TestDateTimeTZWithMs, tokens[x++].Value);
+        }
+
+        [TestMethod]
+        public void TokenizerTest_TestDateTimeTZNoMs()
+        {
+            var tokens = new Tokenizer().Tokenize(TestDateTimeTZNoMs);
+            var x = 0;
+            tokens[x].Assert(Tokenizer.TokenType.DateTime, TestDateTimeTZNoMs);
         }
 
         [TestMethod]

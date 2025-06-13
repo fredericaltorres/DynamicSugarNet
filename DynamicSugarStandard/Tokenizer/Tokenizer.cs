@@ -240,7 +240,8 @@ namespace DynamicSugar
                     r.Add(new Token(subTokens));
                     x += subTokens.Count + 2; // Skip the closing bracket
                 }
-                //  2025-05-26T22:06:11.513Z
+
+                //  2025-05-26T22:06:11.513Z and 2025-05-26T22:06:11Z
                 else if (
                         GetToken(tokens, x).IsNumber && GetToken(tokens, x, 1).IsDelimiter(DateDelimiters) && 
                         GetToken(tokens, x, 2).IsNumber && GetToken(tokens, x, 3).IsDelimiter(DateDelimiters) 
@@ -256,6 +257,10 @@ namespace DynamicSugar
                     r.Add(new Token(dateStr2, TokenType.DateTime, "", subTokens));
                     x += subTokens.Count;
                 }
+
+
+
+
                 // @"2025-05-24 13:16:52.859";
                 // Date YYYY:MM:DD
                 else if (GetToken(tokens, x).IsNumber && GetToken(tokens, x, 1).IsDelimiter(DateDelimiters) && // YY-
