@@ -29,6 +29,14 @@ namespace DynamicSugar
                 return clonedTokens;
             }
 
+            public string GetRawText()
+            {
+                var sb = new System.Text.StringBuilder();
+                foreach (var token in this)
+                    sb.Append(token.GetRawText());
+                return sb.ToString();
+            }
+
             public string GetAsText(string sepa = "")
             {
                 var sb = new System.Text.StringBuilder();

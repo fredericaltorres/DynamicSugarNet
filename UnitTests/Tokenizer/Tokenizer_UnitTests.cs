@@ -349,13 +349,26 @@ namespace DynamicSugarSharp_UnitTests
             var testLine = @"  | _messagetime               | _receipttime               | _collector                     ";
             var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             var x = 0;
-            
-            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|", preSpaces:  "  ");
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_messagetime", preSpaces: " ");
-            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|", preSpaces: "               ");
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_receipttime");
+
+            Assert.AreEqual("  |", tokens[x].GetRawText());
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
+
+            Assert.AreEqual(" _messagetime", tokens[x].GetRawText());
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_messagetime");
+
+            Assert.AreEqual("               |", tokens[x].GetRawText());
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
+
+            Assert.AreEqual(" _receipttime", tokens[x].GetRawText());
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_receipttime");
+
+            Assert.AreEqual("               |", tokens[x].GetRawText());
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
+
+            Assert.AreEqual(" _collector", tokens[x].GetRawText());
             tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_collector");
+
+            Assert.AreEqual(testLine, tokens.GetRawText());
         }
     }
 }
