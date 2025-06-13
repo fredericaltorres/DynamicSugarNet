@@ -262,27 +262,48 @@ namespace DynamicSugarSharp_UnitTests
             var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote_FileName, tokens[x].Type);
-            Assert.AreEqual(@"c:\windows\notepad.exe", tokens[x].Value);
-
+            Assert.AreEqual(@"""c:\windows\notepad.exe""", tokens[x].Value);
 
             testLine = @"'c:\windows\notepad.exe' ";
             tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             x = 0;
             Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote_FileName, tokens[x].Type);
-            Assert.AreEqual(@"c:\windows\notepad.exe", tokens[x].Value);
+            Assert.AreEqual(@"'c:\windows\notepad.exe'", tokens[x].Value);
 
             testLine = @"'\\windows\notepad.exe' ";
             tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             x = 0;
             Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote_FileName, tokens[x].Type);
-            Assert.AreEqual(@"\\windows\notepad.exe", tokens[x].Value);
+            Assert.AreEqual(@"'\\windows\notepad.exe'", tokens[x].Value);
 
             testLine = @"""\\windows\notepad.exe"" ";
             tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             x = 0;
             Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote_FileName, tokens[x].Type);
-            Assert.AreEqual(@"\\windows\notepad.exe", tokens[x].Value);
+            Assert.AreEqual(@"""\\windows\notepad.exe""", tokens[x].Value);
+        }
 
+        [TestMethod]
+        public void Tokenizer_Filename_NoString()
+        {
+            var testLine = @"c:\windows\notepad.exe";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
+            Assert.AreEqual(@"c", tokens[x].Value);
+            x += 1;
+
+            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x].Type);
+            Assert.AreEqual(@":", tokens[x].Value);
+            x += 1;
+
+            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x].Type);
+            Assert.AreEqual(@"\", tokens[x].Value);
+            x += 1;
+
+            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
+            Assert.AreEqual(@"windows", tokens[x].Value);
+            x += 1;
         }
     }
 }

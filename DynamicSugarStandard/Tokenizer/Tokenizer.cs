@@ -186,7 +186,8 @@ namespace DynamicSugar
                     )
                 )
                 {
-                    r.Add(new Token(tok.Value, tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FileName: Tokenizer.TokenType.StringLiteralSQuote_FileName));
+                    var quote = tok.IsDString ? @"""" : "'";
+                    r.Add(new Token($"{quote}{tok.Value}{quote}", tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FileName: Tokenizer.TokenType.StringLiteralSQuote_FileName));
                     x += 1;
                 }
                 // Identifier . Identifier become one Identifier ""
@@ -199,7 +200,7 @@ namespace DynamicSugar
                     requireRerun = true;
                 }
                 // name := value
-                else if (GetToken(tokens, x).IsIdentifier() && !GetToken(tokens, x).Value.ToLower().StartsWith("http") && 
+                else if (GetToken(tokens, x).IsIdentifier() && (GetToken(tokens, x).Value.Length > 1) && !GetToken(tokens, x).Value.ToLower().StartsWith("http") && 
                          GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
                 {
                     var name = GetToken(tokens, x).Value;
