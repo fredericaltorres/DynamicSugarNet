@@ -305,5 +305,32 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(@"windows", tokens[x].Value);
             x += 1;
         }
+
+        [TestMethod]
+        public void Tokenizer_JSON()
+        {
+            var testLine = @"{ ""JobId"":485939676,""PresentationId"":397596452,""ErrorMessage"":"""",""UserId"":11123574,""TimeStamp"":""2025-06-13T12:22:15.7092738Z"" }";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var x = 0;
+            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x].Type);
+            Assert.AreEqual(@"{", tokens[x].Value);
+            x += 1;
+
+            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
+            Assert.AreEqual(@"485939676", tokens[x].Value);
+            Assert.AreEqual(@"JobId", tokens[x].Name);
+            Assert.AreEqual(@"""JobId"" : 485939676", tokens[x].ValueAsString);
+            x += 1;
+
+            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x].Type);
+            Assert.AreEqual(@",", tokens[x].Value);
+            x += 1;
+
+            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
+            Assert.AreEqual(@"397596452", tokens[x].Value);
+            Assert.AreEqual(@"PresentationId", tokens[x].Name);
+            Assert.AreEqual(@"""PresentationId"" : 397596452", tokens[x].ValueAsString);
+            x += 1;
+        }
     }
 }

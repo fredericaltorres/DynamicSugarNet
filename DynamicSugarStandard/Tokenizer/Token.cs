@@ -11,7 +11,24 @@ namespace DynamicSugar
             public string Value { get; set; }
             public TokenType Type { get; set; }
             public Tokens ArrayValues { get; set; }
+            public Tokens NameValues { get; set; }
 
+
+            public string ValueAsString
+            {
+                get
+                {
+                    if (Type == TokenType.StringLiteralDQuote)
+                        return $@"""{this.Value}""";
+                    if (Type == TokenType.StringLiteralSQuote)
+                        return $@"'{this.Value}'";
+
+                    if (Type == TokenType.NameValuePair)
+                        return $@"{this.NameValues[0].ValueAsString} {this.NameValues[1].ValueAsString} {this.NameValues[2].ValueAsString}";
+
+                    return this.Value;
+                }
+            }
 
             public Token Clone ()
             {
@@ -28,11 +45,12 @@ namespace DynamicSugar
                 Type = TokenType.ArrayOfTokens;
             }
 
-            public Token(string name, string value)
+            public Token(Token tokenName, Token tokenDelimiter, Token tokenValue)
             {
-                this.Name = name;
-                this.Value = value;
+                this.Name = tokenName.Value;
+                this.Value = tokenValue.Value;
                 this.Type = TokenType.NameValuePair;
+                this.NameValues = new Tokens { tokenName, tokenDelimiter, tokenValue };
             }
 
             public Token(string value, TokenType type)

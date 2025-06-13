@@ -96,7 +96,7 @@ namespace DynamicSugar
                         i++;
                     }
                     if (i < input.Length) i++; // Skip closing quote
-                    tokens.Add(new Token(stringBuilder.ToString(), TokenType.StringLiteralDQuote));
+                    tokens.Add(new Token($@"{stringBuilder}", TokenType.StringLiteralDQuote));
                     continue;
                 }
 
@@ -111,7 +111,7 @@ namespace DynamicSugar
                         i++;
                     }
                     if (i < input.Length) i++; // Skip closing quote
-                    tokens.Add(new Token(stringBuilder.ToString(), TokenType.StringLiteralSQuote));
+                    tokens.Add(new Token($"{stringBuilder}", TokenType.StringLiteralSQuote));
                     continue;
                 }
 
@@ -180,11 +180,8 @@ namespace DynamicSugar
             {
                 var tok = GetToken(tokens, x);
 
-                if (tok.IsString && (
-                       (char.IsLetter(tok.GetValueCharIndex(0)) && tok.GetValueCharIndex(1) == ':') ||
-                       (tok.Value.StartsWith("\\"))
-                    )
-                )
+                // Detect filename c:\aa \\aa
+                if (tok.IsString && ((char.IsLetter(tok.GetValueCharIndex(0)) && tok.GetValueCharIndex(1) == ':') || (tok.Value.StartsWith("\\"))))
                 {
                     var quote = tok.IsDString ? @"""" : "'";
                     r.Add(new Token($"{quote}{tok.Value}{quote}", tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FileName: Tokenizer.TokenType.StringLiteralSQuote_FileName));
@@ -199,13 +196,15 @@ namespace DynamicSugar
                     x += 3; // Skip the name, delimiter, and value
                     requireRerun = true;
                 }
-                // name := value
-                else if (GetToken(tokens, x).IsIdentifier() && (GetToken(tokens, x).Value.Length > 1) && !GetToken(tokens, x).Value.ToLower().StartsWith("http") && 
+                // name :/= value or "name" :/= value or 'name' :/= value
+                else if (( GetToken(tokens, x).IsIdentifier() || GetToken(tokens, x).IsString )
+                         && (GetToken(tokens, x).Value.Length > 1) && !GetToken(tokens, x).Value.ToLower().StartsWith("http") && 
                          GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsAnyValue)
                 {
-                    var name = GetToken(tokens, x).Value;
-                    var val = GetToken(tokens, x, 2).Value;
-                    r.Add(new Token(name, val));
+                    var tokenName = GetToken(tokens, x);
+                    var tokenDelimiter = GetToken(tokens, x, 1);
+                    var tokenVal = GetToken(tokens, x, 2);
+                    r.Add(new Token(tokenName, tokenDelimiter, tokenVal));
                     x += 3; // Skip the name, delimiter, and value
                 }
                 // http/https:// xxxx
