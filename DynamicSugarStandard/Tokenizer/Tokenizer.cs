@@ -64,6 +64,11 @@ namespace DynamicSugar
             ArrayOfTokens,
             NameValuePair,
             Url,
+
+            StringLiteralDQuote_FileName,
+            StringLiteralSQuote_FileName,
+            StringLiteralDQuote_Url,
+            StringLiteralSQuote_Url,
         }
 
         public Tokens Tokenize(string input, bool combineArray = true)
@@ -175,8 +180,17 @@ namespace DynamicSugar
             {
                 var tok = GetToken(tokens, x);
 
+                if (tok.IsString && (
+                       (char.IsLetter(tok.GetValueCharIndex(0)) && tok.GetValueCharIndex(1) == ':') ||
+                       (tok.Value.StartsWith("\\"))
+                    )
+                )
+                {
+                    r.Add(new Token(tok.Value, tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FileName: Tokenizer.TokenType.StringLiteralSQuote_FileName));
+                    x += 1;
+                }
                 // Identifier . Identifier become one Identifier ""
-                if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(".") && GetToken(tokens, x, 2).IsIdentifier())
+                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(".") && GetToken(tokens, x, 2).IsIdentifier())
                 {
                     var t1 = GetToken(tokens, x);
                     var t2 = GetToken(tokens, x, 2);
@@ -199,7 +213,7 @@ namespace DynamicSugar
                     var subTokens = ReadAllTokenAcceptedForUrl(tokens, x + 1);
                     var text = GetToken(tokens, x).Value + subTokens.GetAsText();
                     r.Add(new Token(text, TokenType.Url));
-                    x += subTokens.Count + 2; // Skip the closing bracket
+                    x += subTokens.Count + 1; // Skip the closing bracket
                 }
                 // Array/List
                 else if (combineArray && GetToken(tokens, x).IsDelimiter("["))

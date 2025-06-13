@@ -53,8 +53,17 @@ namespace DynamicSugar
                 return this.Value == value; 
             }
 
+            public char GetValueCharIndex(int index)
+            {
+                return index < Value.Length ? this.Value[index] : '\0';
+            }
+
             public bool IsIdentifier(string value = null, bool ignoreCase = true) => value == null ? Type == TokenType.Identifier : 
                                                                            Type == TokenType.Identifier && IsEqualValue(value, ignoreCase);
+
+            public bool IsString => Type == TokenType.StringLiteralDQuote || Type == TokenType.StringLiteralSQuote;
+            public bool IsDString => Type == TokenType.StringLiteralDQuote;
+            public bool IsSString => Type == TokenType.StringLiteralSQuote;
 
             public bool IsNumber => Type == TokenType.Number;
             public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
