@@ -281,8 +281,8 @@ namespace DynamicSugar
                             /* : 52.123 */
                         }
                         var (subStr1, subTokens1) = ConcatTokens(tokens, x, 5);
-                        var (subStr2, subToken2) = ConcatTokens(tokens, x + 5, extraTokenCount);
-                        subToken2.AddRange(subTokens1);
+                        var (subStr2, subTokens2) = ConcatTokens(tokens, x + 5, extraTokenCount);
+                        subTokens1.AddRange(subTokens2);
                         var dateStr2 = subStr1 + " " + subStr2; 
 
                         if(GetToken(tokens, x, 10).IsIdentifier("AM") || GetToken(tokens, x, 10).IsIdentifier("PM"))
@@ -290,11 +290,11 @@ namespace DynamicSugar
                             var ampmToken = GetToken(tokens, x, 10);
                             dateStr2 += $" {GetToken(tokens, x, 10).Value}"; // Add AM/PM if present
                             extraTokenCount++; // Include AM/PM in the count
-                            subToken2.Add(ampmToken);
+                            subTokens1.Add(ampmToken);
                         }
 
                         x += 5 + extraTokenCount;
-                        r.Add(new Token(dateStr2, TokenType.DateTime, "", subToken2));
+                        r.Add(new Token(dateStr2, TokenType.DateTime, "", subTokens1));
                     }
                     else
                     {   // Date time no time

@@ -14,15 +14,15 @@ namespace DynamicSugarSharp_UnitTests
     [TestClass]
     public class Tokenizer_UnitTests
     {
-        const string TestLogString1     = @"2025-05-24 A[BB=2] mode: execute";
-        const string DateTime1     = @"2025-05-24 13:16:52";
-        const string DateTime2    =  @"2025/05/24 13-16-52";
-        const string DateTimePlusIdentifiers   = @"2025/05/24 13-16-52,Info,Export";
-        const string DateTimeWithMS     = @"2025-05-24 13:16:52.123";
-        const string TestDateTimeTZWithMs= @"2025-05-26T22:06:11.513Z";
+        const string TestLogString1 = @"2025-05-24 A[BB=2] mode: execute";
+        const string DateTime1 = @"2025-05-24 13:16:52";
+        const string DateTime2 = @"2025/05/24 13-16-52";
+        const string DateTimePlusIdentifiers = @"2025/05/24 13-16-52,Info,Export";
+        const string DateTimeWithMS = @"2025-05-24 13:16:52.123";
+        const string TestDateTimeTZWithMs = @"2025-05-26T22:06:11.513Z";
         const string TestDateTimeTZNoMs = @"2025-05-26T22:06:11Z";
 
-        const string TestLongLogLine = @"2025-05-24 13:16:52.859,Info,Export,[id: 709046703, mode: Export][ExecuteConversion()]Slide: 10755223, type: IMAGE, index: 0001";
+        const string TestLongLogLine = @"2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001";
 
         const string TestString1 = @" ""ok"" 'ko' ";
 
@@ -379,6 +379,14 @@ namespace DynamicSugarSharp_UnitTests
 
             var rawText = tokens.GetRawText();
             Assert.AreEqual(testLine.TrimEnd(), rawText.TrimEnd()); // W We ignore the space at the end
+        }
+
+        [TestMethod]
+        public void Tokenizer_RawText_2()
+        {
+            var tokens = new Tokenizer().Tokenize(TestLongLogLine, combineArray: false);
+            var rawText = tokens.GetRawText();
+            Assert.AreEqual(TestLongLogLine.TrimEnd(), rawText.TrimEnd()); // W We ignore the space at the end
         }
     }
 }
