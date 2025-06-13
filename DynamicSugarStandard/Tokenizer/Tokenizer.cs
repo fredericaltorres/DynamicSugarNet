@@ -49,6 +49,7 @@ namespace DynamicSugar
         public enum TokenType
         {
             Identifier,
+            IdentifierPath, // aot/backend/logs
             StringLiteralDQuote,
             StringLiteralSQuote,
             Number,
@@ -174,7 +175,6 @@ namespace DynamicSugar
             
             var x = 0;
             var r = new Tokens();
-            var requireRerun = false;
 
             while (x < tokens.Count)
             {
@@ -187,14 +187,13 @@ namespace DynamicSugar
                     r.Add(new Token($"{quote}{tok.Value}{quote}", tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FileName: Tokenizer.TokenType.StringLiteralSQuote_FileName));
                     x += 1;
                 }
-                // Identifier . Identifier become one Identifier ""
-                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(".") && GetToken(tokens, x, 2).IsIdentifier())
+                // Identifier .\/- Identifier become one IdentifierPath ""
+                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(DS.List(".", "/", @"\", "-")) && GetToken(tokens, x, 2).IsIdentifier())
                 {
-                    var t1 = GetToken(tokens, x);
-                    var t2 = GetToken(tokens, x, 2);
-                    r.Add(new Token($"{t1.Value}.{t2.Value}", Tokenizer.TokenType.Identifier));
-                    x += 3; // Skip the name, delimiter, and value
-                    requireRerun = true;
+                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 1);
+                    var text = GetToken(tokens, x).Value + subTokens.GetAsText();
+                    r.Add(new Token(text, TokenType.IdentifierPath));
+                    x += subTokens.Count + 1;
                 }
                 // name :/= value or "name" :/= value or 'name' :/= value
                 else if (( GetToken(tokens, x).IsIdentifier() || GetToken(tokens, x).IsString )
@@ -287,11 +286,24 @@ namespace DynamicSugar
                 if(token.Type == TokenType.ArrayOfTokens)
                     token.ArrayValues = CombineTokens(token.ArrayValues, combineArray);
 
-            if (requireRerun)
-                return CombineTokens(r, combineArray); // Re-Run another pass of combining tokens
-            else 
-                return r;
+            return r;
         }
+
+        public Tokens ReadAllTokenAcceptedForIdentifierPath(Tokens tokens, int start)
+        {
+            var delimiters = DS.List( "-", "/", @"\", ".");
+            var r = new Tokens();
+            for (int i = start; i < tokens.Count; i++)
+            {
+                if (tokens[i].IsDelimiter(delimiters) || tokens[i].IsIdentifier())
+                {
+                    r.Add(tokens[i]);
+                }
+                else break;
+            }
+            return r;
+        }
+
 
         public Tokens ReadAllTokenAcceptedForUrl(Tokens tokens, int start)
         {
@@ -351,7 +363,7 @@ namespace DynamicSugar
                    c == '(' || c == ')' || c == '[' || c == ']' ||
                    c == '{' || c == '}' || c == '=' || c == '!' ||
                    c == '-' || c == ':' || c == '/' || c == '\\' || c == '*' || c == '+' ||
-                   c == '>' || c == '<' || c == '&' || c == '|' || c == '%';
+                   c == '>' || c == '<' || c == '&' || c == '|' || c == '%' || c == '┊';
             // c == ' ' Space is not a delimiter here, 
         }
     }

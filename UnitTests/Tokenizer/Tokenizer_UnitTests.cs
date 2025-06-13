@@ -30,11 +30,9 @@ namespace DynamicSugarSharp_UnitTests
         {
             var tokens = new Tokenizer().Tokenize(TestString1);
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote, tokens[x].Type);
-            Assert.AreEqual(@"ok", tokens[x++].Value);
 
-            Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote, tokens[x].Type);
-            Assert.AreEqual(@"ko", tokens[x++].Value);
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, "ok");
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralSQuote, "ko");
         }
 
         [TestMethod]
@@ -46,21 +44,24 @@ namespace DynamicSugarSharp_UnitTests
 
             var arrayTokens = tokens[x++].ArrayValues;
             var xx = 0;
-            Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote, arrayTokens[xx].Type);
-            Assert.AreEqual(@"ok", arrayTokens[xx++].Value);
-
-            Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote, arrayTokens[xx].Type);
-            Assert.AreEqual(@"ko", arrayTokens[xx++].Value);
+            arrayTokens[xx++].Assert(Tokenizer.TokenType.StringLiteralDQuote, "ok");
+            arrayTokens[xx++].Assert(Tokenizer.TokenType.StringLiteralSQuote, "ko");
         }
 
         [TestMethod]
-        public void TokenizerTest_StringsInNameValue()
+        public void TokenizerTest_SStringsInNameValue()
         {
             var tokens = new Tokenizer().Tokenize("name:'value' ");
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
-            Assert.AreEqual("name", tokens[x].Name);
-            Assert.AreEqual("value", tokens[x].Value);
+            tokens[x++].AssertNameValue("value", "name", "name : 'value'");
+        }
+
+        [TestMethod]
+        public void TokenizerTest_DStringsInNameValue()
+        {
+            var tokens = new Tokenizer().Tokenize(@"name:""value""");
+            var x = 0;
+            tokens[x++].AssertNameValue("value", "name", @"name : ""value""");
         }
 
         [TestMethod]
@@ -191,8 +192,7 @@ namespace DynamicSugarSharp_UnitTests
         {
             var tokens = new Tokenizer().Tokenize("Global.ExecutorManager.RunTask()").RemoveDelimiters();
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
-            Assert.AreEqual("Global.ExecutorManager.RunTask", tokens[x++].Value);
+            tokens[x].Assert(Tokenizer.TokenType.IdentifierPath, "Global.ExecutorManager.RunTask");
         }
 
         [TestMethod]
@@ -320,6 +320,35 @@ namespace DynamicSugarSharp_UnitTests
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ",");
 
             tokens[x++].AssertNameValue("397596452", "PresentationId", @"""PresentationId"" : 397596452");
+        }
+
+
+        [TestMethod]
+        public void Tokenizer_IdentifierPath()
+        {
+            var testLine = @" prod.backendsvc.app_logs ┊ prod/backendsvc/app_logs | prod\backendsvc\app_logs| prod-backendsvc-app_logs |";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var x = 0;
+            tokens[x++].Assert(Tokenizer.TokenType.IdentifierPath, @"prod.backendsvc.app_logs");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, @"┊");
+
+            tokens[x++].Assert(Tokenizer.TokenType.IdentifierPath, @"prod/backendsvc/app_logs");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, @"|");
+
+            tokens[x++].Assert(Tokenizer.TokenType.IdentifierPath, @"prod\backendsvc\app_logs");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, @"|");
+
+            tokens[x++].Assert(Tokenizer.TokenType.IdentifierPath, @"prod-backendsvc-app_logs");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, @"|");
+        }
+
+        [TestMethod]
+        public void Tokenizer_ComplexLogLine()
+        {
+            var testLine = @" 106 ┊ 2025/06/13 03:47:05.598 AM ┊ 2025/06/13 03:47:07.192 AM ┊ bos3bkndsvc01 ┊ prod/backendsvc/app_logs ┊ 2025-06-13 03:47:05.598|Brainshark|Core|1.0.1.0|INFO|bos3bkndsvc01|msg=CEF:0|Brainshark|Core|0|Message|Message|Info|msg=06/13/2025 03:47:05 AM Severity=3(Info)&&&LocalNum=0&&&NonLocalNum=0&&&Source=Brainshark.Brainshark.Platform.EventGridNotificator:Void SendToEventGrid(Brainshark.Brainshark.Platform.EventGridNotificationPayLoad)&&&Description=No error.Server=BOS3BKNDSVC01&&&ExtendedInfo=Parameter Info: Param0:[SendToEventGrid.SignalR]{""JobId"":485937390,""PresentationId"":773853575,""ErrorMessage"":"""",""UserId"":11523947,""TimeStamp"":""2025-06-13T07:47:05.5827769Z"",""FailedSlides"":null,""RequestedJobState"":125,""RequestedJobStateString"":""ADDING_AUDIO_JOBS"",""RequestedJobStateExtraInfoString"":""TextToSpeechExecutor"",""PresentationBatchJobStateString"":""ADDING_AUDIO_JOBS"",""PresentationBatchJobState"":125,""JobStateType"":2,""JobStateTypeString"":""Processing"",""JobErrorCode"":0,""JobErrorCodeString"":""NO_ERROR"",""PercentComplete"":100,""CompletedSlideJobs"":0,""TotalSlideJobs"":0},Param1:Brainshark.Brainshark.Platform.EventGridNotificator rt=Jun 13 2025 03:47:05 start=Jun 13 2025 03:47:05 end=Jun 13 2025 03:47:05 dvchost=bos3bkndsvc01|sid=|cid=|uid=|pid=|errorCode=-1|errorMessage=NO_ERROR_CODE_PROVIDED|url=|  ┊";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            //var x = 0;
+            //tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "{");
         }
     }
 }
