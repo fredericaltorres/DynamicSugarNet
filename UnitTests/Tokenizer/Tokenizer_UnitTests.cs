@@ -261,50 +261,28 @@ namespace DynamicSugarSharp_UnitTests
             var testLine = @"""c:\windows\notepad.exe"" ";
             var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote_FileName, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote_FilePath, tokens[x].Type);
             Assert.AreEqual(@"""c:\windows\notepad.exe""", tokens[x].Value);
 
             testLine = @"'c:\windows\notepad.exe' ";
             tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote_FileName, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote_FilePath, tokens[x].Type);
             Assert.AreEqual(@"'c:\windows\notepad.exe'", tokens[x].Value);
 
             testLine = @"'\\windows\notepad.exe' ";
             tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote_FileName, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote_FilePath, tokens[x].Type);
             Assert.AreEqual(@"'\\windows\notepad.exe'", tokens[x].Value);
 
             testLine = @"""\\windows\notepad.exe"" ";
             tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote_FileName, tokens[x].Type);
+            Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote_FilePath, tokens[x].Type);
             Assert.AreEqual(@"""\\windows\notepad.exe""", tokens[x].Value);
         }
 
-        [TestMethod]
-        public void Tokenizer_Filename_NoString()
-        {
-            var testLine = @"c:\windows\notepad.exe";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
-            var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
-            Assert.AreEqual(@"c", tokens[x].Value);
-            x += 1;
-
-            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x].Type);
-            Assert.AreEqual(@":", tokens[x].Value);
-            x += 1;
-
-            Assert.AreEqual(Tokenizer.TokenType.Delimiter, tokens[x].Type);
-            Assert.AreEqual(@"\", tokens[x].Value);
-            x += 1;
-
-            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
-            Assert.AreEqual(@"windows", tokens[x].Value);
-            x += 1;
-        }
 
         [TestMethod]
         public void Tokenizer_JSON()
@@ -342,6 +320,20 @@ namespace DynamicSugarSharp_UnitTests
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, @"|");
         }
 
+
+        [TestMethod]
+        public void Tokenizer_Filename_NoString()
+        {
+            var testLine = @"ok c:\windows\notepad.exe , c:\dvt\development 123";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var x = 0;
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "ok");
+            tokens[x++].Assert(Tokenizer.TokenType.FilePath, @"c:\windows\notepad.exe");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ",");
+            tokens[x++].Assert(Tokenizer.TokenType.FilePath, @"c:\dvt\development");
+            tokens[x++].Assert(Tokenizer.TokenType.Number, "123");
+        }
+
         [TestMethod]
         public void Tokenizer_ComplexLogLine()
         {
@@ -349,6 +341,20 @@ namespace DynamicSugarSharp_UnitTests
             var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
             //var x = 0;
             //tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "{");
+        }
+
+        [TestMethod]
+        public void Tokenizer_RespectOfSpace()
+        {
+            var testLine = @"  | _messagetime               | _receipttime               | _collector                     ";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var x = 0;
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_messagetime");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_receipttime");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "|");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_collector");
         }
     }
 }

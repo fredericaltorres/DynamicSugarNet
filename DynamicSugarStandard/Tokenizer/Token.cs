@@ -10,9 +10,11 @@ namespace DynamicSugar
             
             public string Value { get; set; }
             public TokenType Type { get; set; }
-            public Tokens ArrayValues { get; set; }
-            public Tokens NameValues { get; set; }
+            public string PreSpaces { get; set; }
+            public string Name { get; set; } // Only used when the token is a NameValuePair
 
+            public Tokens ArrayValues { get; set; } // nested []
+            public Tokens __internalTokens { get; set; } // Original token
 
             public void Assert(TokenType type, string value, string name = null)
             {
@@ -29,13 +31,12 @@ namespace DynamicSugar
                 if (Type != TokenType.NameValuePair ||
                   (value != null && !IsEqualValue(value, true)) ||
                   (name != null && Name != name) ||
-                  (this.NameValues.Count != 3) || (this.ValueAsString != valueAsString)
+                  (this.__internalTokens.Count != 3) || (this.ValueAsString != valueAsString)
                 )
                 {
                     throw new InvalidEnumArgumentException($"Token NameValue assertion failed: Expected Type={TokenType.NameValuePair}, Value={value}, Name={name}, but got Type={Type}, Value={Value}, Name={Name}.");
                 }
             }
-
 
             public string ValueAsString
             {
@@ -47,15 +48,15 @@ namespace DynamicSugar
                         return $@"'{this.Value}'";
 
                     if (Type == TokenType.NameValuePair)
-                        return $@"{this.NameValues[0].ValueAsString} {this.NameValues[1].ValueAsString} {this.NameValues[2].ValueAsString}";
+                        return $@"{this.__internalTokens[0].ValueAsString} {this.__internalTokens[1].ValueAsString} {this.__internalTokens[2].ValueAsString}";
 
                     return this.Value;
                 }
             }
 
-            public Token Clone ()
+            public Token Clone()
             {
-                return new Token(this.Value, this.Type)
+                return new Token(this.Value, this.Type, this.PreSpaces)
                 {
                     Name = this.Name,
                     ArrayValues = this.ArrayValues?.Clone()
@@ -73,18 +74,28 @@ namespace DynamicSugar
                 this.Name = tokenName.Value;
                 this.Value = tokenValue.Value;
                 this.Type = TokenType.NameValuePair;
-                this.NameValues = new Tokens { tokenName, tokenDelimiter, tokenValue };
+                this.__internalTokens = new Tokens { tokenName, tokenDelimiter, tokenValue };
+                PreSpaces = "";
             }
 
-            public Token(string value, TokenType type)
+            public Token(string value, TokenType type, string preSpaces )
             {
                 Value = value;
                 Type = type;
+                PreSpaces = preSpaces;
+            }
+
+            public Token(string value, TokenType type, string preSpaces, Tokens internalTokens)
+            {
+                Value = value;
+                Type = type;
+                PreSpaces = preSpaces;
+                __internalTokens = internalTokens;
             }
 
             public static Token GetUndefinedToken()
             {
-                return new Token(null, TokenType.UndefinedToken);
+                return new Token(null, TokenType.UndefinedToken, null);
             }
 
             public bool IsEqualValue(string value, bool ignoreCase) 
@@ -100,24 +111,18 @@ namespace DynamicSugar
             }
 
             public bool IsIdentifierOrIdentifierPath => Type == TokenType.Identifier || Type == TokenType.IdentifierPath;
-
-            public bool IsIdentifier(string value = null, bool ignoreCase = true) => value == null ? this.IsIdentifierOrIdentifierPath :
-                                                                           this.IsIdentifierOrIdentifierPath && IsEqualValue(value, ignoreCase);
-
+            public bool IsIdentifier(string value = null, bool ignoreCase = true) => value == null ? this.IsIdentifierOrIdentifierPath : this.IsIdentifierOrIdentifierPath && IsEqualValue(value, ignoreCase);
             public bool IsString => Type == TokenType.StringLiteralDQuote || Type == TokenType.StringLiteralSQuote;
             public bool IsDString => Type == TokenType.StringLiteralDQuote;
             public bool IsSString => Type == TokenType.StringLiteralSQuote;
-
             public bool IsNumber => Type == TokenType.Number;
             public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
             public bool IsFloat => Type == TokenType.Number && Value.Contains(".");
-
-            public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
-
-            public bool IsDelimiter(List<string> values ) =>  (Type == TokenType.Delimiter && values.Contains(this.Value));
             public bool IsAnyValue => !(Type == TokenType.UndefinedToken || Type == TokenType.ArrayOfTokens || Type == TokenType.NameValuePair);
+            public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
+            public bool IsDelimiter(List<string> values ) =>  (Type == TokenType.Delimiter && values.Contains(this.Value));
 
-            public string Name { get; set; } // Only used when the token is a NameValuePair
+            
 
             public override string ToString()
             {

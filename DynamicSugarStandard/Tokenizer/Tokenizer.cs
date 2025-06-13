@@ -66,22 +66,31 @@ namespace DynamicSugar
             NameValuePair,
             Url,
 
-            StringLiteralDQuote_FileName,
-            StringLiteralSQuote_FileName,
+            StringLiteralDQuote_FilePath,
+            StringLiteralSQuote_FilePath,
             StringLiteralDQuote_Url,
             StringLiteralSQuote_Url,
+            FilePath,
+        }
+
+        private string GetSpaces(StringBuilder sbSpaceCounter )
+        {
+            var r = sbSpaceCounter.ToString();
+            sbSpaceCounter.Clear();
+            return r;
         }
 
         public Tokens Tokenize(string input, bool combineArray = true)
         {
             var tokens = new Tokens();
-
             int i = 0;
+            var sbSpaceCounter = new StringBuilder();
             while (i < input.Length)
             {
                 // Skip whitespace
                 if (char.IsWhiteSpace(input[i]))
                 {
+                    sbSpaceCounter.Append(input[i]);
                     i++;
                     continue;
                 }
@@ -97,7 +106,7 @@ namespace DynamicSugar
                         i++;
                     }
                     if (i < input.Length) i++; // Skip closing quote
-                    tokens.Add(new Token($@"{stringBuilder}", TokenType.StringLiteralDQuote));
+                    tokens.Add(new Token($@"{stringBuilder}", TokenType.StringLiteralDQuote, GetSpaces(sbSpaceCounter)));
                     continue;
                 }
 
@@ -112,7 +121,7 @@ namespace DynamicSugar
                         i++;
                     }
                     if (i < input.Length) i++; // Skip closing quote
-                    tokens.Add(new Token($"{stringBuilder}", TokenType.StringLiteralSQuote));
+                    tokens.Add(new Token($"{stringBuilder}", TokenType.StringLiteralSQuote, GetSpaces(sbSpaceCounter)));
                     continue;
                 }
 
@@ -125,14 +134,14 @@ namespace DynamicSugar
                         stringBuilder.Append(input[i]);
                         i++;
                     }
-                    tokens.Add(new Token(stringBuilder.ToString(), TokenType.Number));
+                    tokens.Add(new Token(stringBuilder.ToString(), TokenType.Number, GetSpaces(sbSpaceCounter)));
                     continue;
                 }
 
                 // Handle delimiters and operators
                 if (IsDelimiter(input[i]))
                 {
-                    tokens.Add(new Token(input[i].ToString(), TokenType.Delimiter));
+                    tokens.Add(new Token(input[i].ToString(), TokenType.Delimiter, GetSpaces(sbSpaceCounter)));
                     i++;
                     continue;
                 }
@@ -146,7 +155,7 @@ namespace DynamicSugar
                 }
                 if (identifierBuilder.Length > 0)
                 {
-                    tokens.Add(new Token(identifierBuilder.ToString(), TokenType.Identifier));
+                    tokens.Add(new Token(identifierBuilder.ToString(), TokenType.Identifier, GetSpaces(sbSpaceCounter)));
                 }
             }
 
@@ -172,7 +181,7 @@ namespace DynamicSugar
 
         public Tokens CombineTokens(Tokens tokens, bool combineArray = true)
         {
-            
+            var identifierPathValidDelimiters = DS.List(".", "/", @"\", "-");
             var x = 0;
             var r = new Tokens();
 
@@ -180,19 +189,30 @@ namespace DynamicSugar
             {
                 var tok = GetToken(tokens, x);
 
-                // Detect filename c:\aa \\aa
-                if (tok.IsString && ((char.IsLetter(tok.GetValueCharIndex(0)) && tok.GetValueCharIndex(1) == ':') || (tok.Value.StartsWith("\\"))))
-                {
-                    var quote = tok.IsDString ? @"""" : "'";
-                    r.Add(new Token($"{quote}{tok.Value}{quote}", tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FileName: Tokenizer.TokenType.StringLiteralSQuote_FileName));
-                    x += 1;
-                }
+                //// Detect filename c:\aa \\aa
+                //if (tok.IsString && ((char.IsLetter(tok.GetValueCharIndex(0)) && tok.GetValueCharIndex(1) == ':') || (tok.Value.StartsWith("\\"))))
+                //{
+                //    var quote = tok.IsDString ? @"""" : "'";
+                //    r.Add(new Token($"{quote}{tok.Value}{quote}", tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FilePath: Tokenizer.TokenType.StringLiteralSQuote_FilePath));
+                //    x += 1;
+                //}
+
                 // Identifier .\/- Identifier become one IdentifierPath ""
-                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(DS.List(".", "/", @"\", "-")) && GetToken(tokens, x, 2).IsIdentifier())
+                if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(identifierPathValidDelimiters) && GetToken(tokens, x, 2).IsIdentifier())
                 {
-                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 1);
+                    var firstToken = GetToken(tokens, x);
+                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 1, identifierPathValidDelimiters);
                     var text = GetToken(tokens, x).Value + subTokens.GetAsText();
-                    r.Add(new Token(text, TokenType.IdentifierPath));
+                    r.Add(new Token(text, TokenType.IdentifierPath, "", subTokens));
+                    x += subTokens.Count + 1;
+                }
+                // c:\a\windows\system32\cmd.exe
+                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.Length==1 && char.IsLetter(GetToken(tokens, x).Value[0]) &&
+                         GetToken(tokens, x, 1).IsDelimiter(DS.List(":")) && GetToken(tokens, x, 2).IsDelimiter(DS.List(@"\")))
+                {
+                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 1, DS.List(":", @"\", "."));
+                    var text = GetToken(tokens, x).Value + subTokens.GetAsText();
+                    r.Add(new Token(text, TokenType.FilePath, "", subTokens));
                     x += subTokens.Count + 1;
                 }
                 // name :/= value or "name" :/= value or 'name' :/= value
@@ -211,7 +231,7 @@ namespace DynamicSugar
                 {
                     var subTokens = ReadAllTokenAcceptedForUrl(tokens, x + 1);
                     var text = GetToken(tokens, x).Value + subTokens.GetAsText();
-                    r.Add(new Token(text, TokenType.Url));
+                    r.Add(new Token(text, TokenType.Url, "", subTokens));
                     x += subTokens.Count + 1; // Skip the closing bracket
                 }
                 // Array/List
@@ -225,17 +245,17 @@ namespace DynamicSugar
                 else if (
                         GetToken(tokens, x).IsNumber && GetToken(tokens, x, 1).IsDelimiter(DateDelimiters) && 
                         GetToken(tokens, x, 2).IsNumber && GetToken(tokens, x, 3).IsDelimiter(DateDelimiters) 
-                        && GetToken(tokens, x, 4).IsNumber &&  GetToken(tokens, x, 5).IsIdentifier(/*Thours*/) &&
+                        && GetToken(tokens, x, 4).IsNumber &&  GetToken(tokens, x, 5).IsIdentifier("T") &&
                         GetToken(tokens, x, 6).IsDelimiter(TimeDelimiters) &&
                         GetToken(tokens, x, 7).IsNumber /* << minutes */ && 
                         GetToken(tokens, x, 8).IsDelimiter(TimeDelimiters) &&
                         GetToken(tokens, x, 9).IsNumber && /* << seconds */
-                        GetToken(tokens, x, 10).IsIdentifier(/*Z*/)
+                        GetToken(tokens, x, 10).IsIdentifier("Z")
                     )
                 {
-                    var (dateStr2, countTokenConcatenated) = ConcatTokens(tokens, x, new Token("Z", Tokenizer.TokenType.Identifier));
-                    r.Add(new Token(dateStr2, TokenType.DateTime));
-                    x += countTokenConcatenated;
+                    var (dateStr2, subTokens) = ConcatTokens(tokens, x, new Token("Z", Tokenizer.TokenType.Identifier, null));
+                    r.Add(new Token(dateStr2, TokenType.DateTime, "", subTokens));
+                    x += subTokens.Count;
                 }
                 // @"2025-05-24 13:16:52.859";
                 // Date YYYY:MM:DD
@@ -289,9 +309,9 @@ namespace DynamicSugar
             return r;
         }
 
-        public Tokens ReadAllTokenAcceptedForIdentifierPath(Tokens tokens, int start)
+        public Tokens ReadAllTokenAcceptedForIdentifierPath(Tokens tokens, int start, List<string> delimiters)
         {
-            var delimiters = DS.List( "-", "/", @"\", ".");
+            //var delimiters = DS.List( "-", "/", @"\", ".");
             var r = new Tokens();
             for (int i = start; i < tokens.Count; i++)
             {
@@ -332,20 +352,22 @@ namespace DynamicSugar
             return r;
         }
 
-        public (string str, int count) ConcatTokens(Tokens tokens, int start, Token token)
+        public (string str, Tokens subTokens) ConcatTokens(Tokens tokens, int start, Token token)
         {
+            var subTokens = new Tokens();
             var sb = new StringBuilder();
             var i = start;
             var count = 0;
             while (i < tokens.Count && !tokens[i].Is(token))
             {
+                subTokens.Add(tokens[i]);
                 sb.Append(tokens[i].Value);
                 count++;
                 i++;
             }
             sb.Append(tokens[i].Value);
             count++;
-            return (sb.ToString(), count);
+            return (sb.ToString(), subTokens);
         }
 
         public string ConcatTokens(Tokens tokens, int start, int count)
