@@ -189,16 +189,15 @@ namespace DynamicSugar
             {
                 var tok = GetToken(tokens, x);
 
-                //// Detect filename c:\aa \\aa
-                //if (tok.IsString && ((char.IsLetter(tok.GetValueCharIndex(0)) && tok.GetValueCharIndex(1) == ':') || (tok.Value.StartsWith("\\"))))
-                //{
-                //    var quote = tok.IsDString ? @"""" : "'";
-                //    r.Add(new Token($"{quote}{tok.Value}{quote}", tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FilePath: Tokenizer.TokenType.StringLiteralSQuote_FilePath));
-                //    x += 1;
-                //}
-
+                // Detect filename c:\aa \\aa
+                if (tok.IsString && ((char.IsLetter(tok.GetValueCharIndex(0)) && tok.GetValueCharIndex(1) == ':') || (tok.Value.StartsWith("\\"))))
+                {
+                    var quote = tok.IsDString ? @"""" : "'";
+                    r.Add(new Token($"{quote}{tok.Value}{quote}", tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FilePath : Tokenizer.TokenType.StringLiteralSQuote_FilePath));
+                    x += 1;
+                }
                 // Identifier .\/- Identifier become one IdentifierPath ""
-                if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(identifierPathValidDelimiters) && GetToken(tokens, x, 2).IsIdentifier())
+                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(identifierPathValidDelimiters) && GetToken(tokens, x, 2).IsIdentifier())
                 {
                     var firstToken = GetToken(tokens, x);
                     var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 1, identifierPathValidDelimiters);
@@ -245,7 +244,7 @@ namespace DynamicSugar
                 else if (
                         GetToken(tokens, x).IsNumber && GetToken(tokens, x, 1).IsDelimiter(DateDelimiters) && 
                         GetToken(tokens, x, 2).IsNumber && GetToken(tokens, x, 3).IsDelimiter(DateDelimiters) 
-                        && GetToken(tokens, x, 4).IsNumber &&  GetToken(tokens, x, 5).IsIdentifier("T") &&
+                        && GetToken(tokens, x, 4).IsNumber &&  GetToken(tokens, x, 5).IsIdentifier(/* cannot pas 'T' because the valye is T22*/) &&
                         GetToken(tokens, x, 6).IsDelimiter(TimeDelimiters) &&
                         GetToken(tokens, x, 7).IsNumber /* << minutes */ && 
                         GetToken(tokens, x, 8).IsDelimiter(TimeDelimiters) &&

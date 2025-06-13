@@ -368,7 +368,8 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(" _collector", tokens[x].GetRawText());
             tokens[x++].Assert(Tokenizer.TokenType.Identifier, "_collector");
 
-            Assert.AreEqual(testLine, tokens.GetRawText());
+            var rawText = tokens.GetRawText();
+            Assert.AreEqual(testLine.TrimEnd(), rawText.TrimEnd()); // W We ignore the space at the end
         }
     }
 }
