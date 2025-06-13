@@ -14,6 +14,29 @@ namespace DynamicSugar
             public Tokens NameValues { get; set; }
 
 
+            public void Assert(TokenType type, string value, string name = null)
+            {
+                if(Type != type ||  
+                   (value != null && !IsEqualValue(value, true)) || 
+                   (name != null && Name != name))
+                {
+                    throw new InvalidEnumArgumentException($"Token assertion failed: Expected Type={type}, Value={value}, Name={name}, but got Type={Type}, Value={Value}, Name={Name}.");
+                }
+            }
+
+            public void AssertNameValue(string value, string name, string valueAsString)
+            {
+                if (Type != TokenType.NameValuePair ||
+                  (value != null && !IsEqualValue(value, true)) ||
+                  (name != null && Name != name) ||
+                  (this.NameValues.Count != 3) || (this.ValueAsString != valueAsString)
+                )
+                {
+                    throw new InvalidEnumArgumentException($"Token NameValue assertion failed: Expected Type={TokenType.NameValuePair}, Value={value}, Name={name}, but got Type={Type}, Value={Value}, Name={Name}.");
+                }
+            }
+
+
             public string ValueAsString
             {
                 get
