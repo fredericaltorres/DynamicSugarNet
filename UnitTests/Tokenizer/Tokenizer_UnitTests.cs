@@ -96,10 +96,11 @@ namespace DynamicSugarSharp_UnitTests
             var x = 0;
 
             var raw = tokens[x].GetRawText();
-            Assert.AreEqual(@"name: c:\windows\notepad.exe", raw);
-            tokens[x++].AssertNameValue(@"c:\windows\notepad.exe", "name", @"name : c:\windows\notepad.exe");
-            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ",");
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "toto");
+            Assert.AreEqual(@"name: c", raw);
+            tokens[x++].AssertNameValue(@"c", "name", @"name : c");
+
+            tokens[x++].AssertDelimiter(":");
+            tokens[x++].Assert(Tokenizer.TokenType.FilePath, @"\windows\notepad.exe");
         }
 
         [TestMethod]

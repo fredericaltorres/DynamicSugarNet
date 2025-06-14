@@ -139,10 +139,12 @@ namespace DynamicSugar
                 return index < Value.Length ? this.Value[index] : '\0';
             }
 
+            public bool IsIdentifierPath => Type == TokenType.IdentifierPath;
             public bool IsIdentifierOrIdentifierPath => Type == TokenType.Identifier || Type == TokenType.IdentifierPath;
             public bool IsIdentifier(string value = null, bool ignoreCase = true) => value == null ? this.IsIdentifierOrIdentifierPath : this.IsIdentifierOrIdentifierPath && IsEqualValue(value, ignoreCase);
             public bool IsString => Type == TokenType.StringLiteralDQuote || Type == TokenType.StringLiteralSQuote;
             public bool IsDString => Type == TokenType.StringLiteralDQuote;
+            public bool IsFilePath => Type == TokenType.FilePath;
             public bool IsSString => Type == TokenType.StringLiteralSQuote;
             public bool IsNumber => Type == TokenType.Number;
             public bool IsUndefined => Type == TokenType.UndefinedToken;

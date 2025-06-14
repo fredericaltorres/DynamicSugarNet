@@ -178,6 +178,34 @@ namespace DynamicSugar
         static List<string> DateDelimiters = new List<string> { "-", "/"};
         static List<string> TimeDelimiters = new List<string> { ":", "-"};
 
+        public Tokens CombineTokensPhase2(Tokens tokens)
+        {
+            var identifierPathValidDelimiters = DS.List(".", "/", @"\", "-");
+            var x = 0;
+            var r = new Tokens();
+
+            while (x < tokens.Count)
+            {
+                var tok = GetToken(tokens, x);
+
+                // Detect filename c:\aa \\aa
+                if (tok.IsDelimiter(@"\") && GetToken(tokens, x + 1).IsIdentifierPath)
+                {
+                    var filePathToken = GetToken(tokens, x + 1);
+                    var newToken = new Token( tok.Value + filePathToken.Value, TokenType.FilePath, tok.PreSpaces + filePathToken.PreSpaces);
+                    r.Add(newToken);
+                    x += 2;
+                }
+                else
+                {
+                    r.Add(GetToken(tokens, x));
+                    x++;
+                }
+            }
+
+            return r;
+        }
+
         public Tokens CombineTokens(Tokens tokens)
         {
             var identifierPathValidDelimiters = DS.List(".", "/", @"\", "-");
@@ -255,14 +283,6 @@ namespace DynamicSugar
                     r.Add(new Token(text, TokenType.Url, "", subTokens));
                     x += subTokens.Count; // Skip the closing bracket
                 }
-                //// Array/List
-                //else if (combineArray && GetToken(tokens, x).IsDelimiter("["))
-                //{
-                //    var subTokens = ReadTokenUpTo(tokens, x + 1, "]");
-                //    r.Add(new Token(subTokens));
-                //    x += subTokens.Count + 2; // Skip the closing bracket
-                //}
-
                 //  2025-05-26T22:06:11.513Z and 2025-05-26T22:06:11Z
                 else if (
                         GetToken(tokens, x).IsNumber && GetToken(tokens, x, 1).IsDelimiter(DateDelimiters) && 
@@ -279,10 +299,6 @@ namespace DynamicSugar
                     r.Add(new Token(dateStr2, TokenType.DateTime, "", subTokens));
                     x += subTokens.Count;
                 }
-
-
-
-
                 // @"2025-05-24 13:16:52.859";
                 // Date YYYY:MM:DD
                 else if (GetToken(tokens, x).IsNumber && GetToken(tokens, x, 1).IsDelimiter(DateDelimiters) && // YY-
@@ -332,7 +348,7 @@ namespace DynamicSugar
                 }
             }
 
-            return r;
+            return CombineTokensPhase2(r);
         }
 
         public Tokens ReadAllTokenAcceptedForIdentifierPath(Tokens tokens, int start, List<string> delimiters)
