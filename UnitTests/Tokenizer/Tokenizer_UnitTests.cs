@@ -413,5 +413,54 @@ namespace DynamicSugarSharp_UnitTests
 
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ")");
         }
+
+
+        [TestMethod]
+        public void Tokenizer_BracketWithNames()
+        {
+            var testLine = $@"[BOS3BKNDSVC02,Brainshark.Converters.Listener.VideoStatus,UpdateVideoJobStatus,]";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+
+            tokens[x++].AssertDelimiter("[");
+            tokens[x++].AssertIdentifier("BOS3BKNDSVC02");
+            tokens[x++].AssertDelimiter(",");
+            tokens[x++].AssertIdentifierPath("Brainshark.Converters.Listener.VideoStatus");
+            tokens[x++].AssertDelimiter(",");
+            tokens[x++].AssertIdentifier("UpdateVideoJobStatus");
+            tokens[x++].AssertDelimiter(",");
+            tokens[x++].AssertDelimiter("]");
+        }
+
+
+        [TestMethod]
+        public void Tokenizer_Time()
+        {
+            var testLine = $@"03:02:01 foo";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].Assert(Tokenizer.TokenType.Time, testLine);
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "foo");
+        }
+
+        [TestMethod]
+        public void Tokenizer_NegativeTimeZone()
+        {
+            var testLine = $@"-04:00 foo";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].Assert(Tokenizer.TokenType.TimeZoneOffset, "-04:00");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "foo");
+        }
+
+        [TestMethod]
+        public void Tokenizer_NegativeNumber()
+        {
+            var testLine = $@" -04 foo";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertNumber("-04");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "foo");
+        }
     }
 }

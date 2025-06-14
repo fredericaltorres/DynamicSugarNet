@@ -62,6 +62,8 @@ namespace DynamicSugar
             UndefinedToken,
             Date,
             DateTime,
+            TimeZoneOffset, // -05:00 or +02:00
+            Time, // 13:45:30 or 13:45:30.123
             NameValuePair,
             Url,
 
@@ -223,6 +225,42 @@ namespace DynamicSugar
                     r.Add(new Token($"{quote}{tok.Value}{quote}", tok.IsDString ? Tokenizer.TokenType.StringLiteralDQuote_FilePath : Tokenizer.TokenType.StringLiteralSQuote_FilePath));
                     x += 1;
                 }
+
+                // Time 
+                else if ( tok.IsNumber && GetToken(tokens, x, 1).IsDelimiter(":") && GetToken(tokens, x, 2).IsNumber
+                    && GetToken(tokens, x, 3).IsDelimiter(":") && GetToken(tokens, x, 4).IsNumber)
+                {
+                    var hourToken = tok;
+                    var delimiter1 = GetToken(tokens, x, 1);
+                    var minuteToken = GetToken(tokens, x, 2);
+                    var delimiter2 = GetToken(tokens, x, 3);
+                    var secondToken = GetToken(tokens, x, 4);
+
+                    var newToken = new Token(tok.Value + delimiter1.Value + minuteToken.Value + delimiter2.Value + secondToken.Value, TokenType.Time, tok.PreSpaces + delimiter1.PreSpaces + minuteToken.PreSpaces + delimiter2.PreSpaces + secondToken.PreSpaces);
+                    r.Add(newToken);
+                    x += 5; // Skip the delimiter and the number
+                }
+
+                // -+ Timzone offset
+                else if (tok.IsDelimiter(DS.List("-", "+")) && GetToken(tokens, x, 1).IsNumber && GetToken(tokens, x, 2).IsDelimiter(":") && GetToken(tokens, x, 3).IsNumber)
+                {
+                    var numberToken1 = GetToken(tokens, x, 1);
+                    var seminColorToken = GetToken(tokens, x, 2);
+                    var numberToken2 = GetToken(tokens, x, 3);
+                    var newToken = new Token(tok.Value + numberToken1.Value + seminColorToken.Value + numberToken2.Value, TokenType.Number,  tok.PreSpaces + numberToken1.PreSpaces + seminColorToken.PreSpaces + numberToken2.PreSpaces);
+                    r.Add(newToken);
+                    x += 4; // Skip the delimiter and the number
+                }
+
+                // - number
+                else if (tok.IsDelimiter("-") && GetToken(tokens, x, 1).IsNumber)
+                {
+                    var numberToken = GetToken(tokens, x, 1);
+                    var newToken = new Token(tok.Value + numberToken.Value, TokenType.Number, tok.PreSpaces + numberToken.PreSpaces);
+                    r.Add(newToken);
+                    x += 2; // Skip the delimiter and the number
+                }
+
                 // Identifier .\/- Identifier become one IdentifierPath ""
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(identifierPathValidDelimiters) && GetToken(tokens, x, 2).IsIdentifier())
                 {
@@ -261,15 +299,6 @@ namespace DynamicSugar
                     var tokenName = GetToken(tokens, x);
                     var tokenDelimiter = GetToken(tokens, x, 1);
                     var tokenVal = GetToken(tokens, x, 2);
-
-                    //var remainingTokens =  new Tokens(tokens.Skip(x + 2).ToList());
-                    //var remainingCombinedTokens = CombineTokens(remainingTokens);
-
-                    //if (remainingCombinedTokens[0].Type != remainingTokens[0].Type)
-                    //{
-                    //    tokenVal = remainingCombinedTokens[0];
-                    //    x += remainingCombinedTokens[0].__internalTokens.Count - 1;
-                    //}
 
                     r.Add(new Token(tokenName, tokenDelimiter, tokenVal));
                     x += 3; // Skip the name, delimiter, and value
