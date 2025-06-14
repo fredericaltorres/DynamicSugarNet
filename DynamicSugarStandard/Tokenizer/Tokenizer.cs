@@ -62,7 +62,6 @@ namespace DynamicSugar
             UndefinedToken,
             Date,
             DateTime,
-            ArrayOfTokens,
             NameValuePair,
             Url,
 
@@ -80,7 +79,7 @@ namespace DynamicSugar
             return r;
         }
 
-        public Tokens Tokenize(string input, bool combineArray = true)
+        public Tokens Tokenize(string input)
         {
             var tokens = new Tokens();
             int i = 0;
@@ -159,7 +158,7 @@ namespace DynamicSugar
                 }
             }
 
-            return CombineTokens(tokens, combineArray);
+            return CombineTokens(tokens);
         }
 
         public Token GetToken(Tokens tokens, int x, int inc = 0)
@@ -179,7 +178,7 @@ namespace DynamicSugar
         static List<string> DateDelimiters = new List<string> { "-", "/"};
         static List<string> TimeDelimiters = new List<string> { ":", "-"};
 
-        public Tokens CombineTokens(Tokens tokens, bool combineArray = true)
+        public Tokens CombineTokens(Tokens tokens)
         {
             var identifierPathValidDelimiters = DS.List(".", "/", @"\", "-");
             var x = 0;
@@ -237,7 +236,7 @@ namespace DynamicSugar
 
                     var remainingTokens =  new Tokens(tokens.Skip(x + 2).ToList());
 
-                    var remainingCombinedTokens = CombineTokens(remainingTokens, combineArray);
+                    var remainingCombinedTokens = CombineTokens(remainingTokens);
 
                     if (remainingCombinedTokens[0].Type != remainingTokens[0].Type)
                     {
@@ -257,13 +256,13 @@ namespace DynamicSugar
                     r.Add(new Token(text, TokenType.Url, "", subTokens));
                     x += subTokens.Count; // Skip the closing bracket
                 }
-                // Array/List
-                else if (combineArray && GetToken(tokens, x).IsDelimiter("["))
-                {
-                    var subTokens = ReadTokenUpTo(tokens, x + 1, "]");
-                    r.Add(new Token(subTokens));
-                    x += subTokens.Count + 2; // Skip the closing bracket
-                }
+                //// Array/List
+                //else if (combineArray && GetToken(tokens, x).IsDelimiter("["))
+                //{
+                //    var subTokens = ReadTokenUpTo(tokens, x + 1, "]");
+                //    r.Add(new Token(subTokens));
+                //    x += subTokens.Count + 2; // Skip the closing bracket
+                //}
 
                 //  2025-05-26T22:06:11.513Z and 2025-05-26T22:06:11Z
                 else if (
@@ -333,10 +332,6 @@ namespace DynamicSugar
                     x++;
                 }
             }
-
-            foreach (var token in r)
-                if(token.Type == TokenType.ArrayOfTokens)
-                    token.ArrayValues = CombineTokens(token.ArrayValues, combineArray);
 
             return r;
         }

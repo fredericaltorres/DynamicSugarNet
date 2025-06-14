@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace DynamicSugar
 {
@@ -31,6 +32,11 @@ namespace DynamicSugar
                     sb.Append(ValueAsString);
                 }
                 return sb.ToString();
+            }
+
+            public void AssertDelimiter(string value)
+            {
+                Assert(TokenType.Delimiter, value);
             }
 
             public void Assert(TokenType type, string value, string name = null, string preSpaces = null)
@@ -87,11 +93,10 @@ namespace DynamicSugar
                 };
             }
 
-            public Token(Tokens tokens)
-            {
-                ArrayValues = tokens;
-                Type = TokenType.ArrayOfTokens;
-            }
+            //public Token(Tokens tokens)
+            //{
+            //    this.__internalTokens = tokens;
+            //}
 
             public Token(Token tokenName, Token tokenDelimiter, Token tokenValue)
             {
@@ -144,7 +149,7 @@ namespace DynamicSugar
             public bool IsUndefined => Type == TokenType.UndefinedToken;
             public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
             public bool IsFloat => Type == TokenType.Number && Value.Contains(".");
-            public bool IsAnyValue => !(Type == TokenType.UndefinedToken || Type == TokenType.ArrayOfTokens || Type == TokenType.NameValuePair);
+            public bool IsAnyValue => !(Type == TokenType.UndefinedToken ||  Type == TokenType.NameValuePair);
             public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
             public bool IsDelimiter(List<string> values ) =>  (Type == TokenType.Delimiter && values.Contains(this.Value));
 
@@ -162,12 +167,7 @@ namespace DynamicSugar
 
             public string ToStringWithType()
             {
-                if (this.Type == TokenType.ArrayOfTokens)
-                {
-                    var arrayValuesString = string.Join(", ", ArrayValues);
-                    return $"{this.Type} [{arrayValuesString}]";
-                }
-                else if (this.Type == TokenType.NameValuePair)
+                if (this.Type == TokenType.NameValuePair)
                 {
                     return $"{this.Type} {this.Name}: {this.Value}";
                 }
@@ -177,12 +177,7 @@ namespace DynamicSugar
 
             public string ToStringWithNoType()
             {
-                if (this.Type == TokenType.ArrayOfTokens)
-                {
-                    var arrayValuesString = string.Join(", ", ArrayValues);
-                    return $"[{arrayValuesString}]";
-                }
-                else if (this.Type == TokenType.NameValuePair)
+                if (this.Type == TokenType.NameValuePair)
                 {
                     return $"{this.Name}: {this.Value}";
                 }

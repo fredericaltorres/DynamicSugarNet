@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
+using System.CodeDom.Compiler;
 
 namespace DynamicSugarSharp_UnitTests 
 {
@@ -41,12 +42,10 @@ namespace DynamicSugarSharp_UnitTests
         {
             var tokens = new Tokenizer().Tokenize($"[ {TestString1} ]");
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.ArrayOfTokens, tokens[x].Type);
-
-            var arrayTokens = tokens[x++].ArrayValues;
-            var xx = 0;
-            arrayTokens[xx++].Assert(Tokenizer.TokenType.StringLiteralDQuote, "ok");
-            arrayTokens[xx++].Assert(Tokenizer.TokenType.StringLiteralSQuote, "ko");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "[");
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, "ok");
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralSQuote, "ko");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "]");
         }
 
         [TestMethod]
@@ -72,7 +71,7 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void TokenizerTest_NameColonDelimiter_Braket()
         {
-            var tokens = new Tokenizer().Tokenize(@"name:[toto]", combineArray: false);
+            var tokens = new Tokenizer().Tokenize(@"name:[toto]");
             var x = 0;
             Assert.AreEqual(@"name:", tokens[x].GetRawText());
             tokens[x++].AssertNameValue(null, "name", @"name :");
@@ -82,7 +81,7 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void TokenizerTest_NameColonDelimiter_Coma()
         {
-            var tokens = new Tokenizer().Tokenize(@"name:,toto", combineArray: false);
+            var tokens = new Tokenizer().Tokenize(@"name:,toto");
             var x = 0;
             Assert.AreEqual(@"name:", tokens[x].GetRawText());
             tokens[x++].AssertNameValue(null, "name", @"name :");
@@ -93,9 +92,9 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void TokenizerTest_NameColonDelimiter_FilePath()
         {
-            var tokens = new Tokenizer().Tokenize(@"name: c:\windows\notepad.exe, toto", combineArray: false);
+            var tokens = new Tokenizer().Tokenize(@"name: c:\windows\notepad.exe, toto");
             var x = 0;
-            +++
+
             var raw = tokens[x].GetRawText();
             Assert.AreEqual(@"name: c:\windows\notepad.exe", raw);
             tokens[x++].AssertNameValue(@"c:\windows\notepad.exe", "name", @"name : c:\windows\notepad.exe");
@@ -165,25 +164,22 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Tokenizer_LogString1()
         {
+            // const string TestLogString1 = @"2025-05-24 A[BB=2] mode: execute";
+
             var tokens = new Tokenizer().Tokenize(TestLogString1);
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.Date, tokens[x].Type);
-            Assert.AreEqual("2025-05-24", tokens[x++].Value);
+            tokens[x++].Assert(Tokenizer.TokenType.Date, "2025-05-24");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "A");
 
-            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
-            Assert.AreEqual("A", tokens[x++].Value);
+            tokens[x++].AssertDelimiter("[");
 
             // [B=2]
-            Assert.AreEqual(Tokenizer.TokenType.ArrayOfTokens, tokens[x].Type);
-            Assert.AreEqual(1, tokens[x].ArrayValues.Count);
-            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].ArrayValues[0].Type);
-            Assert.AreEqual("BB", tokens[x].ArrayValues[0].Name);
-            Assert.AreEqual("2", tokens[x].ArrayValues[0].Value);
-            x++;
+            tokens[x++].AssertNameValue("2", "BB", "BB : 2");
 
-            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
-            Assert.AreEqual("mode", tokens[x].Name);
-            Assert.AreEqual("execute", tokens[x++].Value);
+            tokens[x++].AssertDelimiter("]");
+
+            // mode: execute
+            tokens[x++].AssertNameValue("execute", "mode", "mode : execute");
         }
 
         // const string TestLogString4 = @"2025-05-24 13:16:52.859,Info,Export,[id: 709046703, mode: Export][ExecuteConversion()]Slide: 10755223, type: IMAGE, index: 0001";
@@ -193,44 +189,27 @@ namespace DynamicSugarSharp_UnitTests
         {
             var tokens = new Tokenizer().Tokenize(TestLongLogLine).RemoveDelimiters();
             var x = 0;
-            Assert.AreEqual(Tokenizer.TokenType.DateTime, tokens[x].Type);
-            Assert.AreEqual("2025-05-24 13:16:52.859", tokens[x++].Value);
 
-            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
-            Assert.AreEqual("Info", tokens[x++].Value);
-
-            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
-            Assert.AreEqual("Export", tokens[x++].Value);
+            tokens[x++].Assert(Tokenizer.TokenType.DateTime, "2025-05-24 13:16:52.859");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "Info");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "Export");
 
             // [id: 709046703, mode: Export]
-            Assert.AreEqual(Tokenizer.TokenType.ArrayOfTokens, tokens[x].Type);
-            Assert.AreEqual(2, tokens[x].ArrayValues.Count);
-            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].ArrayValues[0].Type);
-            Assert.AreEqual("id", tokens[x].ArrayValues[0].Name);
-            Assert.AreEqual("709046703", tokens[x].ArrayValues[0].Value);
-
-            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].ArrayValues[1].Type);
-            Assert.AreEqual("mode", tokens[x].ArrayValues[1].Name);
-            Assert.AreEqual("Export", tokens[x].ArrayValues[1].Value);
-            x++;
+            tokens[x++].AssertNameValue("709046703", "id", "id : 709046703");
+            tokens[x++].AssertNameValue("Export", "mode", "mode : Export");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "Export");
 
             //[ExecuteConversion()]
-            Assert.AreEqual(Tokenizer.TokenType.ArrayOfTokens, tokens[x].Type);
-            Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].ArrayValues[0].Type);
-            Assert.AreEqual("ExecuteConversion", tokens[x].ArrayValues[0].Value);
-            x++;
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "ExecuteConversion");
+
 
             // Slide: 10755223, type: IMAGE, index: 0001
-            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
-            Assert.IsTrue(tokens[x].IsNameValue("Slide", "10755223"));
+            tokens[x++].AssertNameValue("10755223", "Slide", "Slide : 10755223");
+
+            tokens[x++].AssertNameValue("IMAGE", "type", "type : IMAGE");
             x++;
 
-            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
-            Assert.IsTrue(tokens[x].IsNameValue("type", "IMAGE"));
-            x++;
-
-            Assert.AreEqual(Tokenizer.TokenType.NameValuePair, tokens[x].Type);
-            Assert.IsTrue(tokens[x].IsNameValue("index", "0001"));
+            tokens[x++].AssertNameValue("0001", "index", "index : 0001");   
             x++;
         }
 
@@ -271,14 +250,14 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_ForColorCoding()
         {
             var testLine = @"   3 | 2025/06/12 11:11:18.329 AM | 2025/06/12 11:11:20.380 AM | bos3bkndsvc01 | prod/backendsvc/app_logs | 2025-06-12 11:11:18.329|Brainshark|Core|1.0.1.0|INFO|bos3bkndsvc01|CEF:0|Brainshark|Core|0|Message|Message|Info|msg=BrainsharkMonitorService64 on BOS3BKNDSVC01,Informational,TTSConverter2,[monitorId: 1934, machineName: BOS3BKNDSVC01][TTSMonitor.Trace()][INFO][TextToSpeechExecutor.ExecuteOnSlide(), JobId:485916067, pid:252369326, Provider: MicrosoftCognitiveServices, slideId:360959416][SUCCEEDED], Duration:2.6s, TextLength:662, Mp3Duration:46s, Mp3Size: 0.3 Mb rt=Jun 12 2025 11:11:18 start=Jun 12 2025 11:11:18 end=Jun 12 2025 11:11:18 dvchost=bos3bkndsvc01|   |";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
         }
 
         [TestMethod]
         public void Tokenizer_ForColorCoding_Url()
         {
             var testLine = @"Start (https://big.atlassian.net/wiki/spaces/8980398205/Export+ReImport+PowerPoint+feature+-+Design+documentation) End";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
 
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.Identifier, tokens[x].Type);
@@ -306,25 +285,25 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_FileNameInString()
         {
             var testLine = @"""c:\windows\notepad.exe"" ";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote_FilePath, tokens[x].Type);
             Assert.AreEqual(@"""c:\windows\notepad.exe""", tokens[x].Value);
 
             testLine = @"'c:\windows\notepad.exe' ";
-            tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            tokens = new Tokenizer().Tokenize(testLine);
             x = 0;
             Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote_FilePath, tokens[x].Type);
             Assert.AreEqual(@"'c:\windows\notepad.exe'", tokens[x].Value);
 
             testLine = @"'\\windows\notepad.exe' ";
-            tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            tokens = new Tokenizer().Tokenize(testLine);
             x = 0;
             Assert.AreEqual(Tokenizer.TokenType.StringLiteralSQuote_FilePath, tokens[x].Type);
             Assert.AreEqual(@"'\\windows\notepad.exe'", tokens[x].Value);
 
             testLine = @"""\\windows\notepad.exe"" ";
-            tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            tokens = new Tokenizer().Tokenize(testLine);
             x = 0;
             Assert.AreEqual(Tokenizer.TokenType.StringLiteralDQuote_FilePath, tokens[x].Type);
             Assert.AreEqual(@"""\\windows\notepad.exe""", tokens[x].Value);
@@ -335,7 +314,7 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_JSON()
         {
             var testLine = @"{ ""JobId"":485939676,""PresentationId"":397596452,""ErrorMessage"":"""",""UserId"":11123574,""TimeStamp"":""2025-06-13T12:22:15.7092738Z"" }";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
 
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "{");
@@ -352,7 +331,7 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_IdentifierPath()
         {
             var testLine = @" prod.backendsvc.app_logs ┊ prod/backendsvc/app_logs | prod\backendsvc\app_logs| prod-backendsvc-app_logs |";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.IdentifierPath, @"prod.backendsvc.app_logs");
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, @"┊");
@@ -372,7 +351,7 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_Filename_NoString()
         {
             var testLine = @"ok c:\windows\notepad.exe , c:\dvt\development 123";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.Identifier, "ok");
             tokens[x++].Assert(Tokenizer.TokenType.FilePath, @"c:\windows\notepad.exe");
@@ -385,7 +364,7 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_ComplexLogLine()
         {
             var testLine = @" 106 ┊ 2025/06/13 03:47:05.598 AM ┊ 2025/06/13 03:47:07.192 AM ┊ bos3bkndsvc01 ┊ prod/backendsvc/app_logs ┊ 2025-06-13 03:47:05.598|Brainshark|Core|1.0.1.0|INFO|bos3bkndsvc01|msg=CEF:0|Brainshark|Core|0|Message|Message|Info|msg=06/13/2025 03:47:05 AM Severity=3(Info)&&&LocalNum=0&&&NonLocalNum=0&&&Source=Brainshark.Brainshark.Platform.EventGridNotificator:Void SendToEventGrid(Brainshark.Brainshark.Platform.EventGridNotificationPayLoad)&&&Description=No error.Server=BOS3BKNDSVC01&&&ExtendedInfo=Parameter Info: Param0:[SendToEventGrid.SignalR]{""JobId"":485937390,""PresentationId"":773853575,""ErrorMessage"":"""",""UserId"":11523947,""TimeStamp"":""2025-06-13T07:47:05.5827769Z"",""FailedSlides"":null,""RequestedJobState"":125,""RequestedJobStateString"":""ADDING_AUDIO_JOBS"",""RequestedJobStateExtraInfoString"":""TextToSpeechExecutor"",""PresentationBatchJobStateString"":""ADDING_AUDIO_JOBS"",""PresentationBatchJobState"":125,""JobStateType"":2,""JobStateTypeString"":""Processing"",""JobErrorCode"":0,""JobErrorCodeString"":""NO_ERROR"",""PercentComplete"":100,""CompletedSlideJobs"":0,""TotalSlideJobs"":0},Param1:Brainshark.Brainshark.Platform.EventGridNotificator rt=Jun 13 2025 03:47:05 start=Jun 13 2025 03:47:05 end=Jun 13 2025 03:47:05 dvchost=bos3bkndsvc01|sid=|cid=|uid=|pid=|errorCode=-1|errorMessage=NO_ERROR_CODE_PROVIDED|url=|  ┊";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
             //var x = 0;
             //tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "{");
         }
@@ -394,7 +373,7 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_RawText_1()
         {
             var testLine = @"  | _messagetime               | _receipttime               | _collector                     ";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
 
             Assert.AreEqual("  |", tokens[x].GetRawText());
@@ -422,7 +401,7 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Tokenizer_RawText_2()
         {
-            var tokens = new Tokenizer().Tokenize(TestLongLogLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(TestLongLogLine);
             var rawText = tokens.GetRawText();
             Assert.AreEqual(TestLongLogLine.TrimEnd(), rawText.TrimEnd()); // W We ignore the space at the end
         }
@@ -432,7 +411,7 @@ namespace DynamicSugarSharp_UnitTests
         {
             var url = "https://jir.bitbuclet.com/browse/ZZZZ-20055";
             var testLine = $@" ({url}) ";
-            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
 
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "(");

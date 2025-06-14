@@ -16,10 +16,6 @@ namespace DynamicSugar
                 var c = Clone();
                 c.RemoveAll(token => token.IsDelimiter());
 
-                foreach (var token in c)
-                    if (token.Type == TokenType.ArrayOfTokens)
-                        token.ArrayValues = token.ArrayValues.RemoveDelimiters();
-
                 return c;
             }
 
@@ -56,16 +52,7 @@ namespace DynamicSugar
                 var sb = new System.Text.StringBuilder();
                 foreach (var token in this)
                 {
-                    if (token.Type == TokenType.ArrayOfTokens)
-                    {
-                        sb.Append("List [");
-                        sb.Append(token.ArrayValues.GetTokenScript(addType));
-                        sb.Append("]");
-                    }
-                    else
-                    {
-                        sb.Append(token.ToString(addType));
-                    }
+                    sb.Append(token.ToString(addType));
                     sb.Append("; ");
                 }
                 return sb.ToString();
@@ -81,15 +68,6 @@ namespace DynamicSugar
                         if (!variables.ContainsKey(token.Name))
                             variables.Add(token.Name, token.Value);
                     }
-                    else if (token.Type == TokenType.ArrayOfTokens)
-                    {
-                        var arrayVariables = token.ArrayValues.GetVariables();
-                        foreach (var kvp in arrayVariables)
-                        {
-                            if (!variables.ContainsKey(kvp.Key))
-                                variables.Add(kvp.Key, kvp.Value);
-                        }
-                    }
                 }
 
                 return variables;
@@ -101,13 +79,6 @@ namespace DynamicSugar
                 {
                     if(token.Type == TokenType.NameValuePair && string.Equals(token.Name, name, StringComparison.OrdinalIgnoreCase))
                         return token.Value;
-
-                    if (token.Type == TokenType.ArrayOfTokens)
-                    {
-                        var r = token.ArrayValues.GetVariableValue(name, ignoreCase);
-                        if(r != null)
-                            return r;
-                    }
                 }
 
                 return null;
@@ -126,19 +97,8 @@ namespace DynamicSugar
             public bool IdentifierExists(string name, bool ignoreCase = true)
             {
                 foreach (var token in this)
-                {
-                    if (token.Type == TokenType.ArrayOfTokens)
-                    {
-                        var r = token.ArrayValues.IdentifierExists(name, ignoreCase);
-                        if (r)
-                            return true;
-                    }
-                    else
-                    {
                         if (token.IsIdentifier(name, ignoreCase))
                             return true;
-                    }
-                }
 
                 return false;
             }
