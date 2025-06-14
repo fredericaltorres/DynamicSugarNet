@@ -470,14 +470,17 @@ namespace DynamicSugarSharp_UnitTests
             var testLine = $@"
 
 Decoded-Values:
+
 Number 6
 DateTime 2025/06/13 12:39:00.401 PM
 DateTime 2025/06/13 12:39:01.874 PM";
 
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
-            tokens[x++].AssertNumber("-04");
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "foo");
+            tokens[x++].AssertNameValue("Number", "Decoded-Values", "Decoded-Values : Number");
+            tokens[x++].AssertNumber("6");
+            tokens[x++].AssertIdentifier("DateTime");
+            tokens[x++].Assert(Tokenizer.TokenType.DateTime, "2025/06/13 12:39:00.401 PM");
         }
     }
 }

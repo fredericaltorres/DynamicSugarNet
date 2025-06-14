@@ -213,6 +213,7 @@ namespace DynamicSugar
             var identifierPathValidDelimiters = DS.List(".", "/", @"\", "-");
             var x = 0;
             var r = new Tokens();
+            var requireReRun = false;
 
             while (x < tokens.Count)
             {
@@ -269,6 +270,7 @@ namespace DynamicSugar
                     var text = GetToken(tokens, x).Value + subTokens.GetAsText();
                     r.Add(new Token(text, TokenType.IdentifierPath, "", subTokens));
                     x += subTokens.Count + 1;
+                    requireReRun = true; //  for IdentifierPath: We need to re-run the loop to check for more identifiers 
                 }
                 // c:\a\windows\system32\cmd.exe
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.Length==1 && char.IsLetter(GetToken(tokens, x).Value[0]) &&
@@ -375,6 +377,11 @@ namespace DynamicSugar
                     r.Add(GetToken(tokens, x));
                     x++;
                 }
+            }
+
+            if(requireReRun)
+            {
+                r = CombineTokens(r);
             }
 
             return CombineTokensPhase2(r);
