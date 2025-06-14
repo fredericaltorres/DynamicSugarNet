@@ -165,19 +165,14 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_LogString1()
         {
             // const string TestLogString1 = @"2025-05-24 A[BB=2] mode: execute";
-
             var tokens = new Tokenizer().Tokenize(TestLogString1);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.Date, "2025-05-24");
             tokens[x++].Assert(Tokenizer.TokenType.Identifier, "A");
-
             tokens[x++].AssertDelimiter("[");
-
             // [B=2]
-            tokens[x++].AssertNameValue("2", "BB", "BB : 2");
-
+            tokens[x++].AssertNameValue("2", "BB", "BB = 2");
             tokens[x++].AssertDelimiter("]");
-
             // mode: execute
             tokens[x++].AssertNameValue("execute", "mode", "mode : execute");
         }

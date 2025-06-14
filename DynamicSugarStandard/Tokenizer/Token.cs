@@ -78,7 +78,6 @@ namespace DynamicSugar
                         else
                             return $@"{this.__internalTokens[0].ValueAsString} {this.__internalTokens[1].ValueAsString} {this.__internalTokens[2].ValueAsString}";
                     }
-                        
 
                     return this.Value;
                 }
@@ -167,12 +166,7 @@ namespace DynamicSugar
 
             public string ToStringWithType()
             {
-                if (this.Type == TokenType.NameValuePair)
-                {
-                    return $"{this.Type} {this.Name}: {this.Value}";
-                }
-
-                return $"{this.Type} {this.Value}";
+                return $"{this.Type} {this.ValueAsString}";
             }
 
             public string ToStringWithNoType()

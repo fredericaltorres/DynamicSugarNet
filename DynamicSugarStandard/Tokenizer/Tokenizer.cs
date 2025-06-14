@@ -234,15 +234,14 @@ namespace DynamicSugar
                     var tokenDelimiter = GetToken(tokens, x, 1);
                     var tokenVal = GetToken(tokens, x, 2);
 
-                    var remainingTokens =  new Tokens(tokens.Skip(x + 2).ToList());
+                    //var remainingTokens =  new Tokens(tokens.Skip(x + 2).ToList());
+                    //var remainingCombinedTokens = CombineTokens(remainingTokens);
 
-                    var remainingCombinedTokens = CombineTokens(remainingTokens);
-
-                    if (remainingCombinedTokens[0].Type != remainingTokens[0].Type)
-                    {
-                        tokenVal = remainingCombinedTokens[0];
-                        x += remainingCombinedTokens[0].__internalTokens.Count - 1;
-                    }
+                    //if (remainingCombinedTokens[0].Type != remainingTokens[0].Type)
+                    //{
+                    //    tokenVal = remainingCombinedTokens[0];
+                    //    x += remainingCombinedTokens[0].__internalTokens.Count - 1;
+                    //}
 
                     r.Add(new Token(tokenName, tokenDelimiter, tokenVal));
                     x += 3; // Skip the name, delimiter, and value
