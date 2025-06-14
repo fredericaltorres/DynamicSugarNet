@@ -388,5 +388,21 @@ namespace DynamicSugarSharp_UnitTests
             var rawText = tokens.GetRawText();
             Assert.AreEqual(TestLongLogLine.TrimEnd(), rawText.TrimEnd()); // W We ignore the space at the end
         }
+
+        [TestMethod]
+        public void Tokenizer_URL()
+        {
+            var url = "https://jir.bitbuclet.com/browse/ZZZZ-20055";
+            var testLine = $@" ({url}) ";
+            var tokens = new Tokenizer().Tokenize(testLine, combineArray: false);
+            var x = 0;
+
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "(");
+            tokens[x++].Assert(Tokenizer.TokenType.Url, url);
+            var raw = tokens[x - 1].GetRawText();
+            Assert.AreEqual(url, raw);
+
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ")");
+        }
     }
 }

@@ -68,8 +68,8 @@ namespace DynamicSugar
 
             StringLiteralDQuote_FilePath,
             StringLiteralSQuote_FilePath,
-            StringLiteralDQuote_Url,
-            StringLiteralSQuote_Url,
+            //StringLiteralDQuote_Url,
+            //StringLiteralSQuote_Url,
             FilePath,
         }
 
@@ -228,10 +228,10 @@ namespace DynamicSugar
                 // http/https:// xxxx
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.ToLower().StartsWith("http"))
                 {
-                    var subTokens = ReadAllTokenAcceptedForUrl(tokens, x + 1);
-                    var text = GetToken(tokens, x).Value + subTokens.GetAsText();
+                    var subTokens = ReadAllTokenAcceptedForUrl(tokens, x);
+                    var text = subTokens.GetAsText();
                     r.Add(new Token(text, TokenType.Url, "", subTokens));
-                    x += subTokens.Count + 1; // Skip the closing bracket
+                    x += subTokens.Count; // Skip the closing bracket
                 }
                 // Array/List
                 else if (combineArray && GetToken(tokens, x).IsDelimiter("["))
