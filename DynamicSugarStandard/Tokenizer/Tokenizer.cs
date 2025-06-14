@@ -247,7 +247,7 @@ namespace DynamicSugar
                     var numberToken1 = GetToken(tokens, x, 1);
                     var seminColorToken = GetToken(tokens, x, 2);
                     var numberToken2 = GetToken(tokens, x, 3);
-                    var newToken = new Token(tok.Value + numberToken1.Value + seminColorToken.Value + numberToken2.Value, TokenType.Number,  tok.PreSpaces + numberToken1.PreSpaces + seminColorToken.PreSpaces + numberToken2.PreSpaces);
+                    var newToken = new Token(tok.Value + numberToken1.Value + seminColorToken.Value + numberToken2.Value, TokenType.TimeZoneOffset,  tok.PreSpaces + numberToken1.PreSpaces + seminColorToken.PreSpaces + numberToken2.PreSpaces);
                     r.Add(newToken);
                     x += 4; // Skip the delimiter and the number
                 }

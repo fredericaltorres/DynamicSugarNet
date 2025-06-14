@@ -436,10 +436,10 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Tokenizer_Time()
         {
-            var testLine = $@"03:02:01 foo";
+            var testLine = "03:02:01 foo";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
-            tokens[x++].Assert(Tokenizer.TokenType.Time, testLine);
+            tokens[x++].Assert(Tokenizer.TokenType.Time, "03:02:01");
             tokens[x++].Assert(Tokenizer.TokenType.Identifier, "foo");
         }
 
@@ -457,6 +457,23 @@ namespace DynamicSugarSharp_UnitTests
         public void Tokenizer_NegativeNumber()
         {
             var testLine = $@" -04 foo";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertNumber("-04");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "foo");
+        }
+
+
+        [TestMethod]
+        public void Tokenizer_Header()
+        {
+            var testLine = $@"
+
+Decoded-Values:
+Number 6
+DateTime 2025/06/13 12:39:00.401 PM
+DateTime 2025/06/13 12:39:01.874 PM";
+
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].AssertNumber("-04");
