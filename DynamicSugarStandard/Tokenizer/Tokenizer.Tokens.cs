@@ -8,6 +8,9 @@ namespace DynamicSugar
     {
         public class Tokens : List<Token>
         {
+            public Tokens() : base() { }
+            public Tokens(IEnumerable<Token> tokens) : base(tokens) { }
+
             public Tokens RemoveDelimiters()
             {
                 var c = Clone();

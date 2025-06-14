@@ -54,6 +54,8 @@ namespace DynamicSugarSharp_UnitTests
         {
             var tokens = new Tokenizer().Tokenize("name:'value' ");
             var x = 0;
+            var raw = tokens[x].GetRawText();
+            Assert.AreEqual("name:'value'", raw);
             tokens[x++].AssertNameValue("value", "name", "name : 'value'");
         }
 
@@ -62,7 +64,43 @@ namespace DynamicSugarSharp_UnitTests
         {
             var tokens = new Tokenizer().Tokenize(@"name:""value""");
             var x = 0;
+            var raw = tokens[x].GetRawText();
+            Assert.AreEqual(@"name:""value""", raw);
             tokens[x++].AssertNameValue("value", "name", @"name : ""value""");
+        }
+
+        [TestMethod]
+        public void TokenizerTest_NameColonDelimiter_Braket()
+        {
+            var tokens = new Tokenizer().Tokenize(@"name:[toto]", combineArray: false);
+            var x = 0;
+            Assert.AreEqual(@"name:", tokens[x].GetRawText());
+            tokens[x++].AssertNameValue(null, "name", @"name :");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "[");
+        }
+
+        [TestMethod]
+        public void TokenizerTest_NameColonDelimiter_Coma()
+        {
+            var tokens = new Tokenizer().Tokenize(@"name:,toto", combineArray: false);
+            var x = 0;
+            Assert.AreEqual(@"name:", tokens[x].GetRawText());
+            tokens[x++].AssertNameValue(null, "name", @"name :");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ",");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "toto");
+        }
+
+        [TestMethod]
+        public void TokenizerTest_NameColonDelimiter_FilePath()
+        {
+            var tokens = new Tokenizer().Tokenize(@"name: c:\windows\notepad.exe, toto", combineArray: false);
+            var x = 0;
+            +++
+            var raw = tokens[x].GetRawText();
+            Assert.AreEqual(@"name: c:\windows\notepad.exe", raw);
+            tokens[x++].AssertNameValue(@"c:\windows\notepad.exe", "name", @"name : c:\windows\notepad.exe");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ",");
+            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "toto");
         }
 
         [TestMethod]

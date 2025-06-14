@@ -209,11 +209,23 @@ namespace DynamicSugar
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.Length==1 && char.IsLetter(GetToken(tokens, x).Value[0]) &&
                          GetToken(tokens, x, 1).IsDelimiter(DS.List(":")) && GetToken(tokens, x, 2).IsDelimiter(DS.List(@"\")))
                 {
-                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 1, DS.List(":", @"\", "."));
-                    var text = GetToken(tokens, x).Value + subTokens.GetAsText();
+                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x, DS.List(":", @"\", "."));
+                    var text = subTokens.GetAsText();
                     r.Add(new Token(text, TokenType.FilePath, "", subTokens));
                     x += subTokens.Count + 1;
                 }
+
+                // name :[  or "name" :, value or 'name' ::
+                else if ((GetToken(tokens, x).IsIdentifier() || GetToken(tokens, x).IsString)
+                         && (GetToken(tokens, x).Value.Length > 1) && !GetToken(tokens, x).Value.ToLower().StartsWith("http") &&
+                         GetToken(tokens, x, 1).IsDelimiter(DS.List(":", "=")) && GetToken(tokens, x, 2).IsDelimiter())
+                {
+                    var tokenName = GetToken(tokens, x);
+                    var tokenDelimiter = GetToken(tokens, x, 1);
+                    r.Add(new Token(tokenName, tokenDelimiter, Token.GetUndefinedToken()));
+                    x += 2; // Skip the name, delimiter
+                }
+
                 // name :/= value or "name" :/= value or 'name' :/= value
                 else if (( GetToken(tokens, x).IsIdentifier() || GetToken(tokens, x).IsString )
                          && (GetToken(tokens, x).Value.Length > 1) && !GetToken(tokens, x).Value.ToLower().StartsWith("http") && 
@@ -222,9 +234,21 @@ namespace DynamicSugar
                     var tokenName = GetToken(tokens, x);
                     var tokenDelimiter = GetToken(tokens, x, 1);
                     var tokenVal = GetToken(tokens, x, 2);
+
+                    var remainingTokens =  new Tokens(tokens.Skip(x + 2).ToList());
+
+                    var remainingCombinedTokens = CombineTokens(remainingTokens, combineArray);
+
+                    if (remainingCombinedTokens[0].Type != remainingTokens[0].Type)
+                    {
+                        tokenVal = remainingCombinedTokens[0];
+                        x += remainingCombinedTokens[0].__internalTokens.Count - 1;
+                    }
+
                     r.Add(new Token(tokenName, tokenDelimiter, tokenVal));
                     x += 3; // Skip the name, delimiter, and value
                 }
+
                 // http/https:// xxxx
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.ToLower().StartsWith("http"))
                 {

@@ -27,7 +27,8 @@ namespace DynamicSugar
                 {
                     if(!string.IsNullOrEmpty(PreSpaces))
                         sb.Append(PreSpaces);
-                    sb.Append(Value);
+
+                    sb.Append(ValueAsString);
                 }
                 return sb.ToString();
             }
@@ -46,7 +47,7 @@ namespace DynamicSugar
             public void AssertNameValue(string value, string name, string valueAsString)
             {
                 if (Type != TokenType.NameValuePair ||
-                  (value != null && !IsEqualValue(value, true)) ||
+                  (/*value != null &&*/ !IsEqualValue(value, true)) ||
                   (name != null && Name != name) ||
                   (this.__internalTokens.Count != 3) || (this.ValueAsString != valueAsString)
                 )
@@ -65,7 +66,13 @@ namespace DynamicSugar
                         return $@"'{this.Value}'";
 
                     if (Type == TokenType.NameValuePair)
-                        return $@"{this.__internalTokens[0].ValueAsString} {this.__internalTokens[1].ValueAsString} {this.__internalTokens[2].ValueAsString}";
+                    {
+                        if (this.__internalTokens[2].IsUndefined)
+                            return $@"{this.__internalTokens[0].ValueAsString} {this.__internalTokens[1].ValueAsString}";
+                        else
+                            return $@"{this.__internalTokens[0].ValueAsString} {this.__internalTokens[1].ValueAsString} {this.__internalTokens[2].ValueAsString}";
+                    }
+                        
 
                     return this.Value;
                 }
@@ -134,6 +141,7 @@ namespace DynamicSugar
             public bool IsDString => Type == TokenType.StringLiteralDQuote;
             public bool IsSString => Type == TokenType.StringLiteralSQuote;
             public bool IsNumber => Type == TokenType.Number;
+            public bool IsUndefined => Type == TokenType.UndefinedToken;
             public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
             public bool IsFloat => Type == TokenType.Number && Value.Contains(".");
             public bool IsAnyValue => !(Type == TokenType.UndefinedToken || Type == TokenType.ArrayOfTokens || Type == TokenType.NameValuePair);
