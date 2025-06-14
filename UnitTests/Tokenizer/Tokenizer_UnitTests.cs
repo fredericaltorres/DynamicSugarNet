@@ -178,35 +178,31 @@ namespace DynamicSugarSharp_UnitTests
             tokens[x++].AssertNameValue("execute", "mode", "mode : execute");
         }
 
-        // const string TestLogString4 = @"2025-05-24 13:16:52.859,Info,Export,[id: 709046703, mode: Export][ExecuteConversion()]Slide: 10755223, type: IMAGE, index: 0001";
 
         [TestMethod]
         public void Tokenizer_LogString_LongComplexLine()
         {
+            //  @"2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001";
             var tokens = new Tokenizer().Tokenize(TestLongLogLine).RemoveDelimiters();
             var x = 0;
 
+            var aaa = tokens[4].ToString();
             tokens[x++].Assert(Tokenizer.TokenType.DateTime, "2025-05-24 13:16:52.859");
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "Info");
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "Export");
+            tokens[x++].AssertIdentifier("Info");
+            tokens[x++].AssertIdentifier("Export");
 
             // [id: 709046703, mode: Export]
             tokens[x++].AssertNameValue("709046703", "id", "id : 709046703");
             tokens[x++].AssertNameValue("Export", "mode", "mode : Export");
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "Export");
 
             //[ExecuteConversion()]
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "ExecuteConversion");
+            tokens[x++].AssertIdentifier("ExecuteConversion");
 
 
             // Slide: 10755223, type: IMAGE, index: 0001
             tokens[x++].AssertNameValue("10755223", "Slide", "Slide : 10755223");
-
             tokens[x++].AssertNameValue("IMAGE", "type", "type : IMAGE");
-            x++;
-
             tokens[x++].AssertNameValue("0001", "index", "index : 0001");   
-            x++;
         }
 
         [TestMethod]
@@ -349,11 +345,11 @@ namespace DynamicSugarSharp_UnitTests
             var testLine = @"ok c:\windows\notepad.exe , c:\dvt\development 123";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
-            tokens[x++].Assert(Tokenizer.TokenType.Identifier, "ok");
+            tokens[x++].AssertIdentifier("ok");
             tokens[x++].Assert(Tokenizer.TokenType.FilePath, @"c:\windows\notepad.exe");
-            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ",");
+            tokens[x++].AssertDelimiter(",");
             tokens[x++].Assert(Tokenizer.TokenType.FilePath, @"c:\dvt\development");
-            tokens[x++].Assert(Tokenizer.TokenType.Number, "123");
+            tokens[x++].AssertNumber("123");
         }
 
         [TestMethod]

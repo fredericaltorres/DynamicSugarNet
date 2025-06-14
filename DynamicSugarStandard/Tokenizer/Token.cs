@@ -13,7 +13,6 @@ namespace DynamicSugar
             public TokenType Type { get; set; }
             public string PreSpaces { get; set; }
             public string Name { get; set; } // Only used when the token is a NameValuePair
-            public Tokens ArrayValues { get; set; } // nested []
             public Tokens __internalTokens { get; set; } // Original token
 
             public string GetRawText()
@@ -37,6 +36,16 @@ namespace DynamicSugar
             public void AssertDelimiter(string value)
             {
                 Assert(TokenType.Delimiter, value);
+            }
+
+            public void AssertIdentifier(string value)
+            {
+                Assert(TokenType.Identifier, value);
+            }
+
+            public void AssertNumber(string value)
+            {
+                Assert(TokenType.Number, value);
             }
 
             public void Assert(TokenType type, string value, string name = null, string preSpaces = null)
@@ -73,7 +82,7 @@ namespace DynamicSugar
 
                     if (Type == TokenType.NameValuePair)
                     {
-                        if (this.__internalTokens[2].IsUndefined)
+                        if (this.__internalTokens != null && this.__internalTokens.Count >= 2 && this.__internalTokens[2].IsUndefined)
                             return $@"{this.__internalTokens[0].ValueAsString} {this.__internalTokens[1].ValueAsString}";
                         else
                             return $@"{this.__internalTokens[0].ValueAsString} {this.__internalTokens[1].ValueAsString} {this.__internalTokens[2].ValueAsString}";
@@ -88,7 +97,7 @@ namespace DynamicSugar
                 return new Token(this.Value, this.Type, this.PreSpaces)
                 {
                     Name = this.Name,
-                    ArrayValues = this.ArrayValues?.Clone()
+                    __internalTokens = this.__internalTokens // maybe should clone this as well?
                 };
             }
 
@@ -188,11 +197,9 @@ namespace DynamicSugar
 
             internal bool Is(Token token)
             {
-                return this.Type == token.Type && 
-                       this.Value == token.Value && 
-                       this.Name == token.Name &&
-                       (this.ArrayValues == null && token.ArrayValues == null || 
-                                              this.ArrayValues?.Count == token.ArrayValues?.Count);
+                return this.Type == token.Type &&
+                       this.Value == token.Value &&
+                       this.Name == token.Name;
             }
         }
     }

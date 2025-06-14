@@ -239,7 +239,7 @@ namespace DynamicSugar
                     var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x, DS.List(":", @"\", "."));
                     var text = subTokens.GetAsText();
                     r.Add(new Token(text, TokenType.FilePath, "", subTokens));
-                    x += subTokens.Count + 1;
+                    x += subTokens.Count;
                 }
 
                 // name :[  or "name" :, value or 'name' ::
