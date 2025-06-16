@@ -482,5 +482,49 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].AssertIdentifier("DateTime");
             tokens[x++].Assert(Tokenizer.TokenType.DateTime, "2025/06/13 12:39:00.401 PM");
         }
+
+
+        [TestMethod]
+        public void Tokenizer_CommandLine_Linux_LongFormat()
+        {
+            var testLine = $@"
+""C:\development\Console.exe"" webServicesMobile --loginDirectory ""IntegrationTesting_Converters_Cheetah_Company_06"" --username ""IntegrationTesting_Converters_Cheetah_Company_06_CoursePerf"" --password ""moxie"" --host ""staging.brainshark.com"" --setStagingDB  --verbose --logFile""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" --toto 1
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
+            tokens[x++].IsIdentifier("webServicesMobile");
+            tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"--loginDirectory");
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"IntegrationTesting_Converters_Cheetah_Company_06");
+        }
+
+
+        [TestMethod]
+        public void Tokenizer_CommandLine_Linux_ShortFormat()
+        {
+            var testLine = $@"
+""C:\development\Console.exe"" webServicesMobile -loginDirectory ""IntegrationTesting_Converters_Cheetah_Company_06"" -username ""IntegrationTesting_Converters_Cheetah_Company_06_CoursePerf"" -password ""moxie"" -host ""staging.brainshark.com"" -setStagingDB  -verbose -logFile""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" -toto 1
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
+            tokens[x++].IsIdentifier("webServicesMobile");
+            tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"-loginDirectory");
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"IntegrationTesting_Converters_Cheetah_Company_06");
+        }
+
+        [TestMethod]
+        public void Tokenizer_CommandLine_Linux_backSlashSyntax()
+        {
+            var testLine = $@"
+""C:\development\Console.exe"" webServicesMobile /loginDirectory ""IntegrationTesting_Converters_Cheetah_Company_06"" /username ""IntegrationTesting_Converters_Cheetah_Company_06_CoursePerf"" -password ""moxie"" /host ""staging.brainshark.com"" /setStagingDB /verbose /logFile ""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" /toto 1
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
+            tokens[x++].IsIdentifier("webServicesMobile");
+            tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"/loginDirectory");
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"IntegrationTesting_Converters_Cheetah_Company_06");
+        }
     }
 }

@@ -66,6 +66,7 @@ namespace DynamicSugar
             Time, // 13:45:30 or 13:45:30.123
             NameValuePair,
             Url,
+            CommandLineParameter, // --name value or -n value or /name
 
             StringLiteralDQuote_FilePath,
             StringLiteralSQuote_FilePath,
@@ -259,18 +260,45 @@ namespace DynamicSugar
                     var numberToken = GetToken(tokens, x, 1);
                     var newToken = new Token(tok.Value + numberToken.Value, TokenType.Number, tok.PreSpaces + numberToken.PreSpaces);
                     r.Add(newToken);
-                    x += 2; // Skip the delimiter and the number
+                    x += 2;
+                }
+                // --identifier
+                else if (tok.IsDelimiter("-") && /*tok.HasEmptyPreSpace &&*/  GetToken(tokens, x, 1).IsDelimiter("-") && GetToken(tokens, x, 1).HasEmptyPreSpace && GetToken(tokens, x, 2).IsIdentifier() && GetToken(tokens, x, 2).HasEmptyPreSpace)
+                {
+                    var minus1Token = GetToken(tokens, x, 0);
+                    var minus2Token = GetToken(tokens, x, 1);
+                    var idToken = GetToken(tokens, x, 2);
+                    var newToken = new Token(minus1Token.Value + minus2Token.Value + idToken.Value, TokenType.CommandLineParameter, minus1Token.PreSpaces + minus2Token.PreSpaces + idToken.PreSpaces);
+                    r.Add(newToken);
+                    x += 3;
+                }
+
+                // -identifier or /identifier
+                else if (tok.IsDelimiter(DS.List("-", "/")) /*&& tok.HasPreSpace*/  && GetToken(tokens, x, 1).IsIdentifier() && GetToken(tokens, x, 1).HasEmptyPreSpace)
+                {
+                    var minus1Token = GetToken(tokens, x, 0);
+                    var idToken = GetToken(tokens, x, 1);
+                    var newToken = new Token(minus1Token.Value + idToken.Value, TokenType.CommandLineParameter, minus1Token.PreSpaces + idToken.PreSpaces);
+                    r.Add(newToken);
+                    x += 2;
                 }
 
                 // Identifier .\/- Identifier become one IdentifierPath ""
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x, 1).IsDelimiter(identifierPathValidDelimiters) && GetToken(tokens, x, 2).IsIdentifier())
                 {
-                    var firstToken = GetToken(tokens, x);
                     var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 1, identifierPathValidDelimiters);
-                    var text = GetToken(tokens, x).Value + subTokens.GetAsText();
-                    r.Add(new Token(text, TokenType.IdentifierPath, "", subTokens));
-                    x += subTokens.Count + 1;
-                    requireReRun = true; //  for IdentifierPath: We need to re-run the loop to check for more identifiers 
+                    if (subTokens.Count == 0)
+                    {
+                        r.Add(GetToken(tokens, x));
+                        x += 1;
+                    }
+                    else
+                    {
+                        var text = GetToken(tokens, x).Value + subTokens.GetAsText();
+                        r.Add(new Token(text, TokenType.IdentifierPath, "", subTokens));
+                        x += subTokens.Count + 1;
+                        requireReRun = true; //  for IdentifierPath: We need to re-run the loop to check for more identifiers 
+                    }
                 }
                 // c:\a\windows\system32\cmd.exe
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.Length==1 && char.IsLetter(GetToken(tokens, x).Value[0]) &&
@@ -290,7 +318,7 @@ namespace DynamicSugar
                     var tokenName = GetToken(tokens, x);
                     var tokenDelimiter = GetToken(tokens, x, 1);
                     r.Add(new Token(tokenName, tokenDelimiter, Token.GetUndefinedToken()));
-                    x += 2; // Skip the name, delimiter
+                    x += 2;
                 }
 
                 // name :/= value or "name" :/= value or 'name' :/= value
@@ -303,7 +331,7 @@ namespace DynamicSugar
                     var tokenVal = GetToken(tokens, x, 2);
 
                     r.Add(new Token(tokenName, tokenDelimiter, tokenVal));
-                    x += 3; // Skip the name, delimiter, and value
+                    x += 3;
                 }
 
                 // http/https:// xxxx
@@ -393,7 +421,8 @@ namespace DynamicSugar
             var r = new Tokens();
             for (int i = start; i < tokens.Count; i++)
             {
-                if (tokens[i].IsDelimiter(delimiters) || tokens[i].IsIdentifier())
+                if ((tokens[i].IsDelimiter(delimiters) && tokens[i].HasEmptyPreSpace) || 
+                    (tokens[i].IsIdentifier() && (tokens[i].HasEmptyPreSpace || i == start /* accept previous space for the first word*/)))
                 {
                     r.Add(tokens[i]);
                 }

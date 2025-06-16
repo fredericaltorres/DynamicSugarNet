@@ -167,6 +167,8 @@ namespace DynamicSugar
             public bool IsAnyValue => !(Type == TokenType.UndefinedToken ||  Type == TokenType.NameValuePair);
             public bool IsDelimiter(string value = null) => value == null ? (Type == TokenType.Delimiter) : (Type == TokenType.Delimiter && this.Value == value);
             public bool IsDelimiter(List<string> values ) =>  (Type == TokenType.Delimiter && values.Contains(this.Value));
+            public bool HasEmptyPreSpace => string.IsNullOrEmpty(PreSpaces);
+            public bool HasPreSpace => !string.IsNullOrEmpty(PreSpaces);
 
             public override string ToString()
             {
