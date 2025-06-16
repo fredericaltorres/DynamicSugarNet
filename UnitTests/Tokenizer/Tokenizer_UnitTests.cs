@@ -552,7 +552,8 @@ DateTime 2025/06/13 12:39:01.874 PM";
             ""boolTrue"": true,
             ""boolFalse"": false,
             ""null"": null,
-            ""Presentation"": {{
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Presentation"": {
                 ""Number"": 213523
             }
         }
@@ -593,6 +594,9 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].AssertNameValue("null", "null", @"""null"" : null");
 
             tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue("2025-05-26T22:06:11.513Z", "date", @"""date"" : ""2025-05-26T22:06:11.513Z""");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
             tokens[x++].AssertNameValue(null, "Presentation", @"""Presentation"" :");
             tokens[x++].AssertDelimiter("{");
         }
@@ -602,7 +606,12 @@ DateTime 2025/06/13 12:39:01.874 PM";
         public void Tokenizer_AnalyseFormattedJSON_ReturnAnalyse()
         {
             var analyse = new Tokenizer().AnalyzeFormattedJson(formattedJson);
-            
+            var actualTypes = analyse.Select(a => a.Type).ToList();
+            var actualTypesStr = string.Join(",Tokenizer.AnalysedJsonLineType.", actualTypes);
+            var expectedTypes = DS.List(Tokenizer.AnalysedJsonLineType.StartObject, Tokenizer.AnalysedJsonLineType.StartPropertyArray, Tokenizer.AnalysedJsonLineType.StartObject, Tokenizer.AnalysedJsonLineType.PropertyNumber, Tokenizer.AnalysedJsonLineType.PropertyString, Tokenizer.AnalysedJsonLineType.PropertyBool, Tokenizer.AnalysedJsonLineType.PropertyBool, Tokenizer.AnalysedJsonLineType.PropertyNull, Tokenizer.AnalysedJsonLineType.PropertyDate, Tokenizer.AnalysedJsonLineType.StartPropertyObject, Tokenizer.AnalysedJsonLineType.PropertyNumber, Tokenizer.AnalysedJsonLineType.EndObject, Tokenizer.AnalysedJsonLineType.EndObject, Tokenizer.AnalysedJsonLineType.EndArray, Tokenizer.AnalysedJsonLineType.EndObject);
+
+            for(var i = 0; i < expectedTypes.Count; i++)
+                Assert.AreEqual(expectedTypes[i], actualTypes[i], $"Mismatch at index {i}: expected {expectedTypes[i]}, got {actualTypes[i]}");
         }
     }
 }

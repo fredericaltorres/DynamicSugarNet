@@ -358,7 +358,7 @@ namespace DynamicSugar
                 {
                     var (dateStr2, subTokens) = ConcatTokens(tokens, x, new Token("Z", Tokenizer.TokenType.Identifier, null));
                     r.Add(new Token(dateStr2, TokenType.DateTime, "", subTokens));
-                    x += subTokens.Count;
+                    x += subTokens.Count + 1;
                 }
                 // @"2025-05-24 13:16:52.859";
                 // Date YYYY:MM:DD
@@ -510,6 +510,7 @@ namespace DynamicSugar
             EndArray,
             StartPropertyObject,
             StartPropertyArray,
+            PropertyDate,
             PropertyNumber,
             PropertyString,
             PropertyBool,
@@ -539,7 +540,7 @@ namespace DynamicSugar
                 var tokens = new Tokenizer().Tokenize(jsonLine);
 
                 Token curToken = tokens[x];
-                Token nextToken = null;
+                Token nextToken = Token.GetUndefinedToken();
                 if(x + 1 < tokens.Count)
                     nextToken = tokens[x + 1];
 
@@ -565,8 +566,18 @@ namespace DynamicSugar
                     r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyNumber, jsonLine));
 
                 else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsDString)
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyString, jsonLine));
-
+                {
+                    var stringValue = curToken.__internalTokens.Last();
+                    var tmpTokens = this.Tokenize(stringValue.Value);
+                    if(tmpTokens.Count == 1 && (tmpTokens[0].Type == TokenType.Date|| tmpTokens[0].Type == TokenType.DateTime))
+                    {
+                        r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyDate, jsonLine));
+                    }
+                    else
+                    {
+                        r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyString, jsonLine));
+                    }
+                }
                 else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsIdentifier("null"))
                     r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyNull, jsonLine));
 
