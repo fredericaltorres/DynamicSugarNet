@@ -502,5 +502,85 @@ namespace DynamicSugar
                    c == '>' || c == '<' || c == '&' || c == '|' || c == '%' || c == '┊';
             // c == ' ' Space is not a delimiter here, 
         }
+
+        public enum AnalysedJsonLineType  {
+            StartObject,
+            StartArray,
+            EndObject,
+            EndArray,
+            StartPropertyObject,
+            StartPropertyArray,
+            PropertyNumber,
+            PropertyString,
+            PropertyBool,
+            PropertyNull,
+            Unknown,
+        };
+
+        public class AnalysedJsonLine
+        {
+            public AnalysedJsonLineType Type { get; set; }
+            public string Line { get; set; }
+            public AnalysedJsonLine(AnalysedJsonLineType type, string line)
+            {
+                Type = type;
+                Line = line;
+            }
+        }
+
+        public  List<AnalysedJsonLine> AnalyzeFormattedJson(string formattedJson)
+        {
+            var r = new List<AnalysedJsonLine>();
+            var jsonLines = formattedJson.SplitByCRLF();
+
+            foreach (var jsonLine in jsonLines)
+            {
+                var x = 0;
+                var tokens = new Tokenizer().Tokenize(jsonLine);
+
+                Token curToken = tokens[x];
+                Token nextToken = null;
+                if(x + 1 < tokens.Count)
+                    nextToken = tokens[x + 1];
+
+                if(curToken.AssertDelimiter("{", throwEx: false) && tokens.Count == 1)
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.StartObject, jsonLine));
+
+                else if (curToken.AssertDelimiter("}", throwEx: false) && tokens.Count == 1)
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.EndObject, jsonLine));
+
+                else if (curToken.AssertDelimiter("[", throwEx: false) && tokens.Count == 1)
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.StartArray, jsonLine));
+
+                else if (curToken.AssertDelimiter("]", throwEx: false) && tokens.Count == 1)
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.EndArray, jsonLine));
+
+                else if (curToken.Type == TokenType.NameValuePair && nextToken.IsDelimiter("["))
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.StartPropertyArray, jsonLine));
+
+                else if (curToken.Type == TokenType.NameValuePair && nextToken.IsDelimiter("{"))
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.StartPropertyObject, jsonLine));
+
+                else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsNumber)
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyNumber, jsonLine));
+
+                else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsDString)
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyString, jsonLine));
+
+                else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsIdentifier("null"))
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyNull, jsonLine));
+
+                else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsIdentifier("true"))
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyBool, jsonLine));
+
+                else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsIdentifier("false"))
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyBool, jsonLine));
+                else
+                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.Unknown, jsonLine));
+            }
+
+            return r;
+        }
     }
 }
+

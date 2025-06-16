@@ -9,7 +9,7 @@ using System.Dynamic;
 using System.Reflection;
 using System.CodeDom.Compiler;
 
-namespace DynamicSugarSharp_UnitTests 
+namespace DynamicSugarSharp_UnitTests
 {
 
     [TestClass]
@@ -202,7 +202,7 @@ namespace DynamicSugarSharp_UnitTests
             // Slide: 10755223, type: IMAGE, index: 0001
             tokens[x++].AssertNameValue("10755223", "Slide", "Slide : 10755223");
             tokens[x++].AssertNameValue("IMAGE", "type", "type : IMAGE");
-            tokens[x++].AssertNameValue("0001", "index", "index : 0001");   
+            tokens[x++].AssertNameValue("0001", "index", "index : 0001");
         }
 
         [TestMethod]
@@ -540,7 +540,69 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].AssertDelimiter("(");
             tokens[x++].AssertDelimiter(")");
             tokens[x++].AssertDelimiter("]");
+        }
 
+
+        const string formattedJson = @"
+{
+    ""Results"": [
+        {
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""Presentation"": {{
+                ""Number"": 213523
+            }
+        }
+    ]
+}
+";
+
+        [TestMethod]
+        public void Tokenizer_AnalyseFormattedJSON_ParseOnly()
+        {
+            var x = 0;
+            var lineX = 0;
+            var jsonLines = formattedJson.SplitByCRLF();
+
+            var tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertDelimiter("{");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue(null, "Results", @"""Results"" :");
+            tokens[x++].AssertDelimiter("[");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertDelimiter("{");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue("213523", "Number", @"""Number"" : 213523");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue("string", "Description", @"""Description"" : ""string""");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue("true", "boolTrue", @"""boolTrue"" : true");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue("false", "boolFalse", @"""boolFalse"" : false");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue("null", "null", @"""null"" : null");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue(null, "Presentation", @"""Presentation"" :");
+            tokens[x++].AssertDelimiter("{");
+        }
+
+
+        [TestMethod]
+        public void Tokenizer_AnalyseFormattedJSON_ReturnAnalyse()
+        {
+            var analyse = new Tokenizer().AnalyzeFormattedJson(formattedJson);
+            
         }
     }
 }

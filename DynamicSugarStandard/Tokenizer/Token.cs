@@ -33,14 +33,29 @@ namespace DynamicSugar
                 return sb.ToString();
             }
 
-            public void AssertDelimiter(string value)
+            public bool AssertDelimiter(string value, bool throwEx = true)
             {
-                Assert(TokenType.Delimiter, value);
+                try
+                {
+                    Assert(TokenType.Delimiter, value);
+                    return true;
+                }
+                catch (InvalidEnumArgumentException)
+                {
+                    if (throwEx)
+                        throw;
+                    return false;
+                }
             }
 
             public void AssertIdentifier(string value)
             {
                 Assert(TokenType.Identifier, value);
+            }
+
+            public void AssertDString(string value)
+            {
+                Assert(TokenType.StringLiteralDQuote, value);
             }
 
             public void AssertIdentifierPath(string value)
@@ -64,16 +79,20 @@ namespace DynamicSugar
                 }
             }
 
-            public void AssertNameValue(string value, string name, string valueAsString)
+            public bool AssertNameValue(string value, string name, string valueAsString, bool throwEx = true)
             {
+                
                 if (Type != TokenType.NameValuePair ||
                   (/*value != null &&*/ !IsEqualValue(value, true)) ||
                   (name != null && Name != name) ||
                   (this.__internalTokens.Count != 3) || (this.ValueAsString != valueAsString)
                 )
                 {
-                    throw new InvalidEnumArgumentException($"Token NameValue assertion failed: Expected Type={TokenType.NameValuePair}, Value={value}, Name={name}, but got Type={Type}, Value={Value}, Name={Name}.");
+                    if(throwEx)
+                        throw new InvalidEnumArgumentException($"Token NameValue assertion failed: Expected Type={TokenType.NameValuePair}, Value={value}, Name={name}, but got Type={Type}, Value={Value}, Name={Name}.");
+                    return false;
                 }
+                return true;
             }
 
             public string ValueAsString
