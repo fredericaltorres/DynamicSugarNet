@@ -295,8 +295,9 @@ namespace DynamicSugar
                     else
                     {
                         var text = GetToken(tokens, x).Value + subTokens.GetAsText();
+                        subTokens.Insert(0, GetToken(tokens, x)); // Add the first token to the subTokens
                         r.Add(new Token(text, TokenType.IdentifierPath, "", subTokens));
-                        x += subTokens.Count + 1;
+                        x += subTokens.Count;
                         requireReRun = true; //  for IdentifierPath: We need to re-run the loop to check for more identifiers 
                     }
                 }
@@ -335,7 +336,8 @@ namespace DynamicSugar
                 }
 
                 // http/https:// xxxx
-                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.ToLower().StartsWith("http"))
+                else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Type != TokenType.IdentifierPath && 
+                         GetToken(tokens, x).Value.ToLower().StartsWith("http"))
                 {
                     var subTokens = ReadAllTokenAcceptedForUrl(tokens, x);
                     var text = subTokens.GetAsText();

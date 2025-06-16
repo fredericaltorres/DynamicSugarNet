@@ -526,5 +526,21 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"/loginDirectory");
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"IntegrationTesting_Converters_Cheetah_Company_06");
         }
+
+
+        [TestMethod]
+        public void Tokenizer_IdentifierPath2()
+        {
+            var testLine = $@"[HTTPHelper.Execute()]";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertDelimiter("[");
+            Assert.AreEqual(@"HTTPHelper.Execute", tokens[x].GetRawText(), "Raw text should match the identifier path");
+            tokens[x++].Assert(Tokenizer.TokenType.IdentifierPath, @"HTTPHelper.Execute");
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertDelimiter(")");
+            tokens[x++].AssertDelimiter("]");
+
+        }
     }
 }
