@@ -601,7 +601,6 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].AssertDelimiter("{");
         }
 
-
         [TestMethod]
         public void Tokenizer_AnalyseFormattedJSON_ReturnAnalyse()
         {

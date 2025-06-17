@@ -522,6 +522,7 @@ namespace DynamicSugar
         {
             public AnalysedJsonLineType Type { get; set; }
             public string Line { get; set; }
+            public object Tag { get; set; }
             public AnalysedJsonLine(AnalysedJsonLineType type, string line)
             {
                 Type = type;
