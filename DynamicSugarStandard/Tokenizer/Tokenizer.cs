@@ -263,7 +263,7 @@ namespace DynamicSugar
                     x += 2;
                 }
                 // --identifier
-                else if (tok.IsDelimiter("-") && /*tok.HasEmptyPreSpace &&*/  GetToken(tokens, x, 1).IsDelimiter("-") && GetToken(tokens, x, 1).HasEmptyPreSpace && GetToken(tokens, x, 2).IsIdentifier() && GetToken(tokens, x, 2).HasEmptyPreSpace)
+                else if (tok.IsDelimiter("-") && tok.HasPreSpace &&  GetToken(tokens, x, 1).IsDelimiter("-") && GetToken(tokens, x, 1).HasEmptyPreSpace && GetToken(tokens, x, 2).IsIdentifier() && GetToken(tokens, x, 2).HasEmptyPreSpace)
                 {
                     var minus1Token = GetToken(tokens, x, 0);
                     var minus2Token = GetToken(tokens, x, 1);
@@ -285,7 +285,7 @@ namespace DynamicSugar
                 }
 
                 // -identifier or /identifier
-                else if (tok.IsDelimiter(DS.List("-", "/")) /*&& tok.HasPreSpace*/  && GetToken(tokens, x, 1).IsIdentifier() && GetToken(tokens, x, 1).HasEmptyPreSpace)
+                else if (tok.IsDelimiter(DS.List("-", "/")) && tok.HasPreSpace  && GetToken(tokens, x, 1).IsIdentifier() && GetToken(tokens, x, 1).HasEmptyPreSpace)
                 {
                     var minus1Token = GetToken(tokens, x, 0);
                     var idToken = GetToken(tokens, x, 1);

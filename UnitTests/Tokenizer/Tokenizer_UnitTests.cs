@@ -485,6 +485,32 @@ DateTime 2025/06/13 12:39:01.874 PM";
 
 
         [TestMethod]
+        public void Tokenizer_CommandLine_Linux_LongFormat_NoSpaceBefore_ButIsFirstToken()
+        {
+            var testLine = $@"--win01, ";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertDelimiter("-");
+            tokens[x++].AssertDelimiter("-");
+            tokens[x++].AssertIdentifier("win01");
+            tokens[x++].AssertDelimiter(",");
+        }
+
+        [TestMethod]
+        public void Tokenizer_CommandLine_Linux_LongFormat_NoSpaceBefore()
+        {
+            var testLine = $@"MachineName:qa2node--win01, ";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertNameValue("qa2node", "MachineName", @"MachineName : qa2node");
+            tokens[x++].AssertDelimiter("-");
+            tokens[x++].AssertDelimiter("-");
+            tokens[x++].AssertIdentifier("win01");
+            tokens[x++].AssertDelimiter(",");
+        }
+
+
+        [TestMethod]
         public void Tokenizer_CommandLine_Linux_LongFormat()
         {
             var testLine = $@"
@@ -526,6 +552,29 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].IsIdentifier("webServicesMobile");
             tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"-loginDirectory");
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"TestingX__Company_06");
+        }
+
+        [TestMethod]
+        public void Tokenizer_CommandLine_Linux_ShortFormat_NoSpaceBefore_ButIsFirstToken()
+        {
+            var testLine = $@"-win01, ";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertDelimiter("-");
+            tokens[x++].AssertIdentifier("win01");
+            tokens[x++].AssertDelimiter(",");
+        }
+
+        [TestMethod]
+        public void Tokenizer_CommandLine_Linux_ShortFormat_NoSpaceBefore()
+        {
+            var testLine = $@"MachineName:qa2node-win01, ";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertNameValue("qa2node", "MachineName", @"MachineName : qa2node");
+            tokens[x++].AssertDelimiter("-");
+            tokens[x++].AssertIdentifier("win01");
+            tokens[x++].AssertDelimiter(",");
         }
 
         [TestMethod]
