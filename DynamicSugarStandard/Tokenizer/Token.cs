@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Linq;
+using static DynamicSugar.Tokenizer;
 
 namespace DynamicSugar
 {
@@ -20,8 +21,15 @@ namespace DynamicSugar
                 var sb = new    System.Text.StringBuilder();
                 if(__internalTokens != null && __internalTokens.Count > 0)
                 {
-                    foreach(var token in __internalTokens)
-                        sb.Append(token.GetRawText());
+                    if (this.Type == TokenType.CommandLineParameter)
+                    {
+                        sb.Append($"{this.ValueAsString} {__internalTokens[0].ValueAsString}");
+                    }
+                    else
+                    {
+                        foreach (var token in __internalTokens)
+                            sb.Append(token.GetRawText());
+                    }
                 }
                 else
                 {
@@ -40,7 +48,7 @@ namespace DynamicSugar
                     Assert(TokenType.Delimiter, value);
                     return true;
                 }
-                catch (InvalidEnumArgumentException)
+                catch (ArgumentException)
                 {
                     if (throwEx)
                         throw;
@@ -75,7 +83,7 @@ namespace DynamicSugar
                    (name != null && Name != name) ||
                    (preSpaces != null && PreSpaces != preSpaces))
                 {
-                    throw new InvalidEnumArgumentException($"Token assertion failed: Expected Type={type}, Value={value}, Name={name}, PreSpaces='{PreSpaces}', but got Type={Type}, Value={Value}, Name={Name}, PreSpaces='{preSpaces}'.");
+                    throw new ArgumentException($"Token assertion failed: Expected Type={type}, Value={value}, Name={name}, PreSpaces='{PreSpaces}', but got Type={Type}, Value={Value}, Name={Name}, PreSpaces='{preSpaces}'.");
                 }
             }
 
@@ -180,6 +188,8 @@ namespace DynamicSugar
             public bool IsFilePath => Type == TokenType.FilePath;
             public bool IsSString => Type == TokenType.StringLiteralSQuote;
             public bool IsNumber => Type == TokenType.Number;
+            public bool IsDate => Type == TokenType.Date;
+            public bool IsDateTime => Type == TokenType.DateTime;
             public bool IsUndefined => Type == TokenType.UndefinedToken;
             public bool IsInteger => Type == TokenType.Number && !Value.Contains(".");
             public bool IsFloat => Type == TokenType.Number && Value.Contains(".");
@@ -226,6 +236,21 @@ namespace DynamicSugar
                 return this.Type == token.Type &&
                        this.Value == token.Value &&
                        this.Name == token.Name;
+            }
+
+            public void AssertCommandLineParameter(string value, string commandLineParameterValue = null)
+            {
+                Assert(TokenType.CommandLineParameter, value);
+
+                if (commandLineParameterValue != null)
+                {
+                    if(this.__internalTokens.Count < 1)
+                        throw new ArgumentException("Command line parameter token must have at least one internal token.");
+
+                    var actualValue = this.__internalTokens[0].Value;
+                    if (!string.Equals(commandLineParameterValue, actualValue, StringComparison.OrdinalIgnoreCase))
+                        throw new ArgumentException($"[{nameof(AssertCommandLineParameter)}() [FAILED]]Expected:{commandLineParameterValue}, actual:{actualValue}");
+                }
             }
         }
     }

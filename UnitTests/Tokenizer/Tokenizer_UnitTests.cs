@@ -488,14 +488,29 @@ DateTime 2025/06/13 12:39:01.874 PM";
         public void Tokenizer_CommandLine_Linux_LongFormat()
         {
             var testLine = $@"
-""C:\development\Console.exe"" webServicesMobile --loginDirectory ""IntegrationTesting_Converters_Cheetah_Company_06"" --username ""IntegrationTesting_Converters_Cheetah_Company_06_CoursePerf"" --password ""moxie"" --host ""staging.brainshark.com"" --setStagingDB  --verbose --logFile""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" --toto 1
+""C:\development\Console.exe"" webServicesMobile --loginDirectory ""TestingX__Company_06"" --username TestingX__Company_06_CoursePerf --password ""xie"" --host ""uat.rainbark.com"" --setStagingDB  --verbose --logFile ""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" --toto 1
 ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
             tokens[x++].IsIdentifier("webServicesMobile");
-            tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"--loginDirectory");
-            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"IntegrationTesting_Converters_Cheetah_Company_06");
+
+            Assert.AreEqual(@"--loginDirectory ""TestingX__Company_06""", tokens[x].GetRawText());
+            Assert.AreEqual(@"--loginDirectory", tokens[x].ValueAsString);
+            Assert.AreEqual(@"--loginDirectory", tokens[x].Value);
+
+            tokens[x++].AssertCommandLineParameter( @"--loginDirectory", "TestingX__Company_06");
+            tokens[x++].AssertCommandLineParameter( @"--username", "TestingX__Company_06_CoursePerf");
+            tokens[x++].AssertCommandLineParameter( @"--password", "xie");
+            tokens[x++].AssertCommandLineParameter( @"--host", "uat.rainbark.com");
+            tokens[x++].AssertCommandLineParameter( @"--setStagingDB");
+            tokens[x++].AssertCommandLineParameter( @"--verbose");
+            tokens[x++].AssertCommandLineParameter( @"--logFile", @"C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log");
+
+            Assert.AreEqual(@"--toto 1", tokens[x].GetRawText());
+            Assert.AreEqual(@"--toto", tokens[x].ValueAsString);
+            Assert.AreEqual(@"--toto", tokens[x].Value);
+            tokens[x++].AssertCommandLineParameter( @"--toto", "1");
         }
 
 
@@ -503,28 +518,28 @@ DateTime 2025/06/13 12:39:01.874 PM";
         public void Tokenizer_CommandLine_Linux_ShortFormat()
         {
             var testLine = $@"
-""C:\development\Console.exe"" webServicesMobile -loginDirectory ""IntegrationTesting_Converters_Cheetah_Company_06"" -username ""IntegrationTesting_Converters_Cheetah_Company_06_CoursePerf"" -password ""moxie"" -host ""staging.brainshark.com"" -setStagingDB  -verbose -logFile""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" -toto 1
+""C:\development\Console.exe"" webServicesMobile -loginDirectory ""TestingX__Company_06"" -username ""TestingX__Company_06_CoursePerf"" -password ""moxie"" -host ""staging.brainshark.com"" -setStagingDB  -verbose -logFile""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" -toto 1
 ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
             tokens[x++].IsIdentifier("webServicesMobile");
             tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"-loginDirectory");
-            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"IntegrationTesting_Converters_Cheetah_Company_06");
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"TestingX__Company_06");
         }
 
         [TestMethod]
         public void Tokenizer_CommandLine_Linux_backSlashSyntax()
         {
             var testLine = $@"
-""C:\development\Console.exe"" webServicesMobile /loginDirectory ""IntegrationTesting_Converters_Cheetah_Company_06"" /username ""IntegrationTesting_Converters_Cheetah_Company_06_CoursePerf"" -password ""moxie"" /host ""staging.brainshark.com"" /setStagingDB /verbose /logFile ""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" /toto 1
+""C:\development\Console.exe"" webServicesMobile /loginDirectory ""TestingX__Company_06"" /username ""TestingX__Company_06_CoursePerf"" -password ""moxie"" /host ""staging.brainshark.com"" /setStagingDB /verbose /logFile ""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" /toto 1
 ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
             tokens[x++].IsIdentifier("webServicesMobile");
             tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"/loginDirectory");
-            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"IntegrationTesting_Converters_Cheetah_Company_06");
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"TestingX__Company_06");
         }
 
 
@@ -562,7 +577,7 @@ DateTime 2025/06/13 12:39:01.874 PM";
 ";
 
         [TestMethod]
-        public void Tokenizer_AnalyseFormattedJSON_ParseOnly()
+        public void Tokenizer_AnalyzeFormattedJSON_ParseOnly()
         {
             var x = 0;
             var lineX = 0;
@@ -602,12 +617,12 @@ DateTime 2025/06/13 12:39:01.874 PM";
         }
 
         [TestMethod]
-        public void Tokenizer_AnalyseFormattedJSON_ReturnAnalyse()
+        public void Tokenizer_AnalyzeFormattedJSON_ReturnAnalyze()
         {
             var analyse = new Tokenizer().AnalyzeFormattedJson(formattedJson);
             var actualTypes = analyse.Select(a => a.Type).ToList();
-            var actualTypesStr = string.Join(",Tokenizer.AnalysedJsonLineType.", actualTypes);
-            var expectedTypes = DS.List(Tokenizer.AnalysedJsonLineType.StartObject, Tokenizer.AnalysedJsonLineType.StartPropertyArray, Tokenizer.AnalysedJsonLineType.StartObject, Tokenizer.AnalysedJsonLineType.PropertyNumber, Tokenizer.AnalysedJsonLineType.PropertyString, Tokenizer.AnalysedJsonLineType.PropertyBool, Tokenizer.AnalysedJsonLineType.PropertyBool, Tokenizer.AnalysedJsonLineType.PropertyNull, Tokenizer.AnalysedJsonLineType.PropertyDate, Tokenizer.AnalysedJsonLineType.StartPropertyObject, Tokenizer.AnalysedJsonLineType.PropertyNumber, Tokenizer.AnalysedJsonLineType.EndObject, Tokenizer.AnalysedJsonLineType.EndObject, Tokenizer.AnalysedJsonLineType.EndArray, Tokenizer.AnalysedJsonLineType.EndObject);
+            var actualTypesStr = string.Join(",Tokenizer.AnalyzedJsonLineType.", actualTypes);
+            var expectedTypes = DS.List(Tokenizer.AnalyzedJsonLineType.StartObject, Tokenizer.AnalyzedJsonLineType.StartPropertyArray, Tokenizer.AnalyzedJsonLineType.StartObject, Tokenizer.AnalyzedJsonLineType.PropertyNumber, Tokenizer.AnalyzedJsonLineType.PropertyString, Tokenizer.AnalyzedJsonLineType.PropertyBool, Tokenizer.AnalyzedJsonLineType.PropertyBool, Tokenizer.AnalyzedJsonLineType.PropertyNull, Tokenizer.AnalyzedJsonLineType.PropertyDate, Tokenizer.AnalyzedJsonLineType.StartPropertyObject, Tokenizer.AnalyzedJsonLineType.PropertyNumber, Tokenizer.AnalyzedJsonLineType.EndObject, Tokenizer.AnalyzedJsonLineType.EndObject, Tokenizer.AnalyzedJsonLineType.EndArray, Tokenizer.AnalyzedJsonLineType.EndObject);
 
             for(var i = 0; i < expectedTypes.Count; i++)
                 Assert.AreEqual(expectedTypes[i], actualTypes[i], $"Mismatch at index {i}: expected {expectedTypes[i]}, got {actualTypes[i]}");

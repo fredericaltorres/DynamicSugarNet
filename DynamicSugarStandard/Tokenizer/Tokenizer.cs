@@ -268,9 +268,20 @@ namespace DynamicSugar
                     var minus1Token = GetToken(tokens, x, 0);
                     var minus2Token = GetToken(tokens, x, 1);
                     var idToken = GetToken(tokens, x, 2);
-                    var newToken = new Token(minus1Token.Value + minus2Token.Value + idToken.Value, TokenType.CommandLineParameter, minus1Token.PreSpaces + minus2Token.PreSpaces + idToken.PreSpaces);
-                    r.Add(newToken);
-                    x += 3;
+                    var possibleValueToken = GetToken(tokens, x, 3);
+                    if (possibleValueToken.IsString || possibleValueToken.IsIdentifier() || possibleValueToken.IsNumber || possibleValueToken.IsDate || possibleValueToken.IsDateTime)
+                    {
+                        var newToken = new Token(minus1Token.Value + minus2Token.Value + idToken.Value, TokenType.CommandLineParameter, minus1Token.PreSpaces + minus2Token.PreSpaces + idToken.PreSpaces);
+                        newToken.__internalTokens = new Tokens() { possibleValueToken }; // Add the value token as an internal token}
+                        r.Add(newToken);
+                        x += 4;
+                    }
+                    else
+                    {
+                        var newToken = new Token(minus1Token.Value + minus2Token.Value + idToken.Value, TokenType.CommandLineParameter, minus1Token.PreSpaces + minus2Token.PreSpaces + idToken.PreSpaces);
+                        r.Add(newToken);
+                        x += 3;
+                    }
                 }
 
                 // -identifier or /identifier
@@ -503,7 +514,7 @@ namespace DynamicSugar
             // c == ' ' Space is not a delimiter here, 
         }
 
-        public enum AnalysedJsonLineType  {
+        public enum AnalyzedJsonLineType  {
             StartObject,
             StartArray,
             EndObject,
@@ -520,10 +531,10 @@ namespace DynamicSugar
 
         public class AnalysedJsonLine
         {
-            public AnalysedJsonLineType Type { get; set; }
+            public AnalyzedJsonLineType Type { get; set; }
             public string Line { get; set; }
             public object Tag { get; set; }
-            public AnalysedJsonLine(AnalysedJsonLineType type, string line)
+            public AnalysedJsonLine(AnalyzedJsonLineType type, string line)
             {
                 Type = type;
                 Line = line;
@@ -546,25 +557,25 @@ namespace DynamicSugar
                     nextToken = tokens[x + 1];
 
                 if(curToken.AssertDelimiter("{", throwEx: false) && tokens.Count == 1)
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.StartObject, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.StartObject, jsonLine));
 
                 else if (curToken.AssertDelimiter("}", throwEx: false) && tokens.Count == 1)
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.EndObject, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.EndObject, jsonLine));
 
                 else if (curToken.AssertDelimiter("[", throwEx: false) && tokens.Count == 1)
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.StartArray, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.StartArray, jsonLine));
 
                 else if (curToken.AssertDelimiter("]", throwEx: false) && tokens.Count == 1)
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.EndArray, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.EndArray, jsonLine));
 
                 else if (curToken.Type == TokenType.NameValuePair && nextToken.IsDelimiter("["))
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.StartPropertyArray, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.StartPropertyArray, jsonLine));
 
                 else if (curToken.Type == TokenType.NameValuePair && nextToken.IsDelimiter("{"))
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.StartPropertyObject, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.StartPropertyObject, jsonLine));
 
                 else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsNumber)
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyNumber, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.PropertyNumber, jsonLine));
 
                 else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsDString)
                 {
@@ -572,23 +583,23 @@ namespace DynamicSugar
                     var tmpTokens = this.Tokenize(stringValue.Value);
                     if(tmpTokens.Count == 1 && (tmpTokens[0].Type == TokenType.Date|| tmpTokens[0].Type == TokenType.DateTime))
                     {
-                        r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyDate, jsonLine));
+                        r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.PropertyDate, jsonLine));
                     }
                     else
                     {
-                        r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyString, jsonLine));
+                        r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.PropertyString, jsonLine));
                     }
                 }
                 else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsIdentifier("null"))
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyNull, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.PropertyNull, jsonLine));
 
                 else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsIdentifier("true"))
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyBool, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.PropertyBool, jsonLine));
 
                 else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsIdentifier("false"))
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.PropertyBool, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.PropertyBool, jsonLine));
                 else
-                    r.Add(new AnalysedJsonLine(AnalysedJsonLineType.Unknown, jsonLine));
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.Unknown, jsonLine));
             }
 
             return r;
