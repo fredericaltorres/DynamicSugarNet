@@ -593,6 +593,28 @@ DateTime 2025/06/13 12:39:01.874 PM";
 
 
         [TestMethod]
+        public void Tokenizer_FileNameWithMinusInFolderPath()
+        {
+            var testLine = $@"C:\Rainbark\Fred\QA-A\qazaLion01.rdp";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertFilePath(@"C:\Rainbark\Fred\QA-A\qazaLion01.rdp");
+        }
+
+        [TestMethod]
+        public void Tokenizer_FileNameWithMinusInFolderPaths()
+        {
+            var testLine = $@"(c:\windows\system32\mstsc.exe|C:\Rainbark\Fred\QA-A\qazaLion01.rdp)";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertFilePath(@"c:\windows\system32\mstsc.exe");
+            tokens[x++].AssertDelimiter("|");
+            tokens[x++].AssertFilePath(@"C:\Rainbark\Fred\QA-A\qazaLion01.rdp");
+            tokens[x++].AssertDelimiter(")");
+        }
+
+        [TestMethod]
         public void Tokenizer_IdentifierPath2()
         {
             var testLine = $@"[HTTPHelper.Execute()]";

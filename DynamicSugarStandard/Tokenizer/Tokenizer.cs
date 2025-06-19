@@ -211,7 +211,8 @@ namespace DynamicSugar
 
         public Tokens CombineTokens(Tokens tokens)
         {
-            var identifierPathValidDelimiters = DS.List(".", "/", @"\", "-");
+            var identifierPathValidDelimiters = DS.List(".", "/", @"\", "-", "_");
+            var windowsFileNameDelimiters = DS.List(":", @"\", ".", "-", "_");
             var x = 0;
             var r = new Tokens();
             var requireReRun = false;
@@ -316,7 +317,7 @@ namespace DynamicSugar
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.Length==1 && char.IsLetter(GetToken(tokens, x).Value[0]) &&
                          GetToken(tokens, x, 1).IsDelimiter(DS.List(":")) && GetToken(tokens, x, 2).IsDelimiter(DS.List(@"\")))
                 {
-                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x, DS.List(":", @"\", "."));
+                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x, windowsFileNameDelimiters);
                     var text = subTokens.GetAsText();
                     r.Add(new Token(text, TokenType.FilePath, "", subTokens));
                     x += subTokens.Count;
