@@ -502,10 +502,7 @@ DateTime 2025/06/13 12:39:01.874 PM";
             var testLine = $@"MachineName:qa2node--win01, ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
-            tokens[x++].AssertNameValue("qa2node", "MachineName", @"MachineName : qa2node");
-            tokens[x++].AssertDelimiter("-");
-            tokens[x++].AssertDelimiter("-");
-            tokens[x++].AssertIdentifier("win01");
+            tokens[x++].AssertNameValue("qa2node--win01", "MachineName", @"MachineName : qa2node--win01");
             tokens[x++].AssertDelimiter(",");
         }
 
@@ -571,9 +568,7 @@ DateTime 2025/06/13 12:39:01.874 PM";
             var testLine = $@"MachineName:qa2node-win01, ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
-            tokens[x++].AssertNameValue("qa2node", "MachineName", @"MachineName : qa2node");
-            tokens[x++].AssertDelimiter("-");
-            tokens[x++].AssertIdentifier("win01");
+            tokens[x++].AssertNameValue("qa2node-win01", "MachineName", @"MachineName : qa2node-win01");
             tokens[x++].AssertDelimiter(",");
         }
 
@@ -602,6 +597,40 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].AssertIdentifier("Url");
             tokens[x++].AssertDelimiter("(");
             tokens[x++].AssertUrl(url);
+            tokens[x++].AssertDelimiter(")");
+        }
+
+        [TestMethod]
+        public void Tokenizer_NameValueWithValueBeingAnIdentifierPathDot()
+        {
+            var testLine = $@"(poco: Brainshark.IntegrationTesting.ConverterCheckConvertStatusData)";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertNameValue("Brainshark.IntegrationTesting.ConverterCheckConvertStatusData" ,"poco", "poco : Brainshark.IntegrationTesting.ConverterCheckConvertStatusData");
+            tokens[x++].AssertDelimiter(")");
+        }
+
+        [TestMethod]
+        public void Tokenizer_NameValueWithValueBeingAnIdentifierPathMinus()
+        {
+            var testLine = $@"(poco: Brainshark-IntegrationTesting-ConverterCheckConvertStatusData)";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertNameValue("Brainshark-IntegrationTesting-ConverterCheckConvertStatusData", "poco", "poco : Brainshark-IntegrationTesting-ConverterCheckConvertStatusData");
+            tokens[x++].AssertDelimiter(")");
+        }
+
+
+        [TestMethod]
+        public void Tokenizer_NameValueWithValueBeingAnIdentifierPathAsString()
+        {
+            var testLine = $@"(poco: ""Brainshark.IntegrationTesting.ConverterCheckConvertStatusData"")";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertNameValue("Brainshark.IntegrationTesting.ConverterCheckConvertStatusData", "poco", @"poco : ""Brainshark.IntegrationTesting.ConverterCheckConvertStatusData""");
             tokens[x++].AssertDelimiter(")");
         }
 

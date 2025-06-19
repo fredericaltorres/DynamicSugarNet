@@ -354,8 +354,26 @@ namespace DynamicSugar
                     var tokenDelimiter = GetToken(tokens, x, 1);
                     var tokenVal = GetToken(tokens, x, 2);
 
-                    r.Add(new Token(tokenName, tokenDelimiter, tokenVal));
-                    x += 3;
+                    var isIdentifierPath = false;
+
+                    if(tokenVal.IsIdentifier()) // This could be an Identifier path
+                    {
+                        var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 2, identifierPathValidDelimiters);
+                        isIdentifierPath = subTokens.Count > 1;
+                        if (isIdentifierPath)
+                        {
+                            var text = subTokens.GetAsText();
+                            var newIdentifierPathToken = new Token(text, TokenType.IdentifierPath, null, subTokens);
+                            r.Add(new Token(tokenName, tokenDelimiter, newIdentifierPathToken));
+                            x += 2 + subTokens.Count;
+                        }
+                    }
+
+                    if (!isIdentifierPath)
+                    {
+                        r.Add(new Token(tokenName, tokenDelimiter, tokenVal));
+                        x += 3;
+                    }
                 }
 
                 // http/https:// xxxx
