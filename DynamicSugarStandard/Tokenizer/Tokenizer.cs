@@ -313,6 +313,17 @@ namespace DynamicSugar
                         requireReRun = true; //  for IdentifierPath: We need to re-run the loop to check for more identifiers 
                     }
                 }
+
+                // UNC file path \\aaa\bbb\ccc
+                else if (GetToken(tokens, x).IsDelimiter(@"\") && GetToken(tokens, x, 1).IsDelimiter(@"\") && GetToken(tokens, x, 2).IsIdentifier())
+                {
+                    var subTokens = ReadAllTokenAcceptedForIdentifierPath(tokens, x + 1, identifierPathValidDelimiters);
+                    var text = GetToken(tokens, x).Value + subTokens.GetAsText();
+                    subTokens.Insert(0, GetToken(tokens, x)); // Add the first token to the subTokens
+                    r.Add(new Token(text, TokenType.FilePath, null, subTokens));
+                    x += subTokens.Count;
+                }
+
                 // c:\a\windows\system32\cmd.exe
                 else if (GetToken(tokens, x).IsIdentifier() && GetToken(tokens, x).Value.Length==1 && char.IsLetter(GetToken(tokens, x).Value[0]) &&
                          GetToken(tokens, x, 1).IsDelimiter(DS.List(":")) && GetToken(tokens, x, 2).IsDelimiter(DS.List(@"\")))

@@ -615,6 +615,38 @@ DateTime 2025/06/13 12:39:01.874 PM";
         }
 
         [TestMethod]
+        public void Tokenizer_UncFilePath()
+        {
+            var testLine = $@"UncFilePath (\\aaa\bbb\ccc) IdentifierPath (aaa\bbb\ccc) IdentifierPath (aaa/bbb/ccc) IdentifierPath (aaa.bbb.ccc) IdentifierPath (aaa-bbb-ccc)";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertIdentifier("UncFilePath");
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertFilePath(@"\\aaa\bbb\ccc");
+            tokens[x++].AssertDelimiter(")");
+
+            tokens[x++].AssertIdentifier("IdentifierPath");
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertIdentifierPath(@"aaa\bbb\ccc");
+            tokens[x++].AssertDelimiter(")");
+
+            tokens[x++].AssertIdentifier("IdentifierPath");
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertIdentifierPath(@"aaa/bbb/ccc");
+            tokens[x++].AssertDelimiter(")");
+
+            tokens[x++].AssertIdentifier("IdentifierPath");
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertIdentifierPath(@"aaa.bbb.ccc");
+            tokens[x++].AssertDelimiter(")");
+
+            tokens[x++].AssertIdentifier("IdentifierPath");
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertIdentifierPath(@"aaa-bbb-ccc");
+            tokens[x++].AssertDelimiter(")");
+        }
+
+        [TestMethod]
         public void Tokenizer_IdentifierPath2()
         {
             var testLine = $@"[HTTPHelper.Execute()]";
