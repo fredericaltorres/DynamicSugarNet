@@ -241,7 +241,7 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Tokenizer_ForColorCoding()
         {
-            var testLine = @"   3 | 2025/06/12 11:11:18.329 AM | 2025/06/12 11:11:20.380 AM | bos3bkndsvc01 | prod/backendsvc/app_logs | 2025-06-12 11:11:18.329|Brainshark|Core|1.0.1.0|INFO|bos3bkndsvc01|CEF:0|Brainshark|Core|0|Message|Message|Info|msg=BrainsharkMonitorService64 on BOS3BKNDSVC01,Informational,TTSConverter2,[monitorId: 1934, machineName: BOS3BKNDSVC01][TTSMonitor.Trace()][INFO][TextToSpeechExecutor.ExecuteOnSlide(), JobId:485916067, pid:252369326, Provider: MicrosoftCognitiveServices, slideId:360959416][SUCCEEDED], Duration:2.6s, TextLength:662, Mp3Duration:46s, Mp3Size: 0.3 Mb rt=Jun 12 2025 11:11:18 start=Jun 12 2025 11:11:18 end=Jun 12 2025 11:11:18 dvchost=bos3bkndsvc01|   |";
+            var testLine = @"   3 | 2025/06/12 11:11:18.329 AM | 2025/06/12 11:11:20.380 AM | backEndSvc01 | prod/backendsvc/app_logs | 2025-06-12 11:11:18.329|Rainbark|Core|1.0.1.0|INFO|BackEndsvc01|CEF:0|Rainbark|Core|0|Message|Message|Info|msg=Rainbark Service on BACKENDSVC,Informational,TTSConverter2,[monitorId: 1934, machineName: BACENDSVC][TTSMonitor.Trace()][INFO][TextToSpeechExecutor.ExecuteOnSlide(), JobId:485916067, pid:252369326, Provider: MicrosoftCognitiveServices, slideId:360959416][SUCCEEDED], Duration:2.6s, TextLength:662, Mp3Duration:46s, Mp3Size: 0.3 Mb rt=Jun 12 2025 11:11:18 start=Jun 12 2025 11:11:18 end=Jun 12 2025 11:11:18|   |";
             var tokens = new Tokenizer().Tokenize(testLine);
         }
 
@@ -355,7 +355,7 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Tokenizer_ComplexLogLine()
         {
-            var testLine = @" 106 ┊ 2025/06/13 03:47:05.598 AM ┊ 2025/06/13 03:47:07.192 AM ┊ bos3bkndsvc01 ┊ prod/backendsvc/app_logs ┊ 2025-06-13 03:47:05.598|Brainshark|Core|1.0.1.0|INFO|bos3bkndsvc01|msg=CEF:0|Brainshark|Core|0|Message|Message|Info|msg=06/13/2025 03:47:05 AM Severity=3(Info)&&&LocalNum=0&&&NonLocalNum=0&&&Source=Brainshark.Brainshark.Platform.EventGridNotificator:Void SendToEventGrid(Brainshark.Brainshark.Platform.EventGridNotificationPayLoad)&&&Description=No error.Server=BOS3BKNDSVC01&&&ExtendedInfo=Parameter Info: Param0:[SendToEventGrid.SignalR]{""JobId"":485937390,""PresentationId"":773853575,""ErrorMessage"":"""",""UserId"":11523947,""TimeStamp"":""2025-06-13T07:47:05.5827769Z"",""FailedSlides"":null,""RequestedJobState"":125,""RequestedJobStateString"":""ADDING_AUDIO_JOBS"",""RequestedJobStateExtraInfoString"":""TextToSpeechExecutor"",""PresentationBatchJobStateString"":""ADDING_AUDIO_JOBS"",""PresentationBatchJobState"":125,""JobStateType"":2,""JobStateTypeString"":""Processing"",""JobErrorCode"":0,""JobErrorCodeString"":""NO_ERROR"",""PercentComplete"":100,""CompletedSlideJobs"":0,""TotalSlideJobs"":0},Param1:Brainshark.Brainshark.Platform.EventGridNotificator rt=Jun 13 2025 03:47:05 start=Jun 13 2025 03:47:05 end=Jun 13 2025 03:47:05 dvchost=bos3bkndsvc01|sid=|cid=|uid=|pid=|errorCode=-1|errorMessage=NO_ERROR_CODE_PROVIDED|url=|  ┊";
+            var testLine = @" 106 ┊ 2025/06/13 03:47:05.598 AM ┊ 2025/06/13 03:47:07.192 AM ┊ BackEndService01 ┊ prod/backendsvc/app_logs ┊ 2025-06-13 03:47:05.598|Rainbark|Core|1.0.1.0|INFO|BackEndService01|msg=CEF:0|Rainbark|Core|0|Message|Message|Info|msg=06/13/2025 03:47:05 AM Severity=3(Info)&&&LocalNum=0&&&NonLocalNum=0&&&Source=Rainbark.Rainbark.Platform.EventGridNotificator:Void SendToEventGrid(Rainbark.Rainbark.Platform.EventGridNotificationPayLoad)&&&Description=No error.Server=BACKENDSVC&&&ExtendedInfo=Parameter Info: Param0:[SendToEventGrid.SignalR]{""JobId"":485937390,""PresentationId"":773853575,""ErrorMessage"":"""",""UserId"":11523947,""TimeStamp"":""2025-06-13T07:47:05.5827769Z"",""FailedSlides"":null,""RequestedJobState"":125,""RequestedJobStateString"":""ADDING_AUDIO_JOBS"",""RequestedJobStateExtraInfoString"":""TextToSpeechExecutor"",""PresentationBatchJobStateString"":""ADDING_AUDIO_JOBS"",""PresentationBatchJobState"":125,""JobStateType"":2,""JobStateTypeString"":""Processing"",""JobErrorCode"":0,""JobErrorCodeString"":""NO_ERROR"",""PercentComplete"":100,""CompletedSlideJobs"":0,""TotalSlideJobs"":0},Param1:Rainbark.Rainbark.Platform.EventGridNotificator rt=Jun 13 2025 03:47:05 start=Jun 13 2025 03:47:05 end=Jun 13 2025 03:47:05|sid=|cid=|uid=|pid=|errorCode=-1|errorMessage=NO_ERROR_CODE_PROVIDED|url=|  ┊";
             var tokens = new Tokenizer().Tokenize(testLine);
             //var x = 0;
             //tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "{");
@@ -418,14 +418,14 @@ namespace DynamicSugarSharp_UnitTests
         [TestMethod]
         public void Tokenizer_BracketWithNames()
         {
-            var testLine = $@"[BOS3BKNDSVC02,Brainshark.Converters.Listener.VideoStatus,UpdateVideoJobStatus,]";
+            var testLine = $@"[BACKENDSVC,Rainbark.Converters.Listener.VideoStatus,UpdateVideoJobStatus,]";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
 
             tokens[x++].AssertDelimiter("[");
-            tokens[x++].AssertIdentifier("BOS3BKNDSVC02");
+            tokens[x++].AssertIdentifier("BACKENDSVC");
             tokens[x++].AssertDelimiter(",");
-            tokens[x++].AssertIdentifierPath("Brainshark.Converters.Listener.VideoStatus");
+            tokens[x++].AssertIdentifierPath("Rainbark.Converters.Listener.VideoStatus");
             tokens[x++].AssertDelimiter(",");
             tokens[x++].AssertIdentifier("UpdateVideoJobStatus");
             tokens[x++].AssertDelimiter(",");
@@ -499,10 +499,10 @@ DateTime 2025/06/13 12:39:01.874 PM";
         [TestMethod]
         public void Tokenizer_CommandLine_Linux_LongFormat_NoSpaceBefore()
         {
-            var testLine = $@"MachineName:qa2node--win01, ";
+            var testLine = $@"MachineName:uat3node--win01, ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
-            tokens[x++].AssertNameValue("qa2node--win01", "MachineName", @"MachineName : qa2node--win01");
+            tokens[x++].AssertNameValue("uat3node--win01", "MachineName", @"MachineName : uat3node--win01");
             tokens[x++].AssertDelimiter(",");
         }
 
@@ -511,24 +511,24 @@ DateTime 2025/06/13 12:39:01.874 PM";
         public void Tokenizer_CommandLine_Linux_LongFormat()
         {
             var testLine = $@"
-""C:\development\Console.exe"" webServicesMobile --loginDirectory ""TestingX__Company_06"" --username TestingX__Company_06_CoursePerf --password ""xie"" --host ""uat.rainbark.com"" --setStagingDB  --verbose --logFile ""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" --toto 1
+""C:\development\Console.exe"" webServicesMobile --authId ""TestingX__Company_06"" --username TestingX__Company_06_CoursePerf --password ""xie"" --host ""uat.rainbark.com"" --setStagingDB  --verbose --logFile ""C:\Rainbark\logs\Rainbark.IntegratedTest.Converters.log"" --toto 1
 ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
             tokens[x++].IsIdentifier("webServicesMobile");
 
-            Assert.AreEqual(@"--loginDirectory ""TestingX__Company_06""", tokens[x].GetRawText());
-            Assert.AreEqual(@"--loginDirectory", tokens[x].ValueAsString);
-            Assert.AreEqual(@"--loginDirectory", tokens[x].Value);
+            Assert.AreEqual(@"--authId ""TestingX__Company_06""", tokens[x].GetRawText());
+            Assert.AreEqual(@"--authId", tokens[x].ValueAsString);
+            Assert.AreEqual(@"--authId", tokens[x].Value);
 
-            tokens[x++].AssertCommandLineParameter( @"--loginDirectory", "TestingX__Company_06");
+            tokens[x++].AssertCommandLineParameter( @"--authId", "TestingX__Company_06");
             tokens[x++].AssertCommandLineParameter( @"--username", "TestingX__Company_06_CoursePerf");
             tokens[x++].AssertCommandLineParameter( @"--password", "xie");
             tokens[x++].AssertCommandLineParameter( @"--host", "uat.rainbark.com");
             tokens[x++].AssertCommandLineParameter( @"--setStagingDB");
             tokens[x++].AssertCommandLineParameter( @"--verbose");
-            tokens[x++].AssertCommandLineParameter( @"--logFile", @"C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log");
+            tokens[x++].AssertCommandLineParameter( @"--logFile", @"C:\Rainbark\logs\Rainbark.IntegratedTest.Converters.log");
 
             Assert.AreEqual(@"--toto 1", tokens[x].GetRawText());
             Assert.AreEqual(@"--toto", tokens[x].ValueAsString);
@@ -541,13 +541,13 @@ DateTime 2025/06/13 12:39:01.874 PM";
         public void Tokenizer_CommandLine_Linux_ShortFormat()
         {
             var testLine = $@"
-""C:\development\Console.exe"" webServicesMobile -loginDirectory ""TestingX__Company_06"" -username ""TestingX__Company_06_CoursePerf"" -password ""moxie"" -host ""staging.brainshark.com"" -setStagingDB  -verbose -logFile""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" -toto 1
+""C:\development\Console.exe"" webServicesMobile -authId ""TestingX__Company_06"" -username ""TestingX__Company_06_CoursePerf"" -password ""xiexie"" -host ""staging.Rainbark.com"" -setStagingDB  -verbose -logFile""C:\Rainbark\logs\Rainbark.IntegratedTest.Converters.log"" -toto 1
 ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
             tokens[x++].IsIdentifier("webServicesMobile");
-            tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"-loginDirectory");
+            tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"-authId");
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"TestingX__Company_06");
         }
 
@@ -565,10 +565,10 @@ DateTime 2025/06/13 12:39:01.874 PM";
         [TestMethod]
         public void Tokenizer_CommandLine_Linux_ShortFormat_NoSpaceBefore()
         {
-            var testLine = $@"MachineName:qa2node-win01, ";
+            var testLine = $@"MachineName:uat3node-win01, ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
-            tokens[x++].AssertNameValue("qa2node-win01", "MachineName", @"MachineName : qa2node-win01");
+            tokens[x++].AssertNameValue("uat3node-win01", "MachineName", @"MachineName : uat3node-win01");
             tokens[x++].AssertDelimiter(",");
         }
 
@@ -576,13 +576,13 @@ DateTime 2025/06/13 12:39:01.874 PM";
         public void Tokenizer_CommandLine_Linux_backSlashSyntax()
         {
             var testLine = $@"
-""C:\development\Console.exe"" webServicesMobile /loginDirectory ""TestingX__Company_06"" /username ""TestingX__Company_06_CoursePerf"" -password ""moxie"" /host ""staging.brainshark.com"" /setStagingDB /verbose /logFile ""C:\Brainshark\logs\Brainshark.IntegrationTesting.Converters.log"" /toto 1
+""C:\development\Console.exe"" webServicesMobile /authId ""TestingX__Company_06"" /username ""TestingX__Company_06_CoursePerf"" -password ""xiexie"" /host ""staging.Rainbark.com"" /setStagingDB /verbose /logFile ""C:\Rainbark\logs\Rainbark.IntegratedTest.Converters.log"" /toto 1
 ";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote_FilePath, @"""C:\development\Console.exe""");
             tokens[x++].IsIdentifier("webServicesMobile");
-            tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"/loginDirectory");
+            tokens[x++].Assert(Tokenizer.TokenType.CommandLineParameter, @"/authId");
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"TestingX__Company_06");
         }
 
@@ -603,34 +603,33 @@ DateTime 2025/06/13 12:39:01.874 PM";
         [TestMethod]
         public void Tokenizer_NameValueWithValueBeingAnIdentifierPathDot()
         {
-            var testLine = $@"(poco: Brainshark.IntegrationTesting.ConverterCheckConvertStatusData)";
+            var testLine = $@"(poco: Rainbark.IntegratedTest.ConverterCheckConvertStatusData)";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].AssertDelimiter("(");
-            tokens[x++].AssertNameValue("Brainshark.IntegrationTesting.ConverterCheckConvertStatusData" ,"poco", "poco : Brainshark.IntegrationTesting.ConverterCheckConvertStatusData");
+            tokens[x++].AssertNameValue("Rainbark.IntegratedTest.ConverterCheckConvertStatusData" ,"poco", "poco : Rainbark.IntegratedTest.ConverterCheckConvertStatusData");
             tokens[x++].AssertDelimiter(")");
         }
 
         [TestMethod]
         public void Tokenizer_NameValueWithValueBeingAnIdentifierPathMinus()
         {
-            var testLine = $@"(poco: Brainshark-IntegrationTesting-ConverterCheckConvertStatusData)";
+            var testLine = $@"(poco: Rainbark-IntegratedTest-ConverterCheckConvertStatusData)";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].AssertDelimiter("(");
-            tokens[x++].AssertNameValue("Brainshark-IntegrationTesting-ConverterCheckConvertStatusData", "poco", "poco : Brainshark-IntegrationTesting-ConverterCheckConvertStatusData");
+            tokens[x++].AssertNameValue("Rainbark-IntegratedTest-ConverterCheckConvertStatusData", "poco", "poco : Rainbark-IntegratedTest-ConverterCheckConvertStatusData");
             tokens[x++].AssertDelimiter(")");
         }
-
 
         [TestMethod]
         public void Tokenizer_NameValueWithValueBeingAnIdentifierPathAsString()
         {
-            var testLine = $@"(poco: ""Brainshark.IntegrationTesting.ConverterCheckConvertStatusData"")";
+            var testLine = $@"(poco: ""Rainbark.IntegratedTest.ConverterCheckConvertStatusData"")";
             var tokens = new Tokenizer().Tokenize(testLine);
             var x = 0;
             tokens[x++].AssertDelimiter("(");
-            tokens[x++].AssertNameValue("Brainshark.IntegrationTesting.ConverterCheckConvertStatusData", "poco", @"poco : ""Brainshark.IntegrationTesting.ConverterCheckConvertStatusData""");
+            tokens[x++].AssertNameValue("Rainbark.IntegratedTest.ConverterCheckConvertStatusData", "poco", @"poco : ""Rainbark.IntegratedTest.ConverterCheckConvertStatusData""");
             tokens[x++].AssertDelimiter(")");
         }
 
