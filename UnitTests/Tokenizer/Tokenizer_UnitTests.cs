@@ -593,6 +593,19 @@ DateTime 2025/06/13 12:39:01.874 PM";
 
 
         [TestMethod]
+        public void Tokenizer_Url()
+        {
+            var url = "https://www.figma.com/design/tPeY9vCvjM2WgO9dbiOktB/%F0%9F%92%A1-Digital-Avatars-Brainstorming?node-id=436-356169&t=i96UB6pDHs4oqHDT-4";
+            var testLine = $@"Url ({url})";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            tokens[x++].AssertIdentifier("Url");
+            tokens[x++].AssertDelimiter("(");
+            tokens[x++].AssertUrl(url);
+            tokens[x++].AssertDelimiter(")");
+        }
+
+        [TestMethod]
         public void Tokenizer_FileNameWithMinusInFolderPath()
         {
             var testLine = $@"C:\Rainbark\Fred\QA-A\qazaLion01.rdp";

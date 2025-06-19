@@ -76,6 +76,11 @@ namespace DynamicSugar
                 Assert(TokenType.FilePath, value);
             }
 
+            public void AssertUrl(string value)
+            {
+                Assert(TokenType.Url, value);
+            }
+
             public void AssertNumber(string value)
             {
                 Assert(TokenType.Number, value);

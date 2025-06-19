@@ -459,7 +459,7 @@ namespace DynamicSugar
 
         public Tokens ReadAllTokenAcceptedForUrl(Tokens tokens, int start)
         {
-            var delimiters = DS.List("+", "-", "/", ":", "&", ".");
+            var delimiters = DS.List("+", "-", "/", ":", "&", ".", "%", "?", "=");
             var r = new Tokens();
             for (int i = start; i < tokens.Count; i++)
             {
