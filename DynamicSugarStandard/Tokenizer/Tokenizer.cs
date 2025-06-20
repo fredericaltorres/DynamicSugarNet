@@ -465,7 +465,9 @@ namespace DynamicSugar
             for (int i = start; i < tokens.Count; i++)
             {
                 if ((tokens[i].IsDelimiter(delimiters) && tokens[i].HasEmptyPreSpace) || 
-                    (tokens[i].IsIdentifier() && (tokens[i].HasEmptyPreSpace || i == start /* accept previous space for the first word*/)))
+                    (tokens[i].IsIdentifier() && (tokens[i].HasEmptyPreSpace || i == start /* accept previous space for the first word*/)) ||
+                    (tokens[i].IsNumber && (tokens[i].HasEmptyPreSpace && i > start /* a folder a number cannot be the first */ ))
+                    )
                 {
                     r.Add(tokens[i]);
                 }
