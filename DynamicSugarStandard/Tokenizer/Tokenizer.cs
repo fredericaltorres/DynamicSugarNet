@@ -82,6 +82,26 @@ namespace DynamicSugar
             return r;
         }
 
+        private bool IsDoubleQuoteEscaped(string input, int i) 
+        {
+            return (input[i] == '\\' && i < input.Length - 1 && input[i + 1] == '"');
+        }
+
+        private bool IsSingleQuoteEscaped(string input, int i)
+        {
+            return (input[i] == '\\' && i < input.Length - 1 && input[i + 1] == '\'');
+        }
+
+        private bool IsDoubleQuoteDouble(string input, int i)
+        {
+            return (input[i] == '"' && i < input.Length - 1 && input[i + 1] == '"');
+        }
+
+        private bool IsSingleQuoteDouble(string input, int i)
+        {
+            return (input[i] == '\'' && i < input.Length - 1 && input[i + 1] == '\'');
+        }
+
         public Tokens Tokenize(string input)
         {
             var tokens = new Tokens();
@@ -102,9 +122,23 @@ namespace DynamicSugar
                 {
                     var stringBuilder = new StringBuilder();
                     i++; // Skip opening quote
-                    while (i < input.Length && input[i] != '"')
+                    while (i < input.Length && (input[i] != '"' || IsDoubleQuoteDouble(input, i)))
                     {
-                        stringBuilder.Append(input[i]);
+                        if (IsDoubleQuoteEscaped(input, i))
+                        {
+                            stringBuilder.Append('\\');
+                            stringBuilder.Append('"');
+                            i++; // Skip the escaped quote
+                        }
+                        else if(IsDoubleQuoteDouble(input, i))
+                        {
+                            stringBuilder.Append('"');
+                            i++; // Skip the escaped quote
+                        }
+                        else
+                        {
+                            stringBuilder.Append(input[i]);
+                        }
                         i++;
                     }
                     if (i < input.Length) i++; // Skip closing quote
@@ -117,13 +151,27 @@ namespace DynamicSugar
                 {
                     var stringBuilder = new StringBuilder();
                     i++; // Skip opening quote
-                    while (i < input.Length && input[i] != '\'')
+                    while (i < input.Length && (input[i] != '\'' || IsSingleQuoteDouble(input, i)))
                     {
-                        stringBuilder.Append(input[i]);
+                        if (IsSingleQuoteEscaped(input, i))
+                        {
+                            stringBuilder.Append('\\');
+                            stringBuilder.Append('\'');
+                            i++; // Skip the escaped quote
+                        }
+                        else if (IsSingleQuoteDouble(input, i))
+                        {
+                            stringBuilder.Append('\'');
+                            i++; // Skip the escaped quote
+                        }
+                        else
+                        {
+                            stringBuilder.Append(input[i]);
+                        }
                         i++;
                     }
                     if (i < input.Length) i++; // Skip closing quote
-                    tokens.Add(new Token($"{stringBuilder}", TokenType.StringLiteralSQuote, GetSpaces(sbSpaceCounter)));
+                    tokens.Add(new Token($@"{stringBuilder}", TokenType.StringLiteralSQuote, GetSpaces(sbSpaceCounter)));
                     continue;
                 }
 

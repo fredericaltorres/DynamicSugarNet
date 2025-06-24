@@ -781,5 +781,56 @@ DateTime 2025/06/13 12:39:01.874 PM";
             for(var i = 0; i < expectedTypes.Count; i++)
                 Assert.AreEqual(expectedTypes[i], actualTypes[i], $"Mismatch at index {i}: expected {expectedTypes[i]}, got {actualTypes[i]}");
         }
+
+        [TestMethod]
+        public void Tokenizer_EscapedDStringWithDQuote()
+        {
+            var testLine = $@"
+""hello \"" dolly"" 
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            Assert.AreEqual(@"""hello \"" dolly""", tokens[x].ValueAsString);
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"hello \"" dolly");
+        }
+
+        [TestMethod]
+        public void Tokenizer_DoubleDStringWithDQuote()
+        {
+            var testLine = $@"
+""hello """" dolly"" 
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            var vs = tokens[x].ValueAsString;
+            Assert.AreEqual(@"""hello "" dolly""", tokens[x].ValueAsString);
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"hello "" dolly");
+        }
+
+
+
+        [TestMethod]
+        public void Tokenizer_EscapedSStringWithSQuote()
+        {
+            var testLine = $@"
+'hello \' dolly' 
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            Assert.AreEqual(@"'hello \' dolly'", tokens[x].ValueAsString);
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralSQuote, @"hello \' dolly");
+        }
+
+        [TestMethod]
+        public void Tokenizer_DoubleSStringWithSQuote()
+        {
+            var testLine = $@"
+'hello '' dolly' 
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            Assert.AreEqual(@"'hello ' dolly'", tokens[x].ValueAsString);
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralSQuote, @"hello ' dolly");
+        }
     }
 }
