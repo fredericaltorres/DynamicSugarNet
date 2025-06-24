@@ -783,6 +783,46 @@ DateTime 2025/06/13 12:39:01.874 PM";
         }
 
         [TestMethod]
+        public void Tokenizer_DStringWithCRLF()
+        {
+            var testLine = $@"
+""hello
+dolly""
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            Assert.AreEqual($@"""hello{Environment.NewLine}dolly""", tokens[x].ValueAsString);
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, $@"hello{Environment.NewLine}dolly");
+        }
+
+        [TestMethod]
+        public void Tokenizer_DStringWithCR()
+        {
+            var CR = "\r";
+            var testLine = $@"
+""hello{CR}dolly""
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            Assert.AreEqual($@"""hello{CR}dolly""", tokens[x].ValueAsString);
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, $@"hello{CR}dolly");
+        }
+
+
+        [TestMethod]
+        public void Tokenizer_DStringWithLF()
+        {
+            var LF = "\n";
+            var testLine = $@"
+'hello{LF}dolly'
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            Assert.AreEqual($@"'hello{LF}dolly'", tokens[x].ValueAsString);
+            tokens[x++].Assert(Tokenizer.TokenType.StringLiteralSQuote, $@"hello{LF}dolly");
+        }
+
+        [TestMethod]
         public void Tokenizer_EscapedDStringWithDQuote()
         {
             var testLine = $@"
