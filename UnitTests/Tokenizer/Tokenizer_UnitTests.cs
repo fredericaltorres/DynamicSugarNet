@@ -24,6 +24,7 @@ namespace DynamicSugarSharp_UnitTests
         const string TestDateTimeTZNoMs = @"2025-05-26T22:06:11Z";
 
         const string TestLongLogLine = @"2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001";
+        const string ReallyTestLongLogLine = @"2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001,2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001,2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001, 2025-05-24 13:16:52.859,   Info   ,Export,[          id: 709046703, mode: Export]        [ExecuteConversion()]       Slide: 10755223, type: IMAGE, index: 0001";
 
         const string TestString1 = @" ""ok"" 'ko' ";
 
@@ -873,18 +874,96 @@ dolly""
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralSQuote, @"hello ' dolly");
         }
 
+
+        const string ReallyLongFormattedJson = @"
+{
+    ""Results"": [
+        {
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Presentation"": {
+                ""Number"": 213523
+            },
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+            ""Number"": 213523,
+            ""Description"": ""string"",
+            ""boolTrue"": true,
+            ""boolFalse"": false,
+            ""null"": null,
+            ""date"" : ""2025-05-26T22:06:11.513Z"",
+        }
+    ]
+}
+";
+
         [TestMethod]
         public void Tokenizer_ComputeHistory()
         {
             TokenizerExecutionHistories.DeleteAll();
-            var tokens = new Tokenizer(trackExecutionHistory: true).Tokenize(TestLongLogLine);
-            new Tokenizer(trackExecutionHistory: true).AnalyzeFormattedJson(formattedJson);
+            var tokens = new Tokenizer(trackExecutionHistory: true).Tokenize(ReallyTestLongLogLine);
 
             var tokenizer = new Tokenizer(trackExecutionHistory: true);
             Assert.IsTrue(File.Exists(tokenizer.ExecutionHistories.JsonFileName));
             var tokenizerExecutionHistories = TokenizerExecutionHistories.Load();
             Assert.AreEqual(1, tokenizerExecutionHistories.Histories.Count);
             Assert.IsTrue(tokenizerExecutionHistories.Histories[0].DurationMs > 0);
+            Assert.AreEqual(TokenizerExecutionType.Tokenize, tokenizerExecutionHistories.Histories[0].TokenizerExecutionType);
+
+            new Tokenizer(trackExecutionHistory: true).AnalyzeFormattedJson(ReallyLongFormattedJson);
+
+            tokenizer = new Tokenizer(trackExecutionHistory: true);
+            Assert.IsTrue(File.Exists(tokenizer.ExecutionHistories.JsonFileName));
+            tokenizerExecutionHistories = TokenizerExecutionHistories.Load();
+            Assert.AreEqual(2, tokenizerExecutionHistories.Histories.Count);
+            Assert.IsTrue(tokenizerExecutionHistories.Histories[0].DurationMs > 0);
+            Assert.AreEqual(TokenizerExecutionType.Tokenize, tokenizerExecutionHistories.Histories[0].TokenizerExecutionType);
+            Assert.IsTrue(tokenizerExecutionHistories.Histories[1].DurationMs > 0);
+            Assert.AreEqual(TokenizerExecutionType.AnalyzeJson, tokenizerExecutionHistories.Histories[1].TokenizerExecutionType);
         }
     }
 }

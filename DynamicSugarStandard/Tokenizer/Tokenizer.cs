@@ -33,6 +33,7 @@ namespace DynamicSugar
         }
         public TokenizerExecutionHistory(TokenizerExecutionType tokenizerExecutionType, string text)
         {
+            TokenizerExecutionType = tokenizerExecutionType;
             Text = text;
         }
         public TokenizerExecutionHistory Start()
@@ -733,7 +734,7 @@ namespace DynamicSugar
             }
         }
 
-        public  List<AnalysedJsonLine> AnalyzeFormattedJson(string formattedJson)
+        public List<AnalysedJsonLine> AnalyzeFormattedJson(string formattedJson)
         {
             if(this._trackExecutionHistories)
                 this.ExecutionHistories.Start(TokenizerExecutionType.AnalyzeJson, formattedJson);
@@ -741,11 +742,12 @@ namespace DynamicSugar
             var r = new List<AnalysedJsonLine>();
             var jsonLines = formattedJson.SplitByCRLF();
 
+            var tmpTokenizer = new Tokenizer();
+
             foreach (var jsonLine in jsonLines)
             {
                 var x = 0;
-                var tokens = new Tokenizer().Tokenize(jsonLine);
-
+                var tokens = tmpTokenizer.Tokenize(jsonLine); // does not track execution history
                 Token curToken = tokens[x];
                 Token nextToken = Token.GetUndefinedToken();
                 if(x + 1 < tokens.Count)
@@ -775,7 +777,7 @@ namespace DynamicSugar
                 else if (curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().IsDString)
                 {
                     var stringValue = curToken.__internalTokens.Last();
-                    var tmpTokens = this.Tokenize(stringValue.Value);
+                    var tmpTokens = tmpTokenizer.Tokenize(stringValue.Value);
                     if(tmpTokens.Count == 1 && (tmpTokens[0].Type == TokenType.Date|| tmpTokens[0].Type == TokenType.DateTime))
                     {
                         r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.PropertyDate, jsonLine, tokens));
