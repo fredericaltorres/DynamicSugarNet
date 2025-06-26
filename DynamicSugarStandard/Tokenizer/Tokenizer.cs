@@ -1,11 +1,102 @@
 ﻿using DynamicSugar;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace DynamicSugar
 {
+    public enum TokenizerExecutionType
+    {
+        Tokenize,
+        AnalyzeJson,
+    }
+
+    public class TokenizerExecutionHistory
+    {
+        public string Text { get; set; }
+        public int TextLen => Text?.Length ?? 0;
+        public long DurationMs { get; set; }
+
+        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public TokenizerExecutionType TokenizerExecutionType { get; set; }
+
+        [JsonIgnore]
+        public Stopwatch Stopwatch { get; set; } = new Stopwatch();
+
+        public TokenizerExecutionHistory()
+        {
+
+        }
+        public TokenizerExecutionHistory(TokenizerExecutionType tokenizerExecutionType, string text)
+        {
+            Text = text;
+        }
+        public TokenizerExecutionHistory Start()
+        {
+            Stopwatch.Start();
+            return this;
+        }
+        public void Stop()
+        {
+            Stopwatch.Stop();
+            DurationMs = Stopwatch.ElapsedMilliseconds;
+        }
+    }
+
+    public class TokenizerExecutionHistories : DynamicSugar.JsonObject
+    {
+        public List<TokenizerExecutionHistory> Histories { get; private set; } = new List<TokenizerExecutionHistory>();
+
+        public static string DefaultJsonFileName = @"c:\temp\DynamicSugar.TokenizerExecutionHistories.json";
+
+        public TokenizerExecutionHistories()
+        {
+            base.JsonFileName = DefaultJsonFileName;
+        }
+
+        public static void DeleteAll()
+        {
+            new TestFileHelper().DeleteFile(DefaultJsonFileName);
+        }
+
+        public static TokenizerExecutionHistories Load()
+        {
+            if (File.Exists(DefaultJsonFileName))
+                return JsonObject.FromFile<TokenizerExecutionHistories>(DefaultJsonFileName);
+            else 
+                return new TokenizerExecutionHistories();
+        }
+
+        public void Save()
+        {
+            if(File.Exists(base.JsonFileName))
+            {
+                var tokenizerExecutionHistoriesFromDisk = JsonObject.FromFile<TokenizerExecutionHistories>(base.JsonFileName);
+                tokenizerExecutionHistoriesFromDisk.Histories.AddRange(this.Histories);
+                this.Histories = tokenizerExecutionHistoriesFromDisk.Histories;
+            }
+            base.Save();
+        }
+
+        public void Start(TokenizerExecutionType type, string text)
+        {
+            this.Histories.Add(new TokenizerExecutionHistory(type, text).Start());
+        }
+
+        public void Stop()
+        {
+            if (this.Histories.Count > 0)
+            {
+                this.Histories.Last().Stop();
+                this.Save();
+            }
+        }
+    }
+
     public partial class Tokenizer
     {
         /*
@@ -58,7 +149,6 @@ namespace DynamicSugar
             Keyword,
             Comment,
 
-
             UndefinedToken,
             Date,
             DateTime,
@@ -73,6 +163,16 @@ namespace DynamicSugar
             //StringLiteralDQuote_Url,
             //StringLiteralSQuote_Url,
             FilePath,
+        }
+
+
+        public TokenizerExecutionHistories ExecutionHistories { get; set; }
+        bool _trackExecutionHistories => ExecutionHistories != null;
+
+        public Tokenizer(bool trackExecutionHistory = false)
+        {
+            if(trackExecutionHistory)
+                this.ExecutionHistories = new TokenizerExecutionHistories();
         }
 
         private string GetSpaces(StringBuilder sbSpaceCounter )
@@ -104,6 +204,9 @@ namespace DynamicSugar
 
         public Tokens Tokenize(string input)
         {
+            if (_trackExecutionHistories)
+                this.ExecutionHistories.Start( TokenizerExecutionType.Tokenize, input);
+
             var tokens = new Tokens();
             int i = 0;
             var sbSpaceCounter = new StringBuilder();
@@ -209,7 +312,12 @@ namespace DynamicSugar
                 }
             }
 
-            return CombineTokens(tokens);
+            var r = CombineTokens(tokens);
+
+            if (_trackExecutionHistories)
+                this.ExecutionHistories.Stop();
+
+            return r;
         }
 
         public Token GetToken(Tokens tokens, int x, int inc = 0)
@@ -228,6 +336,8 @@ namespace DynamicSugar
 
         static List<string> DateDelimiters = new List<string> { "-", "/"};
         static List<string> TimeDelimiters = new List<string> { ":", "-"};
+
+        
 
         public Tokens CombineTokensPhase2(Tokens tokens)
         {
@@ -625,6 +735,9 @@ namespace DynamicSugar
 
         public  List<AnalysedJsonLine> AnalyzeFormattedJson(string formattedJson)
         {
+            if(this._trackExecutionHistories)
+                this.ExecutionHistories.Start(TokenizerExecutionType.AnalyzeJson, formattedJson);
+
             var r = new List<AnalysedJsonLine>();
             var jsonLines = formattedJson.SplitByCRLF();
 
@@ -683,6 +796,10 @@ namespace DynamicSugar
                 else
                     r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.Unknown, jsonLine, tokens));
             }
+
+
+            if (this._trackExecutionHistories)
+                this.ExecutionHistories.Stop();
 
             return r;
         }

@@ -872,5 +872,19 @@ dolly""
             Assert.AreEqual(@"'hello ' dolly'", tokens[x].ValueAsString);
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralSQuote, @"hello ' dolly");
         }
+
+        [TestMethod]
+        public void Tokenizer_ComputeHistory()
+        {
+            TokenizerExecutionHistories.DeleteAll();
+            var tokens = new Tokenizer(trackExecutionHistory: true).Tokenize(TestLongLogLine);
+            new Tokenizer(trackExecutionHistory: true).AnalyzeFormattedJson(formattedJson);
+
+            var tokenizer = new Tokenizer(trackExecutionHistory: true);
+            Assert.IsTrue(File.Exists(tokenizer.ExecutionHistories.JsonFileName));
+            var tokenizerExecutionHistories = TokenizerExecutionHistories.Load();
+            Assert.AreEqual(1, tokenizerExecutionHistories.Histories.Count);
+            Assert.IsTrue(tokenizerExecutionHistories.Histories[0].DurationMs > 0);
+        }
     }
 }
