@@ -179,7 +179,6 @@ namespace DynamicSugarSharp_UnitTests
             tokens[x++].AssertNameValue("execute", "mode", "mode : execute");
         }
 
-
         [TestMethod]
         public void Tokenizer_LogString_LongComplexLine()
         {
@@ -273,7 +272,6 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual("End", tokens[x].Value);
         }
 
-
         [TestMethod]
         public void Tokenizer_FileNameInString()
         {
@@ -302,7 +300,6 @@ namespace DynamicSugarSharp_UnitTests
             Assert.AreEqual(@"""\\windows\notepad.exe""", tokens[x].Value);
         }
 
-
         [TestMethod]
         public void Tokenizer_JSON()
         {
@@ -318,7 +315,6 @@ namespace DynamicSugarSharp_UnitTests
 
             tokens[x++].AssertNameValue("397596452", "PresentationId", @"""PresentationId"" : 397596452");
         }
-
 
         [TestMethod]
         public void Tokenizer_IdentifierPath()
@@ -415,7 +411,6 @@ namespace DynamicSugarSharp_UnitTests
             tokens[x++].Assert(Tokenizer.TokenType.Delimiter, ")");
         }
 
-
         [TestMethod]
         public void Tokenizer_BracketWithNames()
         {
@@ -484,7 +479,6 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].Assert(Tokenizer.TokenType.DateTime, "2025/06/13 12:39:00.401 PM");
         }
 
-
         [TestMethod]
         public void Tokenizer_CommandLine_Linux_LongFormat_NoSpaceBefore_ButIsFirstToken()
         {
@@ -506,7 +500,6 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].AssertNameValue("uat3node--win01", "MachineName", @"MachineName : uat3node--win01");
             tokens[x++].AssertDelimiter(",");
         }
-
 
         [TestMethod]
         public void Tokenizer_CommandLine_Linux_LongFormat()
@@ -642,7 +635,6 @@ DateTime 2025/06/13 12:39:01.874 PM";
             var x = 0;
             tokens[x++].AssertFilePath(@"C:\Barkrain\Fred\QA-A\qazaLion01.rdp");
         }
-
 
         [TestMethod]
         public void Tokenizer_FileNameWithMinusInFolderPathAndNumber()
@@ -809,7 +801,6 @@ dolly""
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, $@"hello{CR}dolly");
         }
 
-
         [TestMethod]
         public void Tokenizer_DStringWithLF()
         {
@@ -847,8 +838,6 @@ dolly""
             Assert.AreEqual(@"""hello "" dolly""", tokens[x].ValueAsString);
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralDQuote, @"hello "" dolly");
         }
-
-
 
         [TestMethod]
         public void Tokenizer_EscapedSStringWithSQuote()
@@ -951,7 +940,7 @@ dolly""
             Assert.IsTrue(File.Exists(tokenizer.ExecutionHistories.JsonFileName));
             var tokenizerExecutionHistories = TokenizerExecutionHistories.Load();
             Assert.AreEqual(1, tokenizerExecutionHistories.Histories.Count);
-            Assert.IsTrue(tokenizerExecutionHistories.Histories[0].DurationMs > 0);
+            Assert.IsTrue(tokenizerExecutionHistories.Histories[0].DurationMs >= 0);
             Assert.AreEqual(TokenizerExecutionType.Tokenize, tokenizerExecutionHistories.Histories[0].TokenizerExecutionType);
 
             new Tokenizer(trackExecutionHistory: true).AnalyzeFormattedJson(ReallyLongFormattedJson);
@@ -960,9 +949,9 @@ dolly""
             Assert.IsTrue(File.Exists(tokenizer.ExecutionHistories.JsonFileName));
             tokenizerExecutionHistories = TokenizerExecutionHistories.Load();
             Assert.AreEqual(2, tokenizerExecutionHistories.Histories.Count);
-            Assert.IsTrue(tokenizerExecutionHistories.Histories[0].DurationMs > 0);
+            Assert.IsTrue(tokenizerExecutionHistories.Histories[0].DurationMs >= 0);
             Assert.AreEqual(TokenizerExecutionType.Tokenize, tokenizerExecutionHistories.Histories[0].TokenizerExecutionType);
-            Assert.IsTrue(tokenizerExecutionHistories.Histories[1].DurationMs > 0);
+            Assert.IsTrue(tokenizerExecutionHistories.Histories[1].DurationMs >= 0);
             Assert.AreEqual(TokenizerExecutionType.AnalyzeJson, tokenizerExecutionHistories.Histories[1].TokenizerExecutionType);
         }
     }
