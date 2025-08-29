@@ -726,11 +726,17 @@ namespace DynamicSugar
             public string Line { get; set; }
             public Tokens Tokens { get; set; }
             public object Tag { get; set; }
+
             public AnalysedJsonLine(AnalyzedJsonLineType type, string line, Tokens tokens)
             {
                 Type = type;
                 Line = line;
                 Tokens = tokens;
+            }
+
+            public override string ToString()
+            {
+                return $"{Type} : {Line}";
             }
         }
 

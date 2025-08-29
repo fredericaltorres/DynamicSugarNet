@@ -763,6 +763,27 @@ DateTime 2025/06/13 12:39:01.874 PM";
             tokens[x++].AssertDelimiter("{");
         }
 
+        const string formattedJson2 = @"
+{
+    ""Results"": [
+        {
+            ""Number"": 213523,
+            ""Presentation"": {
+                ""Number"": 213523
+            }
+        }
+    ]
+}
+";
+
+        [TestMethod]
+        public void Tokenizer_AnalyzeFormattedJSON_ParseOnly_2()
+        {
+            var analyse = new Tokenizer().AnalyzeFormattedJson(formattedJson2);
+            Assert.AreEqual(10, analyse.Count);
+        }
+
+
         [TestMethod]
         public void Tokenizer_AnalyzeFormattedJSON_ReturnAnalyze()
         {

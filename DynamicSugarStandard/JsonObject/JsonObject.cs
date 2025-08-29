@@ -6,7 +6,7 @@ namespace DynamicSugar
     {
         public string JsonFileName { get; set; }
 
-        const string JsonFileNameproperty = "JsonFileName";
+        const string JsonFileNameProperty = "JsonFileName";
 
         public void Save(string jsonFileName = null)
         {
@@ -23,8 +23,8 @@ namespace DynamicSugar
 
         private static void SetJsonFileNameProperty(object This, string f)
         {
-            if (ReflectionHelper.PropertyExist(This, JsonFileNameproperty))
-                ReflectionHelper.SetProperty(This, JsonFileNameproperty, f);
+            if (ReflectionHelper.PropertyExist(This, JsonFileNameProperty))
+                ReflectionHelper.SetProperty(This, JsonFileNameProperty, f);
         }
 
         public static T FromFile<T>(string fileName) where T : new()
