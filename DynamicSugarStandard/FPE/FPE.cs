@@ -38,6 +38,12 @@ namespace DynamicSugar
             return BitConverter.ToInt64(rAllb(bf).ToArray(), 0);
         }
 
+        public static Byte[] dTob(DateTime d)
+        {
+            long epochSeconds = (new DateTimeOffset(d)).ToUnixTimeSeconds();
+            return BitConverter.GetBytes(epochSeconds);
+        }
+
         public static DateTime ToD(long epoc)
         {
             return DateTimeOffset.FromUnixTimeSeconds(epoc).UtcDateTime;

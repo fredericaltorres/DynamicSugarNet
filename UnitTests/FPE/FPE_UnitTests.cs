@@ -8,7 +8,8 @@ using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
 
-namespace DynamicSugarSharp_UnitTests {
+namespace DynamicSugarSharp_UnitTests
+{
 
     [TestClass]
     public class FPE_UnitTests
@@ -58,6 +59,14 @@ namespace DynamicSugarSharp_UnitTests {
             var fNameB64 = FPE.sTob(s);
             var result2 = FPE.IsDSorM(fNameB64, false); // Is it time or Is Dark Side Of the Moon?
             Assert.IsFalse(result2);
+        }
+
+        [TestMethod]
+        public void dTob()
+        {
+            var byteArray = FPE.dTob(new DateTime(1964, 12, 11));
+            var str = string.Join(",", byteArray);
+            Assert.AreEqual("208,67,125,246,255,255,255,255", str);
         }
     }
 }
