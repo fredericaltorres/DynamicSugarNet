@@ -130,6 +130,7 @@
     <Compile Include="TestHelper\FileSequenceManager_UnitTests.cs" />
     <Compile Include="TestHelper\TestFileHelper_UnitTests.cs" />
     <Compile Include="TextFileHelper\TextFileHelper_UnitTests.cs" />
+    <Compile Include="FPE\FPE_UnitTests.cs" />
     <Compile Include="Tokenizer\Tokens_UnitTests.cs" />
     <Compile Include="Tokenizer\Tokenizer_UnitTests.cs" />
   </ItemGroup>
@@ -177,6 +178,9 @@
     <EmbeddedResource Include="Files\sequence.file.not.found.md" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Files\zCasData.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
