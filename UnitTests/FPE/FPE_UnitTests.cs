@@ -18,8 +18,13 @@ namespace DynamicSugarSharp_UnitTests
         {
             //var s = @".\Files\zCasData.dat";
             //var fNameB64 = FPE.sTob(s);
-            var result2 = FPE.ResetConnection("LlxGaWxlc1x6Q2FzRGF0YS5kYXQ=");
-            Assert.IsTrue(result2);
+
+            object o = "";
+            var result = o.ResetConnection();
+            Assert.IsFalse(result);
+
+            result = FPE.ResetConnection();
+            Assert.IsFalse(result);
         }
     }
 }
