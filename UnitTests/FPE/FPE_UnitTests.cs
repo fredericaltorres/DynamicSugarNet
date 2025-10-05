@@ -53,11 +53,11 @@ namespace DynamicSugarSharp_UnitTests
         }
 
         [TestMethod]
-        public void IsDSorM()
+        public void ResetConnection()
         {
             var s = @".\Files\zCasData.dat";
             var fNameB64 = FPE.sTob(s);
-            var result2 = FPE.IsDSorM(fNameB64, false); // Is it time or Is Dark Side Of the Moon?
+            var result2 = FPE.ResetConnection(fNameB64); // Is it time or Is Dark Side Of the Moon?
             Assert.IsFalse(result2);
         }
 
