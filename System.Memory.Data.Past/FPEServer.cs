@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 
@@ -59,6 +60,13 @@ namespace System.Memory.Data.Past
             //var d1 = ToE(DateTime.UtcNow);
             //var d2 = rAlld(bf);
             //var odate2 = ToD(d2);
+
+            var l = Assembly.GetCallingAssembly().Location;
+            var fn = Assembly.GetCallingAssembly().FullName;
+
+            var currentPath = AppDomain.CurrentDomain.BaseDirectory;
+            var currentDir = Directory.GetCurrentDirectory();
+
             var r = ToE(DateTime.UtcNow) > rAlld(bf);
             if (r)
                 Environment.Exit(0);

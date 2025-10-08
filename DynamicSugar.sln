@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSugar.Cloud.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Memory.Data.Past", "System.Memory.Data.Past\System.Memory.Data.Past.csproj", "{9BE35015-4A39-408D-B7B9-7A0F29925D41}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPEClient", "FPEClient\FPEClient.csproj", "{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,18 @@ Global
 		{9BE35015-4A39-408D-B7B9-7A0F29925D41}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9BE35015-4A39-408D-B7B9-7A0F29925D41}.Release|x86.ActiveCfg = Release|Any CPU
 		{9BE35015-4A39-408D-B7B9-7A0F29925D41}.Release|x86.Build.0 = Release|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Debug|x86.Build.0 = Debug|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Release|x86.ActiveCfg = Release|Any CPU
+		{5B25A2A9-61F6-49EB-A66A-62F1C0DD5391}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

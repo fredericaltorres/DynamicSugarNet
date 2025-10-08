@@ -8,6 +8,8 @@ using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
 using System.Reflection.Emit;
+using FPE;
+
 
 namespace DynamicSugarSharp_UnitTests
 {
@@ -20,11 +22,11 @@ namespace DynamicSugarSharp_UnitTests
             //var s = @".\Files\zCasData.dat";
             //var fNameB64 = FPE.sTob(s);
 
-            object o = "";
-            var result = o.ResetConnection();
+            var result = FPEClient.ResetConnection();
             Assert.IsFalse(result);
 
-            result = FPE.ResetConnection();
+            object o = "";
+            result = o.ResetConnection();
             Assert.IsFalse(result);
         }
     }

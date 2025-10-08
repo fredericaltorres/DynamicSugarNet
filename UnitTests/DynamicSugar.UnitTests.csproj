@@ -201,6 +201,10 @@
       <Project>{60fe6dd3-e75c-4111-9a43-09fd17af2949}</Project>
       <Name>DynamicSugarStandard</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FPEClient\FPEClient.csproj">
+      <Project>{5b25a2a9-61f6-49eb-a66a-62f1c0dd5391}</Project>
+      <Name>FPEClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\System.Memory.Data.Past\System.Memory.Data.Past.csproj">
       <Project>{9be35015-4a39-408d-b7b9-7a0f29925d41}</Project>
       <Name>System.Memory.Data.Past</Name>

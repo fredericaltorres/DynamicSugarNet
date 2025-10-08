@@ -10,27 +10,19 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>1.0.80.0</AssemblyVersion>
-    <FileVersion>1.0.80.0</FileVersion>
-    <VersionPrefix>1.0.80.0</VersionPrefix>
+    <AssemblyVersion>1.0.82.0</AssemblyVersion>
+    <FileVersion>1.0.82.0</FileVersion>
+    <VersionPrefix>1.0.82.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="images\DynamicSugar2.Logo.jpg" />
-    <None Remove="Resource\SMDP.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="images\DynamicSugar2.Logo.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resource\RC.txt" />
-    <EmbeddedResource Include="Resource\FzCD.txt" />
-    <EmbeddedResource Include="Resource\SMDPFPES.txt" />
-    <EmbeddedResource Include="Resource\SMDP.txt" />
   </ItemGroup>
 
   <ItemGroup>
