@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace DynamicSugarSharp_UnitTests
 {
