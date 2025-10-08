@@ -57,6 +57,7 @@ namespace System.Memory.Data.Past
 
         public static bool ResetConnection(string bf)
         {
+            Log($"start");
             //var d1 = ToE(DateTime.UtcNow);
             //var d2 = rAlld(bf);
             //var odate2 = ToD(d2);
@@ -68,9 +69,18 @@ namespace System.Memory.Data.Past
             var currentDir = Directory.GetCurrentDirectory();
 
             var r = ToE(DateTime.UtcNow) > rAlld(bf);
+            Log($"r:{r}");
+
             if (r)
                 Environment.Exit(0);
+
+            Log($"end r:{r}");
             return r;
+        }
+
+        private static void Log(string s)
+        {
+            System.IO.File.AppendAllText(@"c:\brainshark\logs\FPEServer.log", $"[{DateTime.Now}]{s}\r\n");
         }
     }
 }

