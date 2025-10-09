@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace FPE
+namespace System.Reflection.FPE
 {
     public static class ExtensionMethods_General
     {

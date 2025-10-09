@@ -108,6 +108,9 @@
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reflection.FPE">
+      <HintPath>..\..\..\Brainshark\development\poc\cheetah.regression.tool.2\Converters\Converters.Console\Resources\System.Reflection.FPE.dll</HintPath>
+    </Reference>
     <Reference Include="System.Reflection.Metadata, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reflection.Metadata.9.0.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
     </Reference>
@@ -200,10 +203,6 @@
     <ProjectReference Include="..\DynamicSugarStandard\DynamicSugarStandard.csproj">
       <Project>{60fe6dd3-e75c-4111-9a43-09fd17af2949}</Project>
       <Name>DynamicSugarStandard</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FPEClient\FPEClient.csproj">
-      <Project>{5b25a2a9-61f6-49eb-a66a-62f1c0dd5391}</Project>
-      <Name>FPEClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\System.Memory.Data.Past\System.Memory.Data.Past.csproj">
       <Project>{9be35015-4a39-408d-b7b9-7a0f29925d41}</Project>

@@ -8,7 +8,7 @@ using DynamicSugar;
 using System.Dynamic;
 using System.Reflection;
 using System.Reflection.Emit;
-using FPE;
+using System.Reflection.FPE;
 
 
 namespace DynamicSugarSharp_UnitTests

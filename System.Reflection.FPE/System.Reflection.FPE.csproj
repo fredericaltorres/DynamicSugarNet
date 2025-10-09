@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\blpng" />
+    <EmbeddedResource Include="Resource\FzCD" />
+    <EmbeddedResource Include="Resource\RC" />
+    <EmbeddedResource Include="Resource\SMDPFPES" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="bnsk.logo.2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bnsk.logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo post build&#xD;&#xA;&#xD;&#xA;echo copying System.Memory.Data.Past.dll&#xD;&#xA;copy ..\System.Memory.Data.Past\bin\$(Configuration)\netstandard2.0\System.Memory.Data.Past.dll &quot;$(TargetDir)&quot;&#xD;&#xA;copy ..\System.Memory.Data.Past\bin\$(Configuration)\netstandard2.0\System.Memory.Data.Past.pdb &quot;$(TargetDir)&quot;&#xD;&#xA;&#xD;&#xA;echo overriding &quot;$(TargetDir)bnsk.logo.2.png&quot;&#xD;&#xA;copy /b &quot;$(TargetDir)bnsk.logo.png&quot; + &quot;$(TargetDir)System.Memory.Data.Past.dll&quot; &quot;$(TargetDir)bnsk.logo.2.png&quot;&#xD;&#xA;copy &quot;$(TargetDir)bnsk.logo.2.png&quot; &quot;..\UnitTests\bin\$(Configuration)&quot;&#xD;&#xA;&#xD;&#xA;set A_PATH=C:\Brainshark\development\poc\cheetah.regression.tool.2\ISILONBridgeForJenkins\Brainshark.IntegrationTesting.Windows.NTService&#xD;&#xA;copy &quot;$(TargetDir)System.Reflection.FPE.dll&quot; &quot;%25A_PATH%25&quot;&#xD;&#xA;::copy &quot;$(TargetDir)bnsk.logo.png&quot; &quot;%25A_PATH%25&quot;&#xD;&#xA;copy &quot;$(TargetDir)bnsk.logo.2.png&quot; &quot;%25A_PATH%25&quot;&#xD;&#xA;&#xD;&#xA;set A_PATH=C:\Brainshark\development\poc\cheetah.regression.tool.2\Converters\Converters.Console\Resources&#xD;&#xA;copy &quot;$(TargetDir)System.Reflection.FPE.dll&quot; &quot;%25A_PATH%25&quot;&#xD;&#xA;::copy &quot;$(TargetDir)bnsk.logo.png&quot; &quot;%25A_PATH%25&quot;&#xD;&#xA;copy &quot;$(TargetDir)bnsk.logo.2.png&quot; &quot;%25A_PATH%25&quot;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+  </Target>
+
+</Project>
