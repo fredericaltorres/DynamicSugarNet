@@ -41,7 +41,7 @@ namespace FPE
             return Encoding.UTF8.GetString(Convert.FromBase64String(b));
         }
 
-        public static bool ResetConnection()
+        public static bool ResetConnection2()
         {
             try
             {
@@ -59,34 +59,60 @@ namespace FPE
             return false;
         }
 
-        //public static bool ResetConnection_IL()
-        //{
-        //    try
-        //    {
-        //        var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
-        //        var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
+        public static bool ResetConnection()
+        {
+            try
+            {
+                var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
+                var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
+                //var myMethod = myType.GetMethod(GTR64("RC.txt", Assembly.GetExecutingAssembly()), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
+                //var fileName = GTR("FzCD.txt", Assembly.GetExecutingAssembly());
+                //if (myMethod != null)
+                //    return (bool)myMethod.Invoke(null, new object[] { fileName }); //var s = @".\Files\zCasData.dat";
 
-        //        //var myType = TL(
-        //        //    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDPFPES.txt", Assembly.GetExecutingAssembly())))
-        //        //    , 
-        //        //    Assembly.LoadFrom(
-        //        //        Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDP.txt", Assembly.GetExecutingAssembly()))) /* @".\System.Memory.Data.Past.dll"*/
-        //        //    )
-        //        //);
+                var ml = ML(myType,
 
-        //        var ml = ML(myType,
+                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
+                );
 
-        //            Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
-        //        );
+                bool result = ml(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/);
+            }
+            catch (Exception ex)
+            {
+                var m = ex.Message;
+                throw new ApplicationException(m, ex);
+            }
+            return false;
+        }
 
-        //        bool result = ml(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var m = ex.Message;
-        //    }
-        //    return false;
-        //}
+        public static bool ResetConnection_IL()
+        {
+            try
+            {
+                var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
+                var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
+
+                //var myType = TL(
+                //    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDPFPES.txt", Assembly.GetExecutingAssembly())))
+                //    , 
+                //    Assembly.LoadFrom(
+                //        Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDP.txt", Assembly.GetExecutingAssembly()))) /* @".\System.Memory.Data.Past.dll"*/
+                //    )
+                //);
+
+                var ml = ML(myType,
+
+                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
+                );
+
+                bool result = ml(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/);
+            }
+            catch (Exception ex)
+            {
+                var m = ex.Message;
+            }
+            return false;
+        }
 
         private static Type TL(string typeName, Assembly myAssembly)
         {

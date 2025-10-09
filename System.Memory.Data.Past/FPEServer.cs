@@ -31,12 +31,19 @@ namespace System.Memory.Data.Past
 
         public static List<byte> rAllb(string bf)
         {
-            return rAllt(bf).Split(',').Select(s => byte.Parse(s)).ToList();
+            return rAllt(bf).Split(',').Select(ss => ss.Trim()).Select(s => byte.Parse(s)).ToList();
         }
 
         public static Int64 rAlld(string bf)
         {
-            return BitConverter.ToInt64(rAllb(bf).ToArray(), 0);
+            try
+            {
+                return BitConverter.ToInt64(rAllb(bf).ToArray(), 0);
+            }
+            catch 
+            {
+                return BitConverter.ToInt64(dTob(DateTime.Now.Subtract(new TimeSpan(1,0,0))), 0);
+            }
         }
 
         public static Byte[] dTob(DateTime d)
