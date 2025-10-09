@@ -5,10 +5,9 @@ namespace FPE
 {
     public static class ExtensionMethods_General
     {
-        public static T ResetConnection<T>(this T value)
+        public static int ResetConnection<T>(this T value)
         {
-            FPEClient.ResetConnection();
-            return value;
+            return FPEClient.ResetConnection();
         }
     }
 }

