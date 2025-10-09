@@ -25,9 +25,9 @@ namespace DynamicSugarSharp_UnitTests
             var result = FPEClient.ResetConnection();
             Assert.IsFalse(result);
 
-            object o = "";
-            result = o.ResetConnection();
-            Assert.IsFalse(result);
+            object o = "foo";
+            var result2 = o.ResetConnection();
+            Assert.AreEqual(o.ToString(), result2.ToString());
         }
     }
 }
