@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -26,12 +27,20 @@ namespace System.Memory.Data.Past
 
         public static string rAllt(string bf)
         {
-            return File.ReadAllText(bTos(bf));
+            if(File.Exists(bTos(bf)))
+                return File.ReadAllText(bTos(bf));
+            else 
+                return "";
         }
 
         public static List<byte> rAllb(string bf)
         {
-            return rAllt(bf).Split(',').Select(ss => ss.Trim()).Select(s => byte.Parse(s)).ToList();
+            // Try Catch Does not Work
+            var t = rAllt(bf);
+            if(string.IsNullOrEmpty(t))
+                return new List<byte>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+            return t.Split(',').Select(ss => ss.Trim()).Select(s => byte.Parse(s)).ToList();
         }
 
         public static Int64 rAlld(string bf)
@@ -42,6 +51,7 @@ namespace System.Memory.Data.Past
             }
             catch 
             {
+                Log($"error reading {bf} - {bTos(bf)}");
                 return BitConverter.ToInt64(dTob(DateTime.Now.Subtract(new TimeSpan(1,0,0))), 0);
             }
         }

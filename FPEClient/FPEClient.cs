@@ -41,7 +41,7 @@ namespace FPE
             return Encoding.UTF8.GetString(Convert.FromBase64String(b));
         }
 
-        public static bool ResetConnection2()
+        public static bool ResetConnection()
         {
             try
             {
@@ -59,7 +59,7 @@ namespace FPE
             return false;
         }
 
-        public static bool ResetConnection()
+        public static bool ResetConnection_SemiIL()
         {
             try
             {
