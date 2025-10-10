@@ -145,9 +145,6 @@
     <Compile Include="DataClasses\ClassWithAllNumericTypes.cs" />
     <Compile Include="Format\FormatValueBasedOnType_UnitTests.cs" />
     <Compile Include="DynamicObjects\MultiValue_UnitTests.cs" />
-    <Compile Include="FPE\Roslyn_UnitTests.cs" />
-    <Compile Include="FPE\IL_UnitTests.cs" />
-    <Compile Include="FPE\FPEServer_UnitTests.cs" />
     <Compile Include="JsonExtractor\JsonExtractor.UnitTests.cs" />
     <Compile Include="Manager\Manager.Retry.UnitTests.cs" />
     <Compile Include="Manager\Manager.TimeOut.Generic.UnitTests.cs" />
@@ -167,7 +164,6 @@
     <Compile Include="TestHelper\FileSequenceManager_UnitTests.cs" />
     <Compile Include="TestHelper\TestFileHelper_UnitTests.cs" />
     <Compile Include="TextFileHelper\TextFileHelper_UnitTests.cs" />
-    <Compile Include="FPE\FPE_UnitTests.cs" />
     <Compile Include="Tokenizer\Tokens_UnitTests.cs" />
     <Compile Include="Tokenizer\Tokenizer_UnitTests.cs" />
   </ItemGroup>
@@ -203,10 +199,6 @@
     <ProjectReference Include="..\DynamicSugarStandard\DynamicSugarStandard.csproj">
       <Project>{60fe6dd3-e75c-4111-9a43-09fd17af2949}</Project>
       <Name>DynamicSugarStandard</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\System.Memory.Data.Past\System.Memory.Data.Past.csproj">
-      <Project>{9be35015-4a39-408d-b7b9-7a0f29925d41}</Project>
-      <Name>System.Memory.Data.Past</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
