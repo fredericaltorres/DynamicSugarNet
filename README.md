@@ -9,6 +9,11 @@ to write shorter and more readable source code in C#.
 
 Created in 2011 for C# v 4.0 and .NET 4.0.
 
+### Videos
+- [List](https://ftorres.azurewebsites.net/fmsui?videoId=dynamicsugar2024-list-video)
+- [Dictionary and Reflection](https://ftorres.azurewebsites.net/fmsui?videoId=dynamicsugar2024-dic-reflection-video)
+- [String](https://ftorres.azurewebsites.net/fmsui?videoId=dynamicsugar2024-strings)
+
 ### 2023.
 
 * From 2011 to 2020, the C# language evolved and some features in DynamicSugar became obsolete, like
