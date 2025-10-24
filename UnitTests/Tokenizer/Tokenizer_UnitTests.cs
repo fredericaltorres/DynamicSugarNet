@@ -1,13 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DynamicSugar;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DynamicSugar;
-using System.Dynamic;
-using System.Reflection;
+using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using static DynamicSugar.Tokenizer;
 
 namespace DynamicSugarSharp_UnitTests
 {
@@ -723,6 +724,8 @@ DateTime 2025/06/13 12:39:01.874 PM";
 }
 ";
 
+
+
         [TestMethod]
         public void Tokenizer_AnalyzeFormattedJSON_ParseOnly()
         {
@@ -781,6 +784,35 @@ DateTime 2025/06/13 12:39:01.874 PM";
         {
             var analyse = new Tokenizer().AnalyzeFormattedJson(formattedJson2);
             Assert.AreEqual(10, analyse.Count);
+        }
+
+
+        const string formattedJsonEmptyArray = @"
+{
+    ""Results"": [
+    ]
+}
+";
+
+        [TestMethod]
+        public void Tokenizer_AnalyzeFormattedJSON_ParseEmptyArray()
+        {
+            var x = 0;
+            var lineX = 0;
+            var jsonLines = formattedJsonEmptyArray.SplitByCRLF();
+
+            var tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertDelimiter("{");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertNameValue(null, "Results", @"""Results"" :");
+            tokens[x++].AssertDelimiter("[");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertDelimiter("]");
+
+            tokens = new Tokenizer().Tokenize(jsonLines[lineX++]); x = 0;
+            tokens[x++].AssertDelimiter("}");
         }
 
 
