@@ -787,6 +787,44 @@ DateTime 2025/06/13 12:39:01.874 PM";
         }
 
 
+        const string formattedJson3 = @"
+{
+    ""Results"": -12
+}
+";
+
+        [TestMethod]
+        public void Tokenizer_AnalyzeFormattedJSON_ParseOnly_3()
+        {
+            var analysedTokens = new Tokenizer().AnalyzeFormattedJson(formattedJson3);
+            var expectedTypes = DS.List(Tokenizer.AnalyzedJsonLineType.StartObject, Tokenizer.AnalyzedJsonLineType.PropertyNumber, Tokenizer.AnalyzedJsonLineType.EndObject);
+
+            for (var i = 0; i < expectedTypes.Count; i++)
+                Assert.AreEqual(expectedTypes[i], analysedTokens[i].Type, $"Mismatch at index {i}: expected {expectedTypes[i]}, got {analysedTokens[i]}");
+            Assert.AreEqual(3, analysedTokens.Count);
+        }
+
+
+
+        const string formattedJson4 = @"
+{
+    ""Results"": []
+}
+";
+
+        [TestMethod]
+        public void Tokenizer_AnalyzeFormattedJSON_ParseOnly_4()
+        {
+            var analysedTokens = new Tokenizer().AnalyzeFormattedJson(formattedJson4);
+            var expectedTypes = DS.List(Tokenizer.AnalyzedJsonLineType.StartObject, Tokenizer.AnalyzedJsonLineType.StartPropertyEmptyArray, Tokenizer.AnalyzedJsonLineType.EndObject);
+
+            for (var i = 0; i < expectedTypes.Count; i++)
+                Assert.AreEqual(expectedTypes[i], analysedTokens[i].Type, $"Mismatch at index {i}: expected {expectedTypes[i]}, got {analysedTokens[i]}");
+            Assert.AreEqual(3, analysedTokens.Count);
+        }
+
+
+
         const string formattedJsonEmptyArray = @"
 {
     ""Results"": [
@@ -915,6 +953,21 @@ dolly""
             Assert.AreEqual(@"'hello ' dolly'", tokens[x].ValueAsString);
             tokens[x++].Assert(Tokenizer.TokenType.StringLiteralSQuote, @"hello ' dolly");
         }
+
+        [TestMethod]
+        public void Tokenizer_JsonEmpyArray()
+        {
+            var testLine = $@"
+    ""Results"": []
+";
+            var tokens = new Tokenizer().Tokenize(testLine);
+            var x = 0;
+            Assert.AreEqual(@"""Results"" :", tokens[x].ValueAsString);
+            tokens[x++].Assert(Tokenizer.TokenType.NameValuePair, null);
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "[");
+            tokens[x++].Assert(Tokenizer.TokenType.Delimiter, "]");
+        }
+
 
 
         const string ReallyLongFormattedJson = @"

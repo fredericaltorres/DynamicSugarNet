@@ -16,6 +16,19 @@ namespace DynamicSugar
             public string Name { get; set; } // Only used when the token is a NameValuePair
             public Tokens __internalTokens { get; set; } // Original token
 
+
+            public bool IsNegativeNumber
+            {
+                get
+                {
+                    if (Type == TokenType.Number && Value.StartsWith("-"))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
             public string GetRawText()
             {
                 var sb = new    System.Text.StringBuilder();

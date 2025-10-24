@@ -159,6 +159,8 @@ namespace DynamicSugar
             Url,
             CommandLineParameter, // --name value or -n value or /name
 
+
+
             StringLiteralDQuote_FilePath,
             StringLiteralSQuote_FilePath,
             //StringLiteralDQuote_Url,
@@ -283,6 +285,7 @@ namespace DynamicSugar
                 if (char.IsDigit(input[i]))
                 {
                     var stringBuilder = new StringBuilder();
+
                     while (i < input.Length && (char.IsDigit(input[i]) || input[i] == '.'))
                     {
                         stringBuilder.Append(input[i]);
@@ -388,6 +391,18 @@ namespace DynamicSugar
                     x += 1;
                 }
 
+                // Empty Array
+                else if (tok.IsDelimiter("[") && GetToken(tokens, x, 1).IsDelimiter("]"))
+                {
+                    var delimiter1 = tok;
+                    var delimiter2 = GetToken(tokens, x, 1);
+
+                    r.Add(tok);
+                    r.Add(GetToken(tokens, x, 1));
+
+                    x += 2; // Skip the delimiter and the number
+                }
+
                 // Time 
                 else if ( tok.IsNumber && GetToken(tokens, x, 1).IsDelimiter(":") && GetToken(tokens, x, 2).IsNumber
                     && GetToken(tokens, x, 3).IsDelimiter(":") && GetToken(tokens, x, 4).IsNumber)
@@ -398,7 +413,8 @@ namespace DynamicSugar
                     var delimiter2 = GetToken(tokens, x, 3);
                     var secondToken = GetToken(tokens, x, 4);
 
-                    var newToken = new Token(tok.Value + delimiter1.Value + minuteToken.Value + delimiter2.Value + secondToken.Value, TokenType.Time, tok.PreSpaces + delimiter1.PreSpaces + minuteToken.PreSpaces + delimiter2.PreSpaces + secondToken.PreSpaces);
+                    var newToken = new Token(tok.Value + delimiter1.Value + minuteToken.Value + delimiter2.Value + secondToken.Value, 
+                        TokenType.Time, tok.PreSpaces + delimiter1.PreSpaces + minuteToken.PreSpaces + delimiter2.PreSpaces + secondToken.PreSpaces);
                     r.Add(newToken);
                     x += 5; // Skip the delimiter and the number
                 }
@@ -712,6 +728,7 @@ namespace DynamicSugar
             EndArray,
             StartPropertyObject,
             StartPropertyArray,
+            StartPropertyEmptyArray,
             PropertyDate,
             PropertyNumber,
             PropertyString,
@@ -759,7 +776,25 @@ namespace DynamicSugar
                 if(x + 1 < tokens.Count)
                     nextToken = tokens[x + 1];
 
-                if(curToken.AssertDelimiter("{", throwEx: false) && tokens.Count == 1)
+                if(curToken.Type == TokenType.NameValuePair && curToken.__internalTokens.Last().Type == TokenType.UndefinedToken)
+                {
+                    if(nextToken.IsNegativeNumber)
+                    {
+                        curToken.__internalTokens.Remove(curToken.__internalTokens.Last());
+                        curToken.__internalTokens.Add(nextToken);
+                        tokens.Remove(nextToken);
+
+                        nextToken = Token.GetUndefinedToken();
+                        if (x + 1 < tokens.Count)
+                            nextToken = tokens[x + 1];
+                    }
+                }
+
+                Token nextNextToken = Token.GetUndefinedToken();
+                if (x + 2 < tokens.Count)
+                    nextNextToken = tokens[x + 2];
+
+                if (curToken.AssertDelimiter("{", throwEx: false) && tokens.Count == 1)
                     r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.StartObject, jsonLine, tokens));
 
                 else if (curToken.AssertDelimiter("}", throwEx: false) && tokens.Count == 1)
@@ -770,6 +805,9 @@ namespace DynamicSugar
 
                 else if (curToken.AssertDelimiter("]", throwEx: false) && tokens.Count == 1)
                     r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.EndArray, jsonLine, tokens));
+
+                else if (curToken.Type == TokenType.NameValuePair && nextToken.IsDelimiter("[") && nextNextToken.IsDelimiter("]"))
+                    r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.StartPropertyEmptyArray, jsonLine, tokens));
 
                 else if (curToken.Type == TokenType.NameValuePair && nextToken.IsDelimiter("["))
                     r.Add(new AnalysedJsonLine(AnalyzedJsonLineType.StartPropertyArray, jsonLine, tokens));
