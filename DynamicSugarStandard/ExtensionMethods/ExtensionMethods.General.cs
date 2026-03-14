@@ -5,6 +5,7 @@ using System.Linq;
 using System.IO;
 using System.Collections;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace DynamicSugar {
 
@@ -16,6 +17,12 @@ namespace DynamicSugar {
             foreach (var m in matchCollection)
                 l.Add(m.ToString());
             return l;
+        }
+
+        public static string ToJSON<T>(this T value, Formatting formatting = Formatting.Indented)
+        {
+            var s = JsonConvert.SerializeObject(value, formatting);
+            return s;
         }
 
         public static bool In<T>(this T value, params T[] values) {

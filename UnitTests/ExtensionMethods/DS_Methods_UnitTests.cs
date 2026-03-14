@@ -580,6 +580,15 @@ namespace DynamicSugarSharp_UnitTests
             Assert.IsFalse(i.In(1, 2, 3, 4, 5));
         }
 
+        [TestMethod]
+        public void ToJSON()
+        {
+            var l = DS.Range(5);
+            Assert.AreEqual("[0,1,2,3,4]", l.ToJSON(Newtonsoft.Json.Formatting.None));
+            var d = new Dictionary<string, int>() { { "a", 1 }, { "b", 2 } };
+            Assert.AreEqual(@"{""a"":1,""b"":2}", d.ToJSON(Newtonsoft.Json.Formatting.None));
+        }
+
         public enum TestEnvironment
         {
             QA,
