@@ -167,7 +167,9 @@ namespace DynamicSugar {
 
         public static List<string> SplitByCRLF(this string line, string separator = "\r\n", bool removeBlankEntries = true)
         {
-            var r = line.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var r = line.Split(new string[] { separator },
+                removeBlankEntries ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None
+                ).ToList();
             if(removeBlankEntries)
                 r = r.Where(l => !string.IsNullOrEmpty(l.Trim())).ToList();
             return r;
@@ -322,7 +324,7 @@ namespace DynamicSugar {
         //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5, object a6, object a7, object a8) { return string.Format(s, a1, a2, a3, a4, a5, a6, a7, a8); }
         //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5, object a6, object a7, object a8, object a9) { return string.Format(s, a1, a2, a3, a4, a5, a6, a7, a8, a9); }
         //public static string Format(this string s, object a1, object a2, object a3, object a4, object a5, object a6, object a7, object a8, object a9, object a10) { return string.Format(s, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10); }
-        
+
         /*
         /// <summary>
         /// http://extensionmethod.net/csharp/string/FormatString-string
@@ -343,6 +345,89 @@ namespace DynamicSugar {
                 return string.Format(FormatString, new object[] { arg }.Concat(additionalArgs).ToArray());
             }
         }*/
+
+        /*
+         * 
+         CLAUDE.AI PROMPT
+         
+         write a C# function which accept an list<string> name lines
+and a Dictionary<string, bool > named variables.
+
+The function role is to analyze each line and determine 
+if a block of line must be returned or not. The function returns list<string> 
+
+
+analyze each line 
+
+
+if the line starts with 
+
+"#if " and a variable name AND
+
+if the variable name  is true in the dictionary include
+
+then include the line until you find a line with only "#endif"
+
+
+
+if the line starts with 
+
+"#if !" and a variable name AND
+
+if the variable name is true in the dictionary include
+
+then DO NOT include the line until you find a line with only "#endif"
+
+If a variable is not find in the dictionary, throw an ArgumentException
+
+         */
+
+        public static List<string> ProcessConditionalLines(List<string> lines, Dictionary<string, bool> variables)
+        {
+            var result = new List<string>();
+            bool include = true;
+            bool inBlock = false;
+
+            foreach (var line in lines)
+            {
+                var trimmed = line.Trim();
+
+                if (trimmed.StartsWith("#if !"))
+                {
+                    var varName = trimmed.Substring(5).Trim();
+                    if (!variables.TryGetValue(varName, out bool val))
+                        throw new ArgumentException($"Variable '{varName}' was not found in the dictionary.");
+                    include = !val;
+                    inBlock = true;
+                    continue;
+                }
+
+                if (trimmed.StartsWith("#if "))
+                {
+                    var varName = trimmed.Substring(4).Trim();
+                    if (!variables.TryGetValue(varName, out bool val))
+                        throw new ArgumentException($"Variable '{varName}' was not found in the dictionary.");
+                    include = val;
+                    inBlock = true;
+                    continue;
+                }
+
+                if (trimmed == "#endif")
+                {
+                    include = true;
+                    inBlock = false;
+                    continue;
+                }
+
+                if (include)
+                {
+                    result.Add(line);
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         ///  Replaces the FormatString item in the string with the string representation
         ///  of a corresponding property/field in the object passed.
@@ -350,7 +435,15 @@ namespace DynamicSugar {
         /// <param name="s"></param>
         /// <param name="poco">Any poco object</param>
         /// <returns></returns>
-        public static string Template(this string s, object poco, string startMacro = "{", string endMacro = "}") {
+        public static string Template(this string s, object poco, string startMacro = "{", string endMacro = "}", 
+            Dictionary<string, bool> conditionalIf = null) {
+
+            if(conditionalIf != null)
+            {
+                var lines = s.SplitByCRLF(removeBlankEntries: false);
+                var linesOut = ProcessConditionalLines(lines, conditionalIf);
+                s = string.Join(Environment.NewLine, linesOut);
+            }
 
             if(startMacro == "{")
                 return ExtendedFormat.Format(s, ReflectionHelper.GetDictionary(poco));
