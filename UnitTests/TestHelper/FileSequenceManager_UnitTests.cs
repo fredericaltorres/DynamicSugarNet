@@ -88,5 +88,69 @@ namespace DynamicSugarSharp_UnitTests {
             var errors = fileSequences.LoadSequenceFile(localSequenceFileName, verifyExistenceOfFile: true);
             Assert.AreEqual(4, errors.Count);
         }
+
+        const string markdownFile = @".\Files\Nebula Novelties - Current-Tasks.md";
+
+        [TestMethod]
+        public void FileBackupUtility_BackupFile()
+        {
+            using (var tfh = new TestFileHelper())
+            {
+                var markdownContent = File.ReadAllText(markdownFile);
+                
+                var backedUpFile1 = tfh.TrackFile(FileBackupUtility.BackupFile(markdownFile));
+                Assert.IsTrue(backedUpFile1.Contains(".1."));
+                Assert.IsTrue(File.Exists(backedUpFile1));
+
+                var backedUpFile2 = tfh.TrackFile(FileBackupUtility.BackupFile(markdownFile));
+                Assert.IsTrue(backedUpFile2.Contains(".2."));
+                Assert.IsTrue(File.Exists(backedUpFile2));
+
+                var backedUpFile3 = tfh.TrackFile(FileBackupUtility.BackupFile(markdownFile));
+                Assert.IsTrue(backedUpFile3.Contains(".3."));
+                Assert.IsTrue(File.Exists(backedUpFile3));
+            }
+        }
+
+        private void AssertTextFilesAreEqual(string file1, string file2)
+        {
+            var content1 = File.ReadAllText(file1);
+            var content2 = File.ReadAllText(file2);
+            Assert.AreEqual(content1, content2);
+        }
+        private void AssertTextFilesAreNotEqual(string file1, string file2)
+        {
+            var content1 = File.ReadAllText(file1);
+            var content2 = File.ReadAllText(file2);
+            Assert.AreNotEqual(content1, content2);
+        }
+
+        [TestMethod]
+        public void FileBackupUtility_BackupFile_Restore()
+        {
+            using (var tfh = new TestFileHelper())
+            {
+                var markdownContent = File.ReadAllText(markdownFile);
+
+                var backedUpFile1 = tfh.TrackFile(FileBackupUtility.BackupFile(markdownFile));
+                Assert.IsTrue(backedUpFile1.Contains(".1."));
+                Assert.IsTrue(File.Exists(backedUpFile1));
+
+                var backedUpFile2 = tfh.TrackFile(FileBackupUtility.BackupFile(markdownFile));
+                Assert.IsTrue(backedUpFile2.Contains(".2."));
+                Assert.IsTrue(File.Exists(backedUpFile2));
+
+                AssertTextFilesAreEqual(markdownFile, backedUpFile2);
+
+                File.WriteAllText(markdownFile, "This is a test");
+
+                AssertTextFilesAreNotEqual(markdownFile, backedUpFile2);
+
+                var copyNumber = FileBackupUtility.RestoreCopy(markdownFile);
+                Assert.AreEqual(2, copyNumber);
+
+                AssertTextFilesAreEqual(markdownFile, backedUpFile1);
+            }
+        }
     }
 }

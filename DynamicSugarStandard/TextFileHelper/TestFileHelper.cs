@@ -40,7 +40,6 @@ namespace DynamicSugar
             }
         }
 
-
         public bool CreateDirectory(string dirName)
         {
             try
