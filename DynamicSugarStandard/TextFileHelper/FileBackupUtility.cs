@@ -96,16 +96,16 @@ public static class FileBackupUtility
         // Pattern: <baseName>_backup<digits><extension>
         // Example: report_backup3.txt
         var pattern = new Regex(
-            $@"^{Regex.Escape(baseName)}_backup\.(\d+)\.{Regex.Escape(extension)}$",
+            $@"^{Regex.Escape(baseName)}_backup\.(\d+)\.{Regex.Escape(extension)}bu$",
             RegexOptions.IgnoreCase);
 
-        return Directory
-            .EnumerateFiles(dir, $"{baseName}_backup*{extension}")
-            .Select(f => pattern.Match(Path.GetFileName(f)))
-            .Where(m => m.Success)
-            .Select(m => int.Parse(m.Groups[1].Value))
-            .DefaultIfEmpty(0)
-            .Max();
+        var files = Directory.EnumerateFiles(dir, $"{baseName}_backup*{extension}bu").ToList();
+        var files2 = files.Select(f => pattern.Match(Path.GetFileName(f))).Where(m => m.Success);
+        var files3 = files2.Select(m => int.Parse(m.Groups[1].Value));
+        var versions = files3.DefaultIfEmpty(0).ToList();
+        var max = versions.Max();
+        return max;
+
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ public static class FileBackupUtility
         string baseName = Path.GetFileNameWithoutExtension(filePath);
         string extension = Path.GetExtension(filePath);
 
-        string backupName = $"{baseName}_backup.{number}.{extension}";
+        string backupName = $"{baseName}_backup.{number}.{extension}bu";
         return Path.Combine(dir, backupName);
     }
 }
