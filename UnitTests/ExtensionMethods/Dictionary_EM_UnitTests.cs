@@ -113,6 +113,19 @@ namespace DynamicSugarSharp_UnitTests {
 
             DS.DictionaryHelper.AssertDictionaryEqual(dic3, r);
         }
+
+        [TestMethod]
+        public void StringDictionary()
+        {
+            var dic1 = DS.StringDictionary(new { a = 1, b = "B" });
+            var dic2 = new Dictionary<string, string>() {
+                ["a"] = "1",
+                ["b"] = "B" 
+            };
+
+            DS.DictionaryHelper.AssertDictionaryEqual(dic2, dic1);
+        }
+
         [TestMethod]
         public void Merge_DifferentTypeOfValues_DoNotOverWrite() {
 

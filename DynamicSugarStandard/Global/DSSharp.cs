@@ -137,6 +137,16 @@ namespace DynamicSugar {
 
             return ReflectionHelper.GetDictionary(instance, properties, allProperties);
         }
+
+        public static Dictionary<string, string> StringDictionary(object instance, List<string> properties = null, bool allProperties = false)
+        {
+            var d = Dictionary(instance, properties, allProperties);
+            var d2 = new Dictionary<string, string>();
+            foreach (var k in d)
+                d2.Add(k.Key, k.Value.ToString());
+            return d2;
+        }
+
         /// <summary>
         /// Return in a dictionary of string, T all the properties and fields of an instance.
         /// With the method the type of the dictionart value can be defined.
