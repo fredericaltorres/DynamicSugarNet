@@ -120,17 +120,18 @@ namespace DynamicSugar
             return fileName;
         }
 
-        public string CreateTempFile(string content, string extension = null)
+        public string CreateTempFile(string content, string extension, System.Text.Encoding encoding = null)
         {
             var fileName = this.GetTempFileName(extension);
-            File.WriteAllText(fileName, content);
-            return fileName;
+            return CreateFile(content, fileName, encoding);
         }
 
-        public string CreateFile(string content, string fileName, string extension = null)
+        public string CreateFile(string content, string fileName, System.Text.Encoding encoding = null)
         {
+            if (encoding == null)
+                encoding = System.Text.Encoding.UTF8;
             this.FileNamesToDelete.Add(fileName);
-            File.WriteAllText(fileName, content);
+            File.WriteAllText(fileName, content, encoding);
             return fileName;
         }
 

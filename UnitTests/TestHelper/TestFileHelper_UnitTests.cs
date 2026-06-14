@@ -24,7 +24,7 @@ namespace DynamicSugarSharp_UnitTests {
             var dir = tfh.GetTempFolder();
             Assert.IsTrue(Directory.Exists(dir));
 
-            var fileName1 = tfh.CreateTempFile(TextContent);
+            var fileName1 = tfh.CreateTempFile(TextContent, ".txt");
             Assert.IsTrue(File.Exists(fileName1));
 
             var fileName2 = Path.Combine(dir, "test.txt");
