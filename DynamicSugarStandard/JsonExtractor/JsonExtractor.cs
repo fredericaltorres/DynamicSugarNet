@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace DynamicSugar
 {
@@ -190,7 +191,67 @@ namespace DynamicSugar
             return JsonExtractionType.Unknown;
         }
 
-        public static string Extract(string text, JsonExtractionType JsonType = JsonExtractionType.Unknown)
+        public static List<string> ExtractJsonBlobs_Claude_2026_07(string input)
+        {
+            var results = new List<string>();
+            int i = 0;
+
+            while (i < input.Length)
+            {
+                if (input[i] == '{' || input[i] == '[')
+                {
+                    int start = i;
+                    bool inString = false;
+                    bool escaped = false;
+                    var stack = new Stack<char>();
+
+                    for (; i < input.Length; i++)
+                    {
+                        char c = input[i];
+
+                        if (escaped) { escaped = false; continue; }
+                        if (c == '\\' && inString) { escaped = true; continue; }
+                        if (c == '"') { inString = !inString; continue; }
+                        if (inString) continue;
+
+                        if (c == '{' || c == '[')
+                        {
+                            stack.Push(c);
+                        }
+                        else if (c == '}' || c == ']')
+                        {
+                            // Mismatched or unexpected closer → not valid JSON, abandon this candidate
+                            if (stack.Count == 0 ||
+                                (c == '}' && stack.Peek() != '{') ||
+                                (c == ']' && stack.Peek() != '['))
+                            {
+                                break;
+                            }
+
+                            stack.Pop();
+
+                            if (stack.Count == 0)
+                            {
+                                results.Add(input.Substring(start, i - start + 1));
+                                break;
+                            }
+                        }
+                    }
+
+                    if (stack.Count > 0) 
+                    {
+                        throw new InvalidOperationException($"Unmatched opening bracket at position { start } in input string.");
+                    }
+                }
+                i++;
+            }
+
+            results = results.Where(x => IsValidJson(x)).ToList();
+
+            return results.Select(x => IsValidJson(x) ? Format(x): x).ToList();
+        }
+
+    public static List<string> Extract(string text, JsonExtractionType JsonType = JsonExtractionType.Unknown)
         {
             if (JsonType == JsonExtractionType.Unknown) // Detect if we have a {} or [], note there issue detecting the wrong type
                 JsonType = DetectJsonType(text);
@@ -198,9 +259,12 @@ namespace DynamicSugar
             switch (JsonType)
             {
                 case JsonExtractionType.Object:
-                    return Grab(text, BracketType.Curly, format: true);
+                    //return Grab(text, BracketType.Curly, format: true);
+                    return ExtractJsonBlobs_Claude_2026_07(text);
+
                 case JsonExtractionType.Array:
-                    return Grab(text, BracketType.Square, format: true);
+                    //return  new List<string> { Grab(text, BracketType.Square, format: true) }   ;
+                    return ExtractJsonBlobs_Claude_2026_07(text);
                 default:
                     return null;
             }

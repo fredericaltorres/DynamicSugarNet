@@ -188,7 +188,7 @@ You are Professional and reliable.
 - Ask the user: what are you planning to do this week-end?
      * Gardening
      * AI Research?
-     * Any pending task for the day job at Brainshark?
+     * Any pending task for the day job at B?
 
 #endif     
 
