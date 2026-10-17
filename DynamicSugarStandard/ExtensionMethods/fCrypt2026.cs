@@ -14,7 +14,7 @@ public static class StringCrypt2026
     private const int SaltSize = 16;
     private const int KeySize = 32; // 256-bit
     private const int IvSize = 16; // 128-bit
-    private const int Iterations = 100_000;
+    private const int Iterations = 1000;
     private const int HmacSize = 32; // HMAC-SHA256 tag
 
     public static string Encrypt(string plainText, string password)
@@ -125,7 +125,7 @@ public static class StringCrypt2026
     private static void DeriveKeys(string password, byte[] salt, out byte[] encKey, out byte[] macKey)
     {
         byte[] keyMaterial;
-        using (var kdf = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA256))
+        using (var kdf = new Rfc2898DeriveBytes(password, salt, Iterations))
         {
             keyMaterial = kdf.GetBytes(KeySize * 2); // 32 bytes for AES, 32 bytes for HMAC
         }
