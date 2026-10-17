@@ -33,6 +33,50 @@ namespace DynamicSugar {
         public static Guid     ToGuid    (this string s, Guid? defaultValue = null) { try { return new Guid(s);        } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
         public static bool     ToBool    (this string s, bool? defaultValue = null) { try { return bool.Parse(s);      } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }
 
+        public static string ToBase64(this string s) { try { return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(s)); } catch { return null; } }
+        public static string FromBase64(this string s) { try { return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(s)); } catch { return null; } }
+        
+        public static int GRND10()
+        {
+            return new Random().Next(1, 10);
+        }
+
+        static string b8_8_mrkr = "ok ";
+
+        public static string ToBase64X(this string s) 
+        {
+            var loopCount = GRND10() + GRND10();
+            var newS = $"{b8_8_mrkr}{s}";
+            for (int i = 0; i < loopCount; i++)
+            {
+                newS = newS.ToBase64();
+            }
+            return "`" + newS;
+        }
+
+        public static string FromBase64X(this string s)
+        {
+            if(s == null)
+                throw new ArgumentNullException(nameof(s));
+
+            if (s.StartsWith("`"))
+            {
+                s = s.Substring(1);
+                var x = 0;
+                while (x < 1000)
+                {
+                    s = s.FromBase64();
+                    if (s.StartsWith(b8_8_mrkr))
+                    {
+                        s = s.Substring(b8_8_mrkr.Length);
+                        return s;
+                    }
+                    x++;
+                }
+            }
+            return s.FromBase64();
+        }
+
 
         public static string TokenReplacer(this string s, object poco, string startBracket = "[", string endBracket = "]")
         {

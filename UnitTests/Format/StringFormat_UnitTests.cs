@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSugar;
 using System.Dynamic;
 using System.Net.Mime;
+using System.Diagnostics;
 
 namespace DynamicSugarSharp_UnitTests{
 
@@ -66,10 +67,49 @@ namespace DynamicSugarSharp_UnitTests{
         }
 
         [TestMethod]
+        public void ToBase64_FromBase64()
+        {
+            var theS = $"[/* comment */]";
+            Assert.AreEqual(theS, theS.ToBase64().FromBase64());
+        }
+
+        [TestMethod]
+        public void ToBase64_FromBase64X()
+        {
+            DS.List(
+                "e\u0301", 
+                "שלום مرحبا Hello\u200B\u00A0\uFEFF", 
+                "[/* comment */]",
+                "", "a", "ab", "abc", "???", "~~~", 
+                "abc\0def", 
+                "👨‍👩‍👧‍👦🏳️‍🌈", "" +
+                "abc�def", // <<<< "abc\uD800def", 
+                "é", 
+                "Ünïcödé €100", 
+                new string('x', 1000) + "\r\n"
+                ).ForEach(s => CheckToAndFromBase64X(s));
+        }
+
+        private static string CheckToAndFromBase64X(string theS)
+        {
+            var b64 = theS.ToBase64X();
+            var result = b64.FromBase64X();
+            if (theS != result)
+            {
+                Debugger.Break();
+                Console.WriteLine($"Expected: {theS}, Result: {result}");
+            }
+
+            Assert.AreEqual(theS, result);
+            return result;
+        }
+
+        [TestMethod]
         public void RemoveComment__C_Comment_SlashStar()
         {
             var result = $"[/* comment */]".RemoveComment(commentType: ExtensionMethods_Format.StringComment.C);
             var expected = $"[]";
+     
             Assert.AreEqual(expected, result);
 
 

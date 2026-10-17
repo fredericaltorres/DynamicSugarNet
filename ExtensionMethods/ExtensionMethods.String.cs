@@ -32,6 +32,7 @@ namespace DynamicSugar {
         public static Guid     ToGuid    (this string s, Guid? defaultValue = null) { try { return new Guid(s);        } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }   
         public static bool     ToBool    (this string s, bool? defaultValue = null) { try { return bool.Parse(s);      } catch { if(defaultValue == null) throw;return defaultValue.Value; }  }
 
+    
 
         public static string TokenReplacer(this string s, object poco, string startBracket = "[", string endBracket = "]")
         {
