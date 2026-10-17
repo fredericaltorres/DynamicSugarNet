@@ -74,6 +74,39 @@ namespace DynamicSugarSharp_UnitTests{
         }
 
         [TestMethod]
+        public void ToBase64_FromBase64XX()
+        {
+            DS.List(
+                "Hello word",
+                "e\u0301",
+                "שלום مرحبا Hello\u200B\u00A0\uFEFF",
+                "[/* comment */]",
+                "", "a", "ab", "abc", "???", "~~~",
+                "abc\0def",
+                "👨‍👩‍👧‍👦🏳️‍🌈", "" +
+                "abc�def", // <<<< "abc\uD800def", 
+                "é",
+                "Ünïcödé €100",
+                new string('x', 1000) + "\r\n"
+                ).ForEach(s => CheckToAndFromBase64XX(s));
+        }
+
+
+        private static string CheckToAndFromBase64XX(string theS)
+        {
+            var b64 = theS.ToBase64XX();
+            var result = b64.FromBase64XX();
+            if (theS != result)
+            {
+                Debugger.Break();
+                Console.WriteLine($"Expected: {theS}, Result: {result}");
+            }
+
+            Assert.AreEqual(theS, result);
+            return result;
+        }
+
+        [TestMethod]
         public void ToBase64_FromBase64X()
         {
             DS.List(

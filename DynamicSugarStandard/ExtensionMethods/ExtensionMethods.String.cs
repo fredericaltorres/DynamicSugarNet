@@ -6,6 +6,8 @@ using System.IO;
 using System.Collections;
 using System.Globalization;
 using System.Net;
+using System.Reflection;
+
 
 #if !MONOTOUCH
 using System.Dynamic;
@@ -42,6 +44,24 @@ namespace DynamicSugar {
         }
 
         static string b8_8_mrkr = "ok ";
+
+        public static string GetAppPW()
+        {
+            var args = Environment.GetCommandLineArgs();
+            string path = args[0];
+            var password = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+            return password;
+        }
+
+        public static string ToBase64XX(this string s)
+        {
+            return StringCrypt2026.Encrypt(s.ToBase64X(), GetAppPW());
+        }
+
+        public static string FromBase64XX(this string s)
+        {
+            return StringCrypt2026.Decrypt(s, GetAppPW()).FromBase64X();
+        }
 
         public static string ToBase64X(this string s) 
         {
