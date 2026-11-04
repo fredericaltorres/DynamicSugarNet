@@ -58,9 +58,19 @@ namespace DynamicSugar {
             return StringCrypt2026.Encrypt(s.ToBase64X(), GetAppPW());
         }
 
+        public static string ToBase64XXX(this string s, string p)
+        {
+            return StringCrypt2026.Encrypt(s.ToBase64X(), p);
+        }
+
         public static string FromBase64XX(this string s)
         {
             return StringCrypt2026.Decrypt(s, GetAppPW()).FromBase64X();
+        }
+
+        public static string FromBase64XXX(this string s, string p)
+        {
+            return StringCrypt2026.Decrypt(s, p).FromBase64X();
         }
 
         public static string ToBase64X(this string s) 
