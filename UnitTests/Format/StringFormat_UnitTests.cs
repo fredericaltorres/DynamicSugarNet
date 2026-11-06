@@ -124,6 +124,18 @@ namespace DynamicSugarSharp_UnitTests{
         }
 
         [TestMethod]
+        public void ToBase64_FromBase64XXX_OneTest()
+        {
+            var thePassword = "bcde";
+            var es = "cadmincadmin".ToBase64XXX(thePassword);
+            var pw = thePassword.ToBase64X();
+
+            var pw2 = pw.FromBase64X();
+            var RR = es.FromBase64XXX(pw2);
+        }
+
+
+        [TestMethod]
         public void ToBase64_FromBase64XXX()
         {
             DS.List(
